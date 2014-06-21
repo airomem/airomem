@@ -23,7 +23,7 @@ public class Chat implements ChatView, Serializable {
         this.messages = new CopyOnWriteArrayList<>();
     }
 
-    void addMessage(String nick, String content, LocalDateTime time) {
+    public void addMessage(String nick, String content, LocalDateTime time) {
         final Author author = new Author(nick);
         final Message msg = new Message(author, content, time);
         this.messages.add(msg);

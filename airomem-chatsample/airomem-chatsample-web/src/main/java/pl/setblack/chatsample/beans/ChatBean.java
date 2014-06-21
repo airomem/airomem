@@ -3,6 +3,7 @@
  */
 package pl.setblack.chatsample.beans;
 
+import java.time.LocalDateTime;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import pl.setblack.airomem.chatsample.data.Chat;
@@ -28,5 +29,11 @@ public class ChatBean {
 
     public ChatView getChatView() {
         return controller.query((view) -> view);
+    }
+
+    public void addMessage(String nick, String message) {
+        controller.execute((chat) -> {
+            chat.getDataObject().addMessage(nick, message, LocalDateTime.now());
+        });
     }
 }
