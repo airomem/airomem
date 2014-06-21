@@ -9,7 +9,7 @@ import java.io.Serializable;
  *
  * @author Kanapka
  */
-public interface Command<T extends Storable, RESULT> extends Serializable {
+public interface Command<T extends Storable> extends Serializable {
 
-    RESULT execute(T system);
+    void execute(T system);
 }

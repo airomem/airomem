@@ -12,17 +12,17 @@ import org.prevayler.TransactionWithQuery;
  *
  * @author jarekr
  */
-public class InternalTransaction<T extends Storable, RESULT> implements TransactionWithQuery<Optional<T>, RESULT> {
+public class InternalTransaction<T extends Storable> implements Transaction<Optional<T>> {
 
-    private final Command<T, RESULT> cmd;
+    private final Command<T> cmd;
 
-    public InternalTransaction(Command<T, RESULT> cmd) {
+    public InternalTransaction(Command<T> cmd) {
         this.cmd = cmd;
     }
 
     @Override
-    public RESULT executeAndQuery(Optional<T> p, Date date) throws Exception {
-        return cmd.execute(p.get());
+    public void executeOn(Optional<T> p, Date date) {
+        cmd.execute(p.get());
     }
 
 }

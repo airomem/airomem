@@ -23,4 +23,8 @@ public class DataRoot< IMMUTABLE, DATA extends IMMUTABLE> implements Storable<IM
         return persistentObject;
     }
 
+    public DATA getDataObject() {
+        return persistentObject;
+    }
+
 }

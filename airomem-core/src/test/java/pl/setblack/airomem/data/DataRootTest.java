@@ -28,6 +28,7 @@ public class DataRootTest {
     public void testCreation() {
         assertNotNull(bank);
         assertNotNull(bank.getImmutable().getAmount());
+        assertNotNull(bank.getDataObject().getAmount());
     }
 
 }
