@@ -24,19 +24,31 @@ public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE> {
     }
 
     public void close() {
-        Politician.turnABlindEye(() -> {
+        Politician.beatAroundTheBush(() -> {
             this.prevayler.takeSnapshot();
             this.prevayler.close();
+            this.prevayler = null;
         });
+    }
 
+    public void shut() {
+        Politician.beatAroundTheBush(() -> {
+            this.prevayler.close();
+            this.prevayler = null;
+        });
     }
 
     void initSystem(T object) {
         this.prevayler = createPrevayler(object);
+        Politician.beatAroundTheBush(() -> this.prevayler.takeSnapshot());
     }
 
     public <RESULT> RESULT query(Query<IMMUTABLE, RESULT> query) {
         return query.evaluate(getImmutable());
+    }
+
+    public <RESULT> RESULT execute(Command<T, RESULT> cmd) {
+        return Politician.beatAroundTheBush(() -> this.prevayler.execute(new InternalTransaction<>(cmd)));
     }
 
     private T getObject() {

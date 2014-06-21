@@ -3,6 +3,11 @@
  */
 package pl.setblack.airomem.core;
 
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.function.Supplier;
+
 /**
  *
  * @author jarekr
@@ -21,7 +26,19 @@ public class PersistenceFactory {
         PersistenceController<T, R> controller = new PersistenceController<>(calcFolderName(name));
         controller.initSystem(initial);
         return controller;
+    }
 
+    public <T extends Storable<R>, R> PersistenceController<T, R> initOptional(String name, Supplier<T> supplier) {
+        if (exists(name)) {
+            return this.load(name, null);//this looks bad but type arg is only needed for compiler
+        } else {
+            return this.init(name, supplier.get());
+        }
+    }
+
+    public boolean exists(String name) {
+        final Path path = FileSystems.getDefault().getPath(STORAGE_FOLDER, name);
+        return Files.exists(path);
     }
 
     private String calcFolderName(final String name) {
