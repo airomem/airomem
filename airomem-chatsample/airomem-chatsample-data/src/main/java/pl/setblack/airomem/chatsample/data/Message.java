@@ -4,6 +4,7 @@
 package pl.setblack.airomem.chatsample.data;
 
 import java.time.LocalDateTime;
+import javax.xml.bind.annotation.XmlElement;
 import pl.setblack.airomem.chatsample.view.AuthorView;
 import pl.setblack.airomem.chatsample.view.MessageView;
 
@@ -13,7 +14,7 @@ import pl.setblack.airomem.chatsample.view.MessageView;
  */
 public class Message implements MessageView {
 
-    public final Author author;
+    private final Author author;
 
     private String content;
 
@@ -36,8 +37,14 @@ public class Message implements MessageView {
     }
 
     @Override
+    @XmlElement
     public AuthorView getAuthorView() {
         return this.author;
+    }
+
+    @Override
+    public String getAuthorNick() {
+        return this.author.getNickName();
     }
 
 }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Document   : chat
+    Created on : Jun 21, 2014, 8:00:16 PM
+    Author     : jratajsk
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+
+    <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
+
+    <html>
+        <head>
+            <title>Chat</title>
+            <link href="less/main.less" rel="stylesheet/less" type="text/css"/>
+            <script type="text/javascript">
+
+                less = {
+                    env: "development",
+                    async: false,
+                    fileAsync: false,
+                    poll: 1000,
+                    functions: {},
+                    dumpLineNumbers: "comments",
+                    relativeUrls: false
+
+                };
+            </script>
+            <script type="text/javascript" src="js/lib/less.js"><jsp:text/></script>
+        </head>
+        <body class="chat">
+            <article>
+
+                <section class="chat" data-ng-app="chat" data-ng-controller="chatBoard">
+                    <header>
+                        <hgroup>
+                            <h1>Chat messages</h1>
+                        </hgroup>
+                        
+                    </header>
+                    <ul class="message">
+                        <li data-ng-repeat="msg in messages">
+                            <span class="author">
+                                {{msg.authorView.nickName}}
+                            </span>
+                            <span class="time">
+                                {{msg.time}}
+                            </span>
+                            <span class="content">
+                                {{msg.content}}
+                            </span>
+                        </li>
+                    </ul>
+                </section>
+                <section class="post">
+                    <form>
+                        <label>Nick:</label>
+                        <input type="text" name="nick"/>
+                        <label>Message:</label>
+                        <textarea  name="text"><jsp:text/>
+                        </textarea>
+                        <label>Send</label>
+                        <button>send</button>
+                    </form>
+                </section>
+            </article>
+
+            <script type="text/javascript" src="js/lib/angular.min.js"><jsp:text/></script>
+            <script type="text/javascript" src="js/lib/angular-resource.min.js"><jsp:text/></script>
+            <script type="text/javascript" src="js/lib/angular-animate.min.js"><jsp:text/></script>
+            <script type="text/javascript" src="js/local/chat.js"><jsp:text/></script>
+        </body>
+    </html>
+
+
+</jsp:root>
