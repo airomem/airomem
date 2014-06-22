@@ -69,7 +69,7 @@
             <script type="text/javascript" src="js/lib/angular-animate.min.js"><jsp:text/></script>
             <script type="text/javascript" src="js/lib/jquery.min.js"><jsp:text/></script>
             <script type="text/javascript" src="js/lib/jquery.scrollTo.min.js"><jsp:text/></script>
-            <script type="text/javascript" src="js/local/chat.js"><jsp:text/></script>
+            <script type="text/javascript" src="js/local/chatq.js"><jsp:text/></script>
         </body>
     </html>
 
