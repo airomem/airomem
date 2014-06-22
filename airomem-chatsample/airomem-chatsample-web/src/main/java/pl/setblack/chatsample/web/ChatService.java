@@ -47,7 +47,7 @@ public class ChatService {
     @GET
     @Produces("application/json")
     public List<MessageView> getMessages() {
-        chatBean.addMessage("nickt", "sample message");
+        
         return chatBean.getChatView().getRecentMessages();
     }
 
@@ -59,6 +59,7 @@ public class ChatService {
      */
     @PUT
     @Consumes("application/json")
-    public void putJson(String content) {
+    public void putJson(IncomingMessage msg) {
+        chatBean.addMessage(msg.nick, msg.content);
     }
 }

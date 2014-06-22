@@ -10,6 +10,10 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ChatServlet</servlet-name>
+        <url-pattern>/secured</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChatServlet</servlet-name>
         <url-pattern>/insecure</url-pattern>
     </servlet-mapping>
     <session-config>

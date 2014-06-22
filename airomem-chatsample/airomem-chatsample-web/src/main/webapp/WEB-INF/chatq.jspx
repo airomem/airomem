@@ -28,9 +28,9 @@
             <script type="text/javascript" src="js/lib/less.js"><jsp:text/></script>
         </head>
         <body class="chat">
-            <article>
+            <article data-ng-app="chat" data-ng-controller="chatBoard">
 
-                <section class="chat" data-ng-app="chat" data-ng-controller="chatBoard">
+                <section class="chat" >
                     <header>
                         <hgroup>
                             <h1>Chat messages</h1>
@@ -38,28 +38,28 @@
                         
                     </header>
                     <ul class="message">
-                        <li data-ng-repeat="msg in messages">
+                        <!--<li data-ng-repeat="msg in messages">
                             <span class="author">
                                 {{msg.authorView.nickName}}
                             </span>
-                            <span class="time">
+                            <span class="time" >
                                 {{msg.time}}
                             </span>
-                            <span class="content">
-                                {{msg.content}}
+                            <span class="content" ng-bind-html="msg.insecureContent">
+                                
                             </span>
-                        </li>
+                        </li>-->
                     </ul>
                 </section>
                 <section class="post">
                     <form>
                         <label>Nick:</label>
-                        <input type="text" name="nick"/>
+                        <input type="text" name="nick" data-ng-model="nick"/>
                         <label>Message:</label>
-                        <textarea  name="text"><jsp:text/>
+                        <textarea  name="text"  data-ng-model="content"><jsp:text/>
                         </textarea>
                         <label>Send</label>
-                        <button>send</button>
+                        <button data-ng-click="send()">send</button>
                     </form>
                 </section>
             </article>
@@ -67,6 +67,8 @@
             <script type="text/javascript" src="js/lib/angular.min.js"><jsp:text/></script>
             <script type="text/javascript" src="js/lib/angular-resource.min.js"><jsp:text/></script>
             <script type="text/javascript" src="js/lib/angular-animate.min.js"><jsp:text/></script>
+            <script type="text/javascript" src="js/lib/jquery.min.js"><jsp:text/></script>
+            <script type="text/javascript" src="js/lib/jquery.scrollTo.min.js"><jsp:text/></script>
             <script type="text/javascript" src="js/local/chat.js"><jsp:text/></script>
         </body>
     </html>

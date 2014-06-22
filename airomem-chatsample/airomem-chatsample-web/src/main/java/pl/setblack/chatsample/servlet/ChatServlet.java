@@ -31,7 +31,10 @@ public class ChatServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        request.getRequestDispatcher("WEB-INF/chat.jspx").forward(request, response);
+        if ( request.getContextPath().endsWith("secured")) {
+            response.addHeader("Content-Security-Policy", buildCSPHeader());
+        }
+        request.getRequestDispatcher("WEB-INF/chatq.jspx").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -72,5 +75,9 @@ public class ChatServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private String buildCSPHeader() {
+        return "script-src 'self'";
+    }
 
 }
