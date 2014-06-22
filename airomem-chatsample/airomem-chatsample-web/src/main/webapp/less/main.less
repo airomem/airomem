@@ -48,6 +48,12 @@ article {
                 position: relative;
                 margin-bottom: 1em;
                 background: rgba(255,255,255,0.8);
+                
+                &.blocked {
+                    background: radial-gradient(ellipse at center, rgba(239,239,239,1) 0%,rgba(191,110,78,1) 100%); /* W3C */
+                    padding: 3px 3px 3px 3px;
+                }
+                
                 > .author {
                     position: absolute;
                     height: 1em;

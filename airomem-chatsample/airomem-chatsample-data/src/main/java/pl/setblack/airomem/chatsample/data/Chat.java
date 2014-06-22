@@ -30,7 +30,10 @@ public class Chat implements ChatView, Serializable {
 
     }
 
+    @Override
     public List<MessageView> getRecentMessages() {
-        return Collections.unmodifiableList(this.messages);
+        int size = this.messages.size();
+        final List<MessageView> res = Collections.unmodifiableList(this.messages);
+        return res.subList(Math.max(size - 10, 0), size);
     }
 }
