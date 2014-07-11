@@ -47,9 +47,14 @@ public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE> {
         return query.evaluate(getImmutable());
     }
 
-    public void execute(Command<T> cmd) {
+    public void execute(ContextCommand<T> cmd) {
         Politician.beatAroundTheBush(() -> this.prevayler.execute(new InternalTransaction<>(cmd)));
     }
+    
+     public void execute(Command<T> cmd) {
+        this.execute((ContextCommand<T>)cmd);
+    }
+
 
     private T getObject() {
         return this.prevayler.prevalentSystem().get();

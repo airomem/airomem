@@ -6,16 +6,18 @@
 
 package pl.setblack.airomem.core;
 
+import java.time.Instant;
+import java.util.Date;
+
+
 /**
  *
  * @author jratajsk
  */
-@FunctionalInterface
-public interface Command<T extends Storable> extends ContextCommand<T> {
-    default  void execute(T system, PrevalanceContext context) {
-        this.execute(system);
+public class PrevalanceContext {
+    public final Instant time;
+
+    PrevalanceContext(Date date) {
+        time = date.toInstant();
     }
-    
-    
-    void execute(T system);
 }

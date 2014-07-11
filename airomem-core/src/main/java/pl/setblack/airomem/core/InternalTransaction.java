@@ -14,15 +14,19 @@ import org.prevayler.TransactionWithQuery;
  */
 public class InternalTransaction<T extends Storable> implements Transaction<Optional<T>> {
 
-    private final Command<T> cmd;
+    private final ContextCommand<T> cmd;
 
-    public InternalTransaction(Command<T> cmd) {
+    public InternalTransaction(ContextCommand<T> cmd) {
         this.cmd = cmd;
     }
 
     @Override
     public void executeOn(Optional<T> p, Date date) {
-        cmd.execute(p.get());
+        cmd.execute(p.get(), createContext(date));
+    }
+    
+    PrevalanceContext createContext(Date date) {
+        return new PrevalanceContext(date);
     }
 
 }
