@@ -4,6 +4,7 @@
 package pl.setblack.chatsample.beans;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import pl.setblack.airomem.chatsample.data.Chat;
@@ -32,8 +33,8 @@ public class ChatBean {
     }
 
     public void addMessage(String nick, String message) {
-        controller.execute((chat) -> {
-            chat.getDataObject().addMessage(nick, message, LocalDateTime.now());
+        controller.execute((chat, ctx) -> {
+            chat.getDataObject().addMessage(nick, message, LocalDateTime.ofInstant(ctx.time, ZoneId.systemDefault()));
         });
     }
 }

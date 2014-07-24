@@ -16,12 +16,14 @@ import pl.setblack.airomem.chatsample.view.AuthorView;
 @XmlRootElement
 public class Author implements AuthorView, Serializable {
 
+    private static final long serialVersionUID = 1;
+
     public String nickName;
 
     public Author() {
-        
+
     }
-    
+
     Author(String nick) {
         this.nickName = nick;
     }

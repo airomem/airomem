@@ -5,9 +5,13 @@ package pl.setblack.airomem.chatsample.data;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import org.junit.After;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.mockito.Mockito;
+import pl.setblack.airomem.core.PrevalanceContext;
+import pl.setblack.airomem.core.WriteChecker;
 
 /**
  *
@@ -27,7 +31,14 @@ public class ChatTest {
     @Before
     public void setUp() {
         this.chat = new Chat();
-        this.time = LocalDateTime.of(2014, Month.JUNE, 21, 9, 6);
+        this.time = LocalDateTime.now();
+        WriteChecker.setContext(Mockito.mock(PrevalanceContext.class));
+
+    }
+
+    @After
+    public void tearDown() {
+        WriteChecker.clearContext();
     }
 
     @Test
