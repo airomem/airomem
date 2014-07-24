@@ -6,7 +6,6 @@
 package pl.setblack.airomem.core;
 
 import com.google.common.base.Optional;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneOffset;
@@ -24,39 +23,53 @@ import org.junit.Test;
  */
 public class InternalTransactionTest {
 
-    public InternalTransactionTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of executeOn method, of class InternalTransaction.
      */
     @Test
     public void testExecuteOn() {
-        LocalDateTime time = LocalDateTime.of(1977, Month.MAY, 20, 1, 1);
+        final LocalDateTime time = LocalDateTime.of(1977, Month.MAY, 20, 1, 1);
         final Date date = Date.from(time.toInstant(ZoneOffset.UTC));
-        ContextCommand<StorableObject> myCmd = (x, ctx) -> x.internalMap.put("date", ctx.time.toString());
-        Optional<StorableObject> testSystem = Optional.of(StorableObject.createTestObject());
+        final ContextCommand<StorableObject> myCmd = (x, ctx) -> x.internalMap.put("date", ctx.time.toString());
+        final Optional<StorableObject> testSystem = Optional.of(StorableObject.createTestObject());
 
-        InternalTransaction instance = new InternalTransaction(myCmd);
+        final InternalTransaction instance = new InternalTransaction(myCmd);
         instance.executeOn(testSystem, date);
-        // TODO review the generated test code and remove the default call to fail.
+
         assertEquals(testSystem.get().internalMap.get("date"), time.toInstant(ZoneOffset.UTC).toString());
+    }
+
+    @Test
+    public void testWriteCheckerContext() {
+        final LocalDateTime time = LocalDateTime.of(1977, Month.MAY, 20, 1, 1);
+        final Date date = Date.from(time.toInstant(ZoneOffset.UTC));
+        final ContextCommand<StorableObject> myCmd = (x, ctx) -> {
+            assertTrue(WriteChecker.hasPrevalanceContext());
+            assertEquals(ctx, WriteChecker.getContext());
+        };
+        InternalTransaction instance = new InternalTransaction(myCmd);
+        final Optional<StorableObject> testSystem = Optional.of(StorableObject.createTestObject());
+        instance.executeOn(testSystem, date);
+    }
+
+    @Test
+    public void testWriteCheckerContextClearedWhenExceptionOccured() {
+        final LocalDateTime time = LocalDateTime.of(1977, Month.MAY, 20, 1, 1);
+        final Date date = Date.from(time.toInstant(ZoneOffset.UTC));
+        final RuntimeException exception = new RuntimeException("fail");
+        final ContextCommand<StorableObject> myCmd = (x, ctx) -> {
+            assertTrue(WriteChecker.hasPrevalanceContext());
+            assertEquals(ctx, WriteChecker.getContext());
+            throw exception;
+        };
+        InternalTransaction instance = new InternalTransaction(myCmd);
+        final Optional<StorableObject> testSystem = Optional.of(StorableObject.createTestObject());
+        try {
+            instance.executeOn(testSystem, date);
+        } catch (RuntimeException re) {
+            assertEquals(exception, re);
+        }
+        assertNull(WriteChecker.getContext());
     }
 
     /**
@@ -66,9 +79,9 @@ public class InternalTransactionTest {
     public void testCreateContext() {
         LocalDateTime time = LocalDateTime.of(1977, Month.MAY, 20, 1, 1);
         final Date date = Date.from(time.toInstant(ZoneOffset.UTC));
-       ContextCommand<StorableObject> myCmd = (x, ctx) -> x.internalMap.put("date", ctx.time.toString());
+        ContextCommand<StorableObject> myCmd = (x, ctx) -> x.internalMap.put("date", ctx.time.toString());
         InternalTransaction instance = new InternalTransaction(myCmd);
-        
+
         PrevalanceContext result = instance.createContext(date);
         assertEquals(date.toInstant(), result.time);
     }

@@ -6,7 +6,6 @@ package pl.setblack.airomem.core;
 import com.google.common.base.Optional;
 import java.util.Date;
 import org.prevayler.Transaction;
-import org.prevayler.TransactionWithQuery;
 
 /**
  *
@@ -22,9 +21,15 @@ public class InternalTransaction<T extends Storable> implements Transaction<Opti
 
     @Override
     public void executeOn(Optional<T> p, Date date) {
-        cmd.execute(p.get(), createContext(date));
+        final PrevalanceContext ctx = createContext(date);
+        WriteChecker.setContext(ctx);
+        try {
+            cmd.execute(p.get(), ctx);
+        } finally {
+            WriteChecker.clearContext();
+        }
     }
-    
+
     PrevalanceContext createContext(Date date) {
         return new PrevalanceContext(date);
     }
