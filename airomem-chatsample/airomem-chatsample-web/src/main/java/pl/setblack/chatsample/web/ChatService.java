@@ -14,8 +14,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
+import pl.setblack.airomem.chatsample.execute.ChatController;
 import pl.setblack.airomem.chatsample.view.MessageView;
-import pl.setblack.chatsample.beans.ChatBean;
 
 /**
  * REST Web Service
@@ -30,7 +30,7 @@ public class ChatService {
     private UriInfo context;
 
     @Inject
-    private ChatBean chatBean;
+    private ChatController chatBean;
 
     /**
      * Creates a new instance of ChatService
@@ -47,7 +47,7 @@ public class ChatService {
     @GET
     @Produces("application/json")
     public List<MessageView> getMessages() {
-        
+
         return chatBean.getChatView().getRecentMessages();
     }
 

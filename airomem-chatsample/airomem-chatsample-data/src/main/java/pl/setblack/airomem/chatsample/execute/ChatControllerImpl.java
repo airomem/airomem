@@ -1,7 +1,7 @@
 /*
  *  Created by Jarek Ratajski
  */
-package pl.setblack.chatsample.beans;
+package pl.setblack.airomem.chatsample.execute;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -18,7 +18,7 @@ import pl.setblack.airomem.data.DataRoot;
  * @author jarekr
  */
 @ApplicationScoped
-public class ChatBean {
+public class ChatControllerImpl implements ChatController {
 
     private PersistenceController<DataRoot<ChatView, Chat>, ChatView> controller;
 
