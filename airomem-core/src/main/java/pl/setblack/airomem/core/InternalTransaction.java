@@ -13,6 +13,8 @@ import org.prevayler.Transaction;
  */
 public class InternalTransaction<T extends Storable> implements Transaction<Optional<T>> {
 
+    private static final long serialVersionUID = 1l;
+
     private final ContextCommand<T> cmd;
 
     public InternalTransaction(ContextCommand<T> cmd) {
