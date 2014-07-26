@@ -5,7 +5,6 @@ package pl.setblack.airomem.chatsample.data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
@@ -35,7 +34,8 @@ public class Chat implements ChatView, Serializable {
 
     @Override
     public List<MessageView> getRecentMessages() {
-        final List<MessageView> res = this.messages.stream()
+        int count = this.messages.size();
+        final List<MessageView> res = this.messages.stream().skip(Math.max(count - 10, 0))
                 .limit(10)
                 .collect(Collectors.toList());
         return res;
