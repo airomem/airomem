@@ -4,12 +4,8 @@ package pl.setblack.airomem.core;
  *  Created by Jarek Ratajski
  */
 import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -45,7 +41,6 @@ public class PersistenceFactoryTest {
     public void tearDown() {
         deletePrevaylerFolder();
     }
-
 
     @Test
     public void testInitialization() {
@@ -113,23 +108,21 @@ public class PersistenceFactoryTest {
         assertEquals("dzikc", value);
     }
 
-    
-      @Test
+    @Test
     public void testExecuteWithDate() {
         PersistenceController<StorableObject, Map<String, String>> controller = createController();
-        assertNull( controller.query((map) -> map.get("ctxtest")));
-         
-        controller.execute((x,ctx) -> x.internalMap.put("ctxtest", ctx.time.toString()));
-        final String date =  controller.query((map) -> map.get("ctxtest"));
+        assertNull(controller.query((map) -> map.get("ctxtest")));
+
+        controller.execute((x, ctx) -> x.internalMap.put("ctxtest", ctx.time.toString()));
+        final String date = controller.query((map) -> map.get("ctxtest"));
         assertNotNull(date);
-      
+
         controller.shut();
         PersistenceController<StorableObject, Map<String, String>> controller2 = factory.load("sample", StorableObject.class);
         String value = controller2.query((map) -> map.get("ctxtest"));
         assertEquals(date, value);
     }
-    
-    
+
     @Test
     public void testExistMethod() {
         assertFalse(this.factory.exists("mysystem"));
