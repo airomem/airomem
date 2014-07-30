@@ -7,6 +7,7 @@ import com.google.common.base.Optional;
 import java.io.Serializable;
 import org.prevayler.Prevayler;
 import org.prevayler.PrevaylerFactory;
+import pl.setblack.airomem.core.kryo.KryoSerializer;
 import pl.setblack.badass.Politician;
 
 /**
@@ -50,11 +51,10 @@ public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE> {
     public void execute(ContextCommand<T> cmd) {
         Politician.beatAroundTheBush(() -> this.prevayler.execute(new InternalTransaction<>(cmd)));
     }
-    
-     public void execute(Command<T> cmd) {
-        this.execute((ContextCommand<T>)cmd);
-    }
 
+    public void execute(Command<T> cmd) {
+        this.execute((ContextCommand<T>) cmd);
+    }
 
     private T getObject() {
         return this.prevayler.prevalentSystem().get();
@@ -66,8 +66,13 @@ public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE> {
 
     private Prevayler createPrevayler(final Serializable system) {
         return Politician.beatAroundTheBush(() -> {
-            final Prevayler prev = PrevaylerFactory.createPrevayler(
-                    Optional.of(system), this.uniqueName);
+            PrevaylerFactory<Optional> factory = new PrevaylerFactory<>();
+            factory.configurePrevalentSystem(Optional.of(system));
+            factory.configureJournalDiskSync(false);
+            factory.configurePrevalenceDirectory(this.uniqueName);
+
+            factory.configureJournalSerializer(new KryoSerializer());
+            final Prevayler prev = factory.create();
             return prev;
         });
 

@@ -10,6 +10,13 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+    <repositories>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <name>sonatype snapshots repo</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.prevayler</groupId>
@@ -19,6 +26,12 @@
         <dependency>
             <groupId>org.prevayler</groupId>
             <artifactId>prevayler-factory</artifactId>
+            <version>2.6</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.prevayler.extras</groupId>
+            <artifactId>prevayler-xstream</artifactId>
             <version>2.6</version>
         </dependency>
         <dependency>
@@ -49,7 +62,17 @@
             <scope>test</scope>
             <type>jar</type>
         </dependency>
+        
+        
+        
+
+        <dependency>
+            <groupId>com.esotericsoftware.kryo</groupId>
+            <artifactId>kryo</artifactId>
+            <version>2.24.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
+    
     <build>
         <plugins>
             <plugin>
@@ -73,7 +96,7 @@
                     </execution>
                     <execution>
                         <id>default-check</id>
-                         <phase>verify</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
