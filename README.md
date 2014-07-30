@@ -9,18 +9,23 @@ The most important features are:
 This is achieved because there is no _Database_. There is only _persistence_.
 
 #Motivation
+
 I hava lot of positive experience with _Prevayler_ - quite an old project published by Klaus Wuestefeld.
+Pure Prevayler lacks however some features and is not perfectly safe for unexperienced teams.
 
-Goal of this project is to provide Prevayler based persistence with some extra features such as Java 8 Lambda expressions,
-_Kryo_ based serialization, rich collections (_CQEngine_).
+Goal of this project is to provide Prevayler based persistence with extra features such as Java 8 Lambda expressions,
+_Kryo_ based serialization, rich collections (_CQEngine_) and sanity checks that make Prevayler easier to implement.
+(_Quite honestly Prevayler is perfectly easy to implement, it just does not always work as people expect_).
 
+So airomem =  _Prevayler_ | safety | tools | lambdas | kryo | build...
+Take a look at Features.
 
 #Basic
 Lets assume that system is build without need of persistence. All operations are mode on objects in memory. 
 Instead of SQL queries, objects are traversed and filtered using stream API.
 
 Instead of making INSERTS, UPDATES, transactions there are only changes on objects in java.
-There is no Session, no EntityManager, no cache (because everything is cached...), no problems with ORMs.
+There is no Session, no EntityManager, no cache (stop -> everything is cache...), no problems with ORMs.
 No performance penalties, no DB deadlocks. 
 
 Such world exist and is fun to work with. And what is more funny persistence in this world also exists.
@@ -30,9 +35,8 @@ There are only two things to do:
  - all operations that change domain must be enclosed in [commands](http://en.wikipedia.org/wiki/Command_pattern). 
  
  
- 
-#How simple is that?
-Tak a look airomem-chatsample. Simple chat system (web based) using airomem. Besides JEE7.
+#How simple is that? (Sample Project)
+Tak a look airomem-chatsample. This is simple chat system (web based) build on airomem. Besides this is JEE7 project.
 ## Domain
 Domain consists of three classes:
 - [Chat](https://github.com/jarekratajski/airomem/blob/master/airomem-chatsample/airomem-chatsample-data/src/main/java/pl/setblack/airomem/chatsample/data/Chat.java), 
@@ -115,6 +119,48 @@ public class Chat implements ChatView, Serializable {
 
 
 And that is all...
+
+#Performance - this thing is insane
+This thing must come. How fast is that. Answer is - insane.
+I've tried to measure spped in operations per second using [jpab](http://www.jpab.org/) project.
+The problem is I was getting often int overflows... 
+
+Anyhow after some adaptations, corrections results are here.
+
+In really one can expect to achive performance of 10 up to 1000 faster than DB/ORM approach.
+
+#Applications
+There are already projects using prevayler  out there.
+I've run game for WEB developers once [CSSCraft](http://csscraft.setblack.pl) (this is runing for montths, meanwhile I've corrected few errors in game, adapted rules...
+and never lost scores (that are persisted using _Prevayler_)).
+
+#When not to use prevayler?
+- When data volume is expected to be far bigger than 30GB.
+- When there are expectations to generate ad hoc reports from database.
+- When team is unexperienced in Java. Especially does not want to hear about _synchronized_ keyword.
+
+Industry that should avoid prevayler: Banking.
+
+#When to use prevayler/airomem
+- Data volume is expected to be < 10 GB,
+- Performance, responsiveness of application is important,
+- Team loves Java ad is experienced in it,
+- Team loves DDD, OOD,
+ 
+Industry that can love Prevayler:
+- Game,
+- Social media,
+- E-commerce,
+
+
+
+#Features
+| Feature | Comment | State | Estimation |  
+|---------|---------|-------|------------|
+| Rumtime Write Check | Provide simple check for WRITE context. | DONE | Day | 
+| Sample | Provide sample system | DONE | Day |
+| Safe Build | Provide maven artifact for building Prevayler based system, defensive | NOT DONE | Week | 
+
 
 
 
