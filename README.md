@@ -116,44 +116,6 @@ public class Chat implements ChatView, Serializable {
 
 And that is all...
 
-# Performance
-It is very unfair to compare Prevalance with regular Databases. If there are network overhead, ORM, JDBC taken into account... 
-RAM and CPU nowadays are so fast that naive iterating over milion of Strings in memory and filtering using *.contains("mystr")* may be faster than
-quering INDEXED Table using *SQL LIKE* :-). (I am sure there is a limit, ORM and database and data kind for which statement is not True anymore).
-
-No matter how unfair is that I've invested some time to run some benchark called [jpab](http://www.jpab.org/). (Made to compare ORMs).
-I run this on 8GB RAM  PC Intel i7 -3370 3.40 Ghz. 
-
-## I run Hibernate ORM with mysql (not tuned!).
-
-Starting Hibernate-MySQL-server -> IndexTest
-IndexTest(thread=1, batch=5000) results:
-Persist: 2 839
-Disk Space: 0MB
-Retrieve: 118 245
-Query: 46,9
-Update: 3 290
-Remove: 3 633
-Completed in 190 seconds.
-
-Numbers are measured operations per second.
-
-## Then I've adopted code for airomem/prevayler persistence :
-
-Starting Prevayler-Prevayler-server -> IndexTest
-IndexTest(thread=1, batch=5000) results:
-Persist: 10 759
-Disk Space: 0MB
-Retrieve: 46 881 103
-Query: 202
-Update: 33 463 809
-Remove: 12 359
-Completed in 194 seconds.
-
-Some operations are 5 times, some 10 000 times faster ( I am further investigaing benchmark to find where the problem is).
-
-
-
 
 
 #Typical questions and answers
