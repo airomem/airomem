@@ -3,8 +3,10 @@
  */
 package pl.setblack.airomem.chatsample.execute;
 
+import java.util.List;
 import javax.ejb.Local;
 import pl.setblack.airomem.chatsample.view.ChatView;
+import pl.setblack.airomem.chatsample.view.MessageView;
 
 /**
  *
@@ -13,8 +15,8 @@ import pl.setblack.airomem.chatsample.view.ChatView;
 @Local
 public interface ChatController {
 
-    ChatView getChatView();
-
     void addMessage(String nick, String message);
+
+    List<MessageView> getRecentMessages();
 
 }

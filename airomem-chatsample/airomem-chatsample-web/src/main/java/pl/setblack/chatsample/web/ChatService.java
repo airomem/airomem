@@ -48,7 +48,7 @@ public class ChatService {
     @Produces("application/json")
     public List<MessageView> getMessages() {
 
-        return chatBean.getChatView().getRecentMessages();
+        return chatBean.getRecentMessages();
     }
 
     /**
