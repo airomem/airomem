@@ -9,7 +9,7 @@ The most important features are:
 This is achieved because there is no _Database_. There is only _persistence_.
 
 #Motivation
-I hava lot of positive experience with _Prevayler_.
+I hava lot of positive experience with _Prevayler_ - quite an old project published by Klaus Wuestefeld.
 
 Goal of this project is to provide Prevayler based persistence with some extra features such as Java 8 Lambda expressions,
 _Kryo_ based serialization, rich collections (_CQEngine_).
@@ -17,7 +17,8 @@ _Kryo_ based serialization, rich collections (_CQEngine_).
 
 #Basic
 Lets assume that system is build without need of persistence. All operations are mode on objects in memory. 
-Instead of SQL queries, objects are traversed and filtered.
+Instead of SQL queries, objects are traversed and filtered using stream API.
+
 Instead of making INSERTS, UPDATES, transactions there are only changes on objects in java.
 There is no Session, no EntityManager, no cache (because everything is cached...), no problems with ORMs.
 No performance penalties, no DB deadlocks. 
@@ -26,9 +27,43 @@ Such world exist and is fun to work with. And what is more funny persistence in 
 
 There are only two things to do:
  - all objects from domain must be serializable (this is typically easy  to achieve),
- - all operations that change domain must be enclosed in command.
+ - all operations that change domain must be enclosed in [commands](http://en.wikipedia.org/wiki/Command_pattern). 
  
+#How simple is that?
+Tak a look airomem-chatsample. Simple chat system (web based) using airomem. Besides JEE7.
+## Domain
+Domain consists of three classes:
+- [Chat](https://github.com/jarekratajski/airomem/blob/master/airomem-chatsample/airomem-chatsample-data/src/main/java/pl/setblack/airomem/chatsample/data/Chat.java), 
+- [Message](https://github.com/jarekratajski/airomem/blob/master/airomem-chatsample/airomem-chatsample-data/src/main/java/pl/setblack/airomem/chatsample/data/Message.java), 
+- [Author](https://github.com/jarekratajski/airomem/blob/master/airomem-chatsample/airomem-chatsample-data/src/main/java/pl/setblack/airomem/chatsample/data/Chat.java)
 
+
+## How to store new messsage
+See [ChatControllerImpl](https://github.com/jarekratajski/airomem/blob/master/airomem-chatsample/airomem-chatsample-data/src/main/java/pl/setblack/airomem/chatsample/execute/ChatControllerImpl.java).
+
+```
+private PersistenceController<DataRoot<ChatView, Chat>, ChatView> controller;
+
+    @PostConstruct
+    void initController() {
+        final PersistenceFactory factory = new PersistenceFactory();
+        controller = factory.initOptional("chat", () -> new DataRoot<>(new Chat()));
+    }
+
+    public ChatView getChatView() {
+        return controller.query((view) -> view);
+    }
+
+    public void addMessage(String nick, String message) {
+        controller.execute((chat, ctx) -> {
+            chat.getDataObject().addMessage(nick, message, LocalDateTime.ofInstant(ctx.time, ZoneId.systemDefault()));
+        });
+    }
+```	
+
+
+
+And that is all...
 
 #Quick Start
 
