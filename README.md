@@ -1,10 +1,10 @@
 airomem
 =======
 
-Airomem is Java persistence framework based on [Prevayler(http://prevayler.org/)].
+Airomem is Java persistence framework based on [Prevayler](http://prevayler.org/).
 The most important features are:
--speed,
--simplicity.
+- speed,
+- simplicity.
 
 This is achieved because there is no _Database_. There is only _persistence_.
 
