@@ -121,16 +121,16 @@ public class Chat implements ChatView, Serializable {
 And that is all...
 
 #Performance - this thing is insane
-This thing must come. How fast is that. Answer is - insane.
+This thing must come. How fast is that? Can be more than 1000 times faster than traditional SQL / ORM approach...
+
 I've tried to measure spped in operations per second using [jpab](http://www.jpab.org/) project.
 The problem is I was getting often int overflows... 
 
-Anyhow after some adaptations, corrections results are here.
+Anyhow after some adaptations, corrections results are  [here](https://github.com/jarekratajski/airomem/wiki/JPAB-Benchmark).
 
-In really one can expect to achive performance of 10 up to 1000 faster than DB/ORM approach.
+In reality one can expect to achive performance of 10 up to 1000 faster than DB/ORM approach.
 
 #Applications
-There are already projects using prevayler  out there.
 I've run game for WEB developers once [CSSCraft](http://csscraft.setblack.pl) (this is runing for montths, meanwhile I've corrected few errors in game, adapted rules...
 and never lost scores (that are persisted using _Prevayler_)).
 
@@ -160,7 +160,7 @@ Industry that can love Prevayler:
 | Rumtime Write Check | Provide simple check for WRITE context. | DONE | Day | 
 | Sample | Provide sample system | DONE | Day |
 | Safe Build | Provide maven artifact for building Prevayler based system, defensive | NOT DONE | Week | 
-
+| Sequence | Simple sequence to generatie IDs (inc) |  DONE | Day|
 
 
 
