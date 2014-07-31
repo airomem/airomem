@@ -1,13 +1,9 @@
-/*
- *  Created by Jarek Ratajski
- */
+/* Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0
+ * http://www.apache.org/licenses/LICENSE-2.0 */
 package pl.setblack.airomem.core;
 
-import pl.setblack.airomem.core.PrevalanceContext;
-
 /**
- * Extra helper class that may be used to check if PrevalanceContext was
- * initialized;
+ * Extra helper method check if PrevalanceContext was initialized.
  *
  * @author jarekr
  */

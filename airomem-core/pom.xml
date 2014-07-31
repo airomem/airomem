@@ -92,7 +92,7 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        
+                       
                     </execution>
                     <execution>
                         <id>default-check</id>
@@ -104,7 +104,13 @@
                             <rules>
                                 <!--  implmentation is needed only for Maven 2  -->
                                 <rule implementation="org.jacoco.maven.RuleConfiguration">
-                                    <element>BUNDLE</element>
+                                    <element>CLASS</element>
+                                    <excludes>
+                                        <exclude>pl.setblack.airomem.core.kryo.KryoSerializer</exclude>
+                                        <exclude>pl.setblack.airomem.core.kryo.KryoSerializer.1</exclude>
+                                        <exclude> pl.setblack.airomem.core.kryo.ReferenceResolver</exclude>
+                                        <exclude> pl.setblack.airomem.core.kryo.ReferenceResolver.Value</exclude>
+                                    </excludes>
                                     <limits>
                                         <!--  implmentation is needed only for Maven 2  -->
                                         <limit implementation="org.jacoco.report.check.Limit">

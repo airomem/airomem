@@ -1,15 +1,12 @@
 /*
- *  Created by Jarek Ratajski
+ *  Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0   http://www.apache.org/licenses/LICENSE-2.0
  */
 package pl.setblack.airomem.core;
 
-import pl.setblack.airomem.core.WriteChecker;
-import java.util.Date;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import pl.setblack.airomem.core.PrevalanceContext;
 
 /**
  *
@@ -27,6 +24,9 @@ public class WriteCheckerTest {
     public void setUp() {
         ctx1 = Mockito.mock(PrevalanceContext.class);
         ctx2 = Mockito.mock(PrevalanceContext.class);
+        if (WriteChecker.hasPrevalanceContext()) {
+            WriteChecker.clearContext();
+        }
     }
 
     @Test
@@ -52,6 +52,14 @@ public class WriteCheckerTest {
         assertTrue(WriteChecker.hasPrevalanceContext());
         assertEquals(ctx1, WriteChecker.getContext());
         WriteChecker.clearContext();
+
+    }
+
+    @Test(expected = java.lang.AssertionError.class)
+    public void testCannotSetContextTwice() throws InterruptedException {
+        assertNull(WriteChecker.getContext());
+        WriteChecker.setContext(ctx1);
+        WriteChecker.setContext(ctx1);
 
     }
 
