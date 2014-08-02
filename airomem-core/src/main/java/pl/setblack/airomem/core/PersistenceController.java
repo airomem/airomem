@@ -10,7 +10,12 @@ import pl.setblack.airomem.core.kryo.KryoSerializer;
 import pl.setblack.badass.Politician;
 
 /**
+ * Controller of persistence system.
  *
+ * Use this to perform queries and commands on system.
+ *
+ * @param <IMMUTABLE> immutable interface to persistent system (view)
+ * @param <T> mutable interface to system
  * @author jarekr
  */
 public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE> {
@@ -23,6 +28,12 @@ public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE> {
         this.uniqueName = name;
     }
 
+    /**
+     * Close system.
+     *
+     * This couses snapshot of system to be done. After this operation
+     * Controller should be no more usable.
+     */
     public void close() {
         Politician.beatAroundTheBush(() -> {
             this.prevayler.takeSnapshot();
@@ -31,6 +42,11 @@ public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE> {
         });
     }
 
+    /**
+     * Shut system immediatelly.
+     *
+     * No snaphsot is done. After load system will be restored using Commands.
+     */
     public void shut() {
         Politician.beatAroundTheBush(() -> {
             this.prevayler.close();
@@ -43,14 +59,42 @@ public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE> {
         Politician.beatAroundTheBush(() -> this.prevayler.takeSnapshot());
     }
 
+    /**
+     * Query system (immutable view of it).
+     *
+     * Few things to remember: 1. if operations done on system (using query) do
+     * make some changes they will not be preserved (for long) 2. it is possible
+     * to return any object from domain (including IMMUTABLE root) and perform
+     * operations later on (but the more You do inside Query the safer).
+     *
+     * @param <RESULT> result of query
+     * @param query lambda (or query implementation) with operations
+     * @return calculated result
+     */
     public <RESULT> RESULT query(Query<IMMUTABLE, RESULT> query) {
         return query.evaluate(getImmutable());
     }
 
+    /**
+     * Perform command on system.
+     *
+     * Inside command can be any code doing any changes. Such changes are
+     * guaranteed to be preserved (if only command ended without exception).
+     *
+     * @param cmd
+     */
     public void execute(ContextCommand<T> cmd) {
         Politician.beatAroundTheBush(() -> this.prevayler.execute(new InternalTransaction<>(cmd)));
     }
 
+    /**
+     * Perform command on system.
+     *
+     * Inside command can be any code doing any changes. Such changes are
+     * guaranteed to be preserved (if only command ended without exception).
+     *
+     * @param cmd
+     */
     public void execute(Command<T> cmd) {
         this.execute((ContextCommand<T>) cmd);
     }

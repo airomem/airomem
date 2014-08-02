@@ -6,11 +6,17 @@ import java.time.Instant;
 import java.util.Date;
 
 /**
+ * Context object.
+ *
+ * May be used to get time of command.
  *
  * @author jratajsk
  */
 public class PrevalanceContext {
 
+    /**
+     * Use this time object whenewer actual time was needed in command.
+     */
     public final Instant time;
 
     PrevalanceContext(Date date) {

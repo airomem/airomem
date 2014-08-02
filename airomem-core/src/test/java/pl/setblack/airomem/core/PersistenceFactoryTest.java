@@ -1,7 +1,7 @@
 package pl.setblack.airomem.core;
 
 /*
- *  Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0   http://www.apache.org/licenses/LICENSE-2.0 
+ *  Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0   http://www.apache.org/licenses/LICENSE-2.0
  */
 import java.io.File;
 import java.util.Map;
@@ -91,7 +91,7 @@ public class PersistenceFactoryTest {
     public void testReload() {
         PersistenceController<StorableObject, Map<String, String>> controller = createController();
         controller.close();
-        PersistenceController<StorableObject, Map<String, String>> controller2 = factory.load("sample", StorableObject.class);
+        PersistenceController<StorableObject, Map<String, String>> controller2 = factory.load("sample");
         String value = controller2.query((map) -> map.get("key:2"));
         assertEquals("val:2", value);
     }
@@ -103,7 +103,7 @@ public class PersistenceFactoryTest {
         assertEquals("dzikb", controller.query((map) -> map.get("key:2")));
         controller.execute((x) -> x.internalMap.put("key:2", "dzikc"));
         controller.shut();
-        PersistenceController<StorableObject, Map<String, String>> controller2 = factory.load("sample", StorableObject.class);
+        PersistenceController<StorableObject, Map<String, String>> controller2 = factory.load("sample");
         String value = controller2.query((map) -> map.get("key:2"));
         assertEquals("dzikc", value);
     }
@@ -118,7 +118,7 @@ public class PersistenceFactoryTest {
         assertNotNull(date);
 
         controller.shut();
-        PersistenceController<StorableObject, Map<String, String>> controller2 = factory.load("sample", StorableObject.class);
+        PersistenceController<StorableObject, Map<String, String>> controller2 = factory.load("sample");
         String value = controller2.query((map) -> map.get("ctxtest"));
         assertEquals(date, value);
     }

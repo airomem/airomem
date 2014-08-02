@@ -3,8 +3,7 @@
 package pl.setblack.airomem.core;
 
 /**
- *
- * @author Kanapka
+ * Query interface for query lambdas.
  */
 public interface Query<READONLY, RESULT> {
 

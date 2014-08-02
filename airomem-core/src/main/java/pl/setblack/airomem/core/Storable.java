@@ -5,8 +5,10 @@ package pl.setblack.airomem.core;
 import java.io.Serializable;
 
 /**
+ * Base interface for building Persisten system.
  *
- * @author Kanapka
+ * Every persistent system in RAM should have one ROOT object.
+ *
  */
 public interface Storable<READONLY> extends Serializable {
 

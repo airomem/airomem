@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0   http://www.apache.org/licenses/LICENSE-2.0 
+ *  Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0   http://www.apache.org/licenses/LICENSE-2.0
  */
 package pl.setblack.airomem.core;
 
@@ -40,7 +40,7 @@ public abstract class AbstractPrevaylerTest<T extends Storable<R>, R> {
 
     protected void reloadController(Class<T> type) {
         this.persistenceController.close();
-        this.persistenceController = factory.load("test", type);
+        this.persistenceController = factory.load("test");
     }
 
     private void deletePrevaylerFolder() {

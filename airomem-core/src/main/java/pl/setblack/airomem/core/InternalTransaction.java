@@ -7,16 +7,17 @@ import java.util.Date;
 import org.prevayler.Transaction;
 
 /**
+ * Class used internally to wrap user Command.
  *
  * @author jarekr
  */
-public class InternalTransaction<T extends Storable> implements Transaction<Optional<T>> {
+class InternalTransaction<T extends Storable> implements Transaction<Optional<T>> {
 
     private static final long serialVersionUID = 1l;
 
     private final ContextCommand<T> cmd;
 
-    public InternalTransaction(ContextCommand<T> cmd) {
+    InternalTransaction(ContextCommand<T> cmd) {
         this.cmd = cmd;
     }
 
