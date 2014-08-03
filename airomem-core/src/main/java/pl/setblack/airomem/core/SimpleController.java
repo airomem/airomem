@@ -54,7 +54,7 @@ public class SimpleController<T extends Serializable> implements AutoCloseable {
     }
 
     public void execute(Command<T> cmd) {
-
+        controller.execute(x -> cmd.execute(x.getDataObject()));
     }
 
 }
