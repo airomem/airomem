@@ -39,7 +39,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args> -classpath %classpath ${packageClassName}</exec.args>
+                <exec.args>-classpath %classpath ${packageClassName}</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
@@ -53,8 +53,16 @@
                 <goal>surefire:test</goal>
             </goals>
             <properties>
-                <argLine>-d64  -XX:+UseG1GC -Xms128m -Xmx7096m -verbose:gc </argLine>
+                <argLine>-d64  -XX:+UseG1GC -Xms128m -Xmx7096m -verbose:gc</argLine>
                 <test>${packageClassName}</test>
             </properties>
+        </action>
+        <action>
+            <actionName>CUSTOM-deploy</actionName>
+            <displayName>deploy</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>deploy</goal>
+            </goals>
         </action>
     </actions>

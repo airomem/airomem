@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @author jarekr
  */
 @FunctionalInterface
-public interface ContextCommand<T extends Storable> extends Serializable {
+public interface ContextCommand<T> extends Serializable {
 
     /**
      *

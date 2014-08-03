@@ -87,6 +87,12 @@ public class PersistenceFactoryTest {
         controller.query((map) -> map.get("key:2"));
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void testLoad() {
+        //WHEN
+        factory.load("sample");
+    }
+
     @Test
     public void testReload() {
         PersistenceController<StorableObject, Map<String, String>> controller = createController();

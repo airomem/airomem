@@ -2,6 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package pl.setblack.airomem.core;
 
+import com.google.common.base.Preconditions;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,6 +29,7 @@ public class PersistenceFactory {
      * @return PersistenceController for later use
      */
     public <T extends Storable<R>, R> PersistenceController<T, R> load(String name) {
+        Preconditions.checkState(exists(name));
         PersistenceController<T, R> controller = new PersistenceController<>(calcFolderName(name));
         controller.loadSystem();
         return controller;

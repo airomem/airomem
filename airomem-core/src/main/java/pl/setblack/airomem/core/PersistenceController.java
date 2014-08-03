@@ -18,7 +18,8 @@ import pl.setblack.badass.Politician;
  * @param <T> mutable interface to system
  * @author jarekr
  */
-public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE> {
+public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE>
+        implements AutoCloseable {
 
     private Prevayler<Optional<T>> prevayler;
 
@@ -123,6 +124,10 @@ public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE> {
 
     void loadSystem() {
         this.prevayler = createPrevayler(Optional.absent());
+    }
+
+    boolean isOpen() {
+        return this.prevayler != null;
     }
 
 }

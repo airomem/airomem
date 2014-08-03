@@ -27,7 +27,7 @@ public abstract class AbstractPrevaylerTest<T extends Storable<R>, R> {
 
     @Before
     public void setUp() {
-        deletePrevaylerFolder();
+        AbstractPrevaylerTest.deletePrevaylerFolder();
         this.persistenceController = factory.init("test", createSystem());
 
     }
@@ -35,7 +35,7 @@ public abstract class AbstractPrevaylerTest<T extends Storable<R>, R> {
     @After
     public void tearDown() {
         this.persistenceController.close();
-        deletePrevaylerFolder();
+        AbstractPrevaylerTest.deletePrevaylerFolder();
     }
 
     protected void reloadController(Class<T> type) {
@@ -43,7 +43,7 @@ public abstract class AbstractPrevaylerTest<T extends Storable<R>, R> {
         this.persistenceController = factory.load("test");
     }
 
-    private void deletePrevaylerFolder() {
+    static void deletePrevaylerFolder() {
         Politician.beatAroundTheBush(() -> {
             FileUtils.deleteDirectory(new File(PersistenceFactory.STORAGE_FOLDER));
         });

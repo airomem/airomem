@@ -13,7 +13,7 @@ package pl.setblack.airomem.core;
  * @author jarekr
  */
 @FunctionalInterface
-public interface Command<T extends Storable> extends ContextCommand<T> {
+public interface Command<T> extends ContextCommand<T> {
 
     @Override
     default void execute(T system, PrevalanceContext context) {
