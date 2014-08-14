@@ -1,10 +1,49 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Start Page</title>
+        <title>Airomem Bank</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+             <link href="less/main.less" rel="stylesheet/less" type="text/css"/>
+            <script type="text/javascript">
+
+                less = {
+                    env: "development",
+                    async: false,
+                    fileAsync: false,
+                    poll: 1000,
+                    functions: {},
+                    dumpLineNumbers: "comments",
+                    relativeUrls: false
+
+                };
+            </script>
+            <script type="text/javascript" src="js/lib/less.js"></script>
     </head>
-    <body>
-        <h1>Hello World!</h1>
+    <body data-ng-app="bank" data-ng-controller="bankCtrl">
+        <h1>Welcome to Airomem Bank</h1>
+        <nav>
+            <ul>
+                <li data-ng-repeat="acc in accounts">{{acc.id}}</li>
+            </ul>
+            
+        </nav>
+        <section>
+            <header>
+                <h1>UUID</h1>
+            </header>
+            <p>
+                555.555.555,00
+            </p>
+            <button>Withdraw</button>
+            <button>Deposit</button>
+        </section>
+        <section>
+            <button data-ng-click="register()">Register</button>
+        </section>
+        
+        <script type="text/javascript" src="js/lib/angular.min.js"></script>
+        <script type="text/javascript" src="js/lib/angular-resource.min.js"></script>
+        <script type="text/javascript" src="js/local/bank.js"></script>
     </body>
+    
 </html>

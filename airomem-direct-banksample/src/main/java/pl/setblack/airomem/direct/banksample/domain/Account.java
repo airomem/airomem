@@ -5,10 +5,15 @@ package pl.setblack.airomem.direct.banksample.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import pl.setblack.airomem.direct.banksample.api.AccountAdapter;
 
 /**
  *
  */
+@XmlJavaTypeAdapter(AccountAdapter.class)
 public final class Account implements Serializable {
 
     public final String id;

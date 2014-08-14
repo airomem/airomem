@@ -1,0 +1,121 @@
+@import "3L/3L.less";
+
+html {
+    width: 100%;
+    height: 100%;
+    .reset();
+}
+
+
+body.chat {
+    width: 100%;
+    height: 100%;
+    font-family: arial;
+    
+    background:  linear-gradient(135deg, #fefcea 0%,#f1da36 100%); /* W3C */
+
+}
+
+
+article {
+    h1 {
+        font-size: 32px;
+        text-align: center;
+    }
+
+    width: 100%;
+    height: 100%;
+    position: relative;
+    > section {
+        width: 90%;
+        margin-left: 5%;
+    }
+    > .chat {
+        position: absolute;
+        top: 0px;
+        bottom: 240px;
+        > ul {
+            position: absolute;
+            top: 3em;
+            bottom: 8px;
+            width: 100%;
+            overflow-y: auto;
+            > li {
+                display: block;
+                box-shadow: 2px 2px 6px gray;
+                min-height: 3em;
+                border-radius: 12px;
+                position: relative;
+                margin-bottom: 1em;
+                background: rgba(255,255,255,0.8);
+                
+                &.blocked {
+                    background: radial-gradient(ellipse at center, rgba(239,239,239,1) 0%,rgba(191,110,78,1) 100%); /* W3C */
+                    padding: 3px 3px 3px 3px;
+                }
+                
+                > .author {
+                    position: absolute;
+                    height: 1em;
+                    left: 1em;
+                    top: 0px;
+                    color: black;
+                }
+                > .time {
+                    position: absolute;
+                    height: 1em;
+                    right: 1em;
+                    top: 0px;
+                    color: gray;
+                }
+                > .content {
+                    bottom: 0px;
+                    top: 1em;
+                    position: absolute;
+                    overflow: auto;
+                    left: 1em;
+                    right: 1em;
+                }
+            }
+        }
+    }
+    > .post {
+        position: absolute;
+        height: 220px;
+        bottom: 8px;
+        box-shadow: 2px 2px 6px gray;
+
+        border-radius: 12px;
+        label {
+            float: left;
+            clear: both;
+            margin-left: 10px;
+            min-width: 120px;
+            &:last-of-type {
+                width: 80%;
+            }
+        }
+        input{ 
+            width: 200px;
+            float: left;
+        }
+
+        textarea {
+
+            width: 80%;
+            margin-left: 130px;
+            height: 60%;
+            clear: both;
+            float: left;
+        }
+
+        button {
+
+            float: left;
+            margin-left: 77px;
+
+
+        }
+
+    }
+}

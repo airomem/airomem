@@ -3,14 +3,22 @@
  */
 package pl.setblack.airomem.direct.banksample.rest;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.PathParam;
+import java.math.BigDecimal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import pl.setblack.airomem.direct.banksample.api.AccountAdapter;
+import pl.setblack.airomem.direct.banksample.api.AccountDto;
+import pl.setblack.airomem.direct.banksample.domain.Account;
+import pl.setblack.airomem.direct.banksample.domain.Bank;
 
 /**
  * REST Web Service
@@ -23,10 +31,13 @@ public class BankResource {
     @Context
     private UriInfo context;
 
+    private Bank bank;
+
     /**
      * Creates a new instance of BankResource
      */
     public BankResource() {
+        this.bank = new Bank();
     }
 
     /**
@@ -48,8 +59,14 @@ public class BankResource {
      * @return an HTTP response with content of the updated or created resource.
      */
     @PUT
-    @Consumes("application/json")
-    public void putJson(String content) {
-        System.out.println("test");
+    @Path("/account")
+    @Produces(MediaType.APPLICATION_JSON)
+    public AccountDto putAccount() {
+        final AccountAdapter adapter = new AccountAdapter();
+        try {
+            return adapter.marshal(this.bank.registerNewAccount(BigDecimal.ZERO));
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }
