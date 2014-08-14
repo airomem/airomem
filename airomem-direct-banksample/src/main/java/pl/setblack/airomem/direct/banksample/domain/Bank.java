@@ -7,7 +7,9 @@ import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.RandomBasedGenerator;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -18,6 +20,8 @@ public final class Bank implements Serializable {
 
     private final RandomBasedGenerator uuidGenerator;
 
+    private Map<String, Account> accounts = new ConcurrentHashMap<>();
+
     public Bank() {
         uuidGenerator = Generators.randomBasedGenerator(random);
     }
@@ -27,10 +31,21 @@ public final class Bank implements Serializable {
     }
 
     public Account registerNewAccount(BigDecimal value) {
-        return new Account(uuidGenerator.generate().toString(), value);
+        final Account acc = new Account(uuidGenerator.generate().toString(), value);
+        this.accounts.put(acc.id, acc);
+        return acc;
     }
 
     public Account getAccount(String id) {
-        throw new UnsupportedOperationException();
+        return this.accounts.get(id);
+    }
+
+    public void withdraw(String id, BigDecimal value) {
+
+    }
+
+    public void deposit(String id, BigDecimal value) {
+        Account changed = this.accounts.get(id).change(value);
+        this.accounts.put(id, changed);
     }
 }

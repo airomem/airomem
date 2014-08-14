@@ -65,4 +65,24 @@ public class BankTest {
 
         }
     }
+
+    @Test
+    public void shouldRetrieveSameAccountAsRegistered() {
+        final Account acc1 = bank.registerNewAccount(BigDecimal.valueOf(115));
+        final Account acc2 = bank.getAccount(acc1.id);
+        assertEquals(acc1.value, acc2.value);
+    }
+
+    @Test
+    public void shouldChangeBalanceAfterWithdraw() {
+    }
+
+    @Test
+    public void shouldChangeBalanceAfterDeposit() {
+        final Account acc1 = bank.registerNewAccount(BigDecimal.valueOf(115));
+        bank.deposit(acc1.id, BigDecimal.valueOf(20));
+
+        BigDecimal value = bank.getAccount(acc1.id).value;
+        assertEquals(135, value.longValue());
+    }
 }

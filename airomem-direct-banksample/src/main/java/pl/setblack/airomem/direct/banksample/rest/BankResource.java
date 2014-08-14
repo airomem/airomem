@@ -6,6 +6,7 @@ package pl.setblack.airomem.direct.banksample.rest;
 import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -26,6 +27,7 @@ import pl.setblack.airomem.direct.banksample.domain.Bank;
  * @author jarek ratajski
  */
 @Path("bank")
+@Singleton
 public class BankResource {
 
     @Context
