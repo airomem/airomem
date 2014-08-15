@@ -75,6 +75,11 @@ public class BankTest {
 
     @Test
     public void shouldChangeBalanceAfterWithdraw() {
+        final Account acc1 = bank.registerNewAccount(BigDecimal.valueOf(115));
+        bank.withdraw(acc1.id, BigDecimal.valueOf(20));
+
+        BigDecimal value = bank.getAccount(acc1.id).value;
+        assertEquals(95, value.longValue());
     }
 
     @Test

@@ -4,21 +4,16 @@
 package pl.setblack.airomem.direct.banksample.rest;
 
 import java.math.BigDecimal;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.Singleton;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import pl.setblack.airomem.direct.banksample.api.AccountAdapter;
 import pl.setblack.airomem.direct.banksample.api.AccountDto;
-import pl.setblack.airomem.direct.banksample.domain.Account;
 import pl.setblack.airomem.direct.banksample.domain.Bank;
 
 /**
@@ -27,7 +22,6 @@ import pl.setblack.airomem.direct.banksample.domain.Bank;
  * @author jarek ratajski
  */
 @Path("bank")
-@Singleton
 public class BankResource {
 
     @Context
@@ -71,4 +65,5 @@ public class BankResource {
             throw new RuntimeException(ex);
         }
     }
+
 }

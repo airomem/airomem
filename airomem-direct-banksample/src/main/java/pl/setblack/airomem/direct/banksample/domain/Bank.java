@@ -41,7 +41,8 @@ public final class Bank implements Serializable {
     }
 
     public void withdraw(String id, BigDecimal value) {
-
+        Account changed = this.accounts.get(id).change(value.negate());
+        this.accounts.put(id, changed);
     }
 
     public void deposit(String id, BigDecimal value) {

@@ -23,7 +23,8 @@
         <h1>Welcome to Airomem Bank</h1>
         <nav>
             <ul>
-                <li data-ng-repeat="acc in accounts">{{acc.id}}</li>
+                <li data-ng-repeat="acc in accounts">
+                        <button data-ng-click="select(acc.id)" data-pointed="{{selected(acc.id)}}">{{acc.id}}|{{selected(acc.id)}}</button></li>
             </ul>
             
         </nav>
