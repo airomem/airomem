@@ -22,7 +22,7 @@ public class PersistenceInterceptor {
     @AroundInvoke
     public Object preparePersistence(InvocationContext ctx) {
         try {
-          
+             
             return ctx.proceed();
         } catch (Exception ex) {
 

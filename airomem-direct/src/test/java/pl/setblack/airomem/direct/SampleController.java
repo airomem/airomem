@@ -15,10 +15,10 @@ import static org.junit.Assert.assertNotNull;
 public class SampleController {
   
     @PersistentObject
-    private SampleObject object;
+    protected SampleObject object;
     
     public void writeMethod() {
-        assertNotNull(object);
+        
     }
     
 }
