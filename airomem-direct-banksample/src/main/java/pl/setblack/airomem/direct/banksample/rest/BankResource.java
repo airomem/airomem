@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import pl.setblack.airomem.direct.Persistent;
 import pl.setblack.airomem.direct.banksample.api.AccountAdapter;
 import pl.setblack.airomem.direct.banksample.api.AccountDto;
 import pl.setblack.airomem.direct.banksample.domain.Bank;
@@ -22,6 +23,7 @@ import pl.setblack.airomem.direct.banksample.domain.Bank;
  * @author jarek ratajski
  */
 @Path("bank")
+@Persistent
 public class BankResource {
 
     @Context

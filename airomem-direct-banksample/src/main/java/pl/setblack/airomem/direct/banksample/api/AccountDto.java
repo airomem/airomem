@@ -18,7 +18,7 @@ public class AccountDto {
 
     private BigDecimal value;
 
-    @XmlAttribute
+    @XmlElement
     public String getId() {
         return id;
     }
