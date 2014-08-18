@@ -6,7 +6,6 @@ package pl.setblack.airomem.core.sequnce;
 import junit.framework.Assert;
 import org.junit.Test;
 import pl.setblack.airomem.core.AbstractPrevaylerTest;
-import pl.setblack.airomem.core.Storable;
 
 /**
  *
@@ -22,7 +21,7 @@ public class SequencePersistenceTest
 
     @Test
     public void testPersistenceOfSequence() {
-        this.persistenceController.executeVoid((x) -> x.setNumber(x.getSequence().generateId()));
+        this.persistenceController.execute((x) -> x.setNumber(x.getSequence().generateId()));
         long id1 = this.persistenceController.query(x -> x.getNumber());
         reloadController(SequenceSystem.class);
         long id2 = this.persistenceController.query(x -> x.getNumber());
@@ -31,10 +30,10 @@ public class SequencePersistenceTest
 
     @Test
     public void testPersistenceOfSequence2() {
-        this.persistenceController.executeVoid((x) -> x.setNumber(x.getSequence().generateId()));
+        this.persistenceController.execute((x) -> x.setNumber(x.getSequence().generateId()));
         long id1 = this.persistenceController.query(x -> x.getNumber());
         reloadController(SequenceSystem.class);
-        this.persistenceController.executeVoid((x) -> x.setNumber(x.getSequence().generateId()));
+        this.persistenceController.execute((x) -> x.setNumber(x.getSequence().generateId()));
         long id2 = this.persistenceController.query(x -> x.getNumber());
         Assert.assertEquals(id1 + 1, id2);
 

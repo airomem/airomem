@@ -100,11 +100,11 @@ public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE>
         return this.execute((ContextCommand<T, R>) cmd);
     }
 
-    public void executeVoid(VoidCommand<T> cmd) {
+    public void execute(VoidCommand<T> cmd) {
         this.execute((Command<T, Void>) cmd);
     }
 
-    public void executeVoid(VoidContextCommand<T> cmd) {
+    public void execute(VoidContextCommand<T> cmd) {
         this.execute((ContextCommand<T, Void>) cmd);
     }
 
