@@ -84,7 +84,7 @@ public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE>
      *
      * @param cmd
      */
-    public <R> R execute(ContextCommand<T, R> cmd) {
+    public <R> R executeAndQuery(ContextCommand<T, R> cmd) {
         return Politician.beatAroundTheBush(() -> this.prevayler.execute(new InternalTransaction<>(cmd)));
     }
 
@@ -96,16 +96,16 @@ public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE>
      *
      * @param cmd
      */
-    public <R> R execute(Command<T, R> cmd) {
-        return this.execute((ContextCommand<T, R>) cmd);
+    public <R> R executeAndQuery(Command<T, R> cmd) {
+        return this.executeAndQuery((ContextCommand<T, R>) cmd);
     }
 
     public void execute(VoidCommand<T> cmd) {
-        this.execute((Command<T, Void>) cmd);
+        this.executeAndQuery((Command<T, Void>) cmd);
     }
 
     public void execute(VoidContextCommand<T> cmd) {
-        this.execute((ContextCommand<T, Void>) cmd);
+        this.executeAndQuery((ContextCommand<T, Void>) cmd);
     }
 
     private T getObject() {
