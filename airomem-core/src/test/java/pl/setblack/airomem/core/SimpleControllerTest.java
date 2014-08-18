@@ -98,6 +98,56 @@ public class SimpleControllerTest {
             //THEN
             assertEquals("otherVal", simpleController.query(x -> x.get("key:1")));
         }
+    }
+
+    @Test
+    public void schouldExistsAfterCreation() {
+        //GIVEN
+        try (
+                final SimpleController<HashMap<String, String>> simpleController = SimpleController.create("test", StorableObject.createTestHashMap());) {
+            simpleController.execute((x, ctx) -> x.put("key:1", "otherVal"));
+        }
+        //when
+        //then
+        assertTrue(SimpleController.exists("test"));
+    }
+
+    @Test
+    public void schouldNotExistsAfterCreation() {
+        //GIVEN
+
+        //when
+        //then
+        assertFalse(SimpleController.exists("test"));
+    }
+
+    @Test
+    public void schouldCreateNewSystem() {
+        //GIVEN
+        try (
+                final SimpleController<HashMap<String, String>> simpleController = SimpleController.loadOptional("test", () -> StorableObject.createTestHashMap());) {
+            //WHEN
+            final String val = simpleController.query(x -> x.get("key:1"));
+            //THEN
+            assertEquals("val:1", val);
+        }
+    }
+
+    @Test
+    public void schouldLoadOldSystemIfExists() {
+        //GIVEN
+        try (
+                final SimpleController<HashMap<String, String>> simpleController = SimpleController.create("test", StorableObject.createTestHashMap());) {
+            simpleController.execute((x, ctx) -> x.put("key:1", "otherVal"));
+        }
+        try (
+                final SimpleController<HashMap<String, String>> simpleController = SimpleController.loadOptional("test", () -> StorableObject.createTestHashMap());) {
+            //WHEN
+            final String val = simpleController.query(x -> x.get("key:1"));
+            //THEN
+            assertEquals("otherVal", val);
+        }
 
     }
+
 }

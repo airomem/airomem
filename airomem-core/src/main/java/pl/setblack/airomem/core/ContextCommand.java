@@ -13,12 +13,12 @@ import java.io.Serializable;
  * @author jarekr
  */
 @FunctionalInterface
-public interface ContextCommand<T> extends Serializable {
+public interface ContextCommand<T, R> extends Serializable {
 
     /**
      *
      * @param system reference to mutable system
      * @param context context info (such as date)
      */
-    void execute(T system, PrevalanceContext context);
+    R execute(T system, PrevalanceContext context);
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0   http://www.apache.org/licenses/LICENSE-2.0 
+ *  Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0   http://www.apache.org/licenses/LICENSE-2.0
  */
 package pl.setblack.airomem.core.sequnce;
 
@@ -22,7 +22,7 @@ public class SequencePersistenceTest
 
     @Test
     public void testPersistenceOfSequence() {
-        this.persistenceController.execute((x) -> x.setNumber(x.getSequence().generateId()));
+        this.persistenceController.executeVoid((x) -> x.setNumber(x.getSequence().generateId()));
         long id1 = this.persistenceController.query(x -> x.getNumber());
         reloadController(SequenceSystem.class);
         long id2 = this.persistenceController.query(x -> x.getNumber());
@@ -31,10 +31,10 @@ public class SequencePersistenceTest
 
     @Test
     public void testPersistenceOfSequence2() {
-        this.persistenceController.execute((x) -> x.setNumber(x.getSequence().generateId()));
+        this.persistenceController.executeVoid((x) -> x.setNumber(x.getSequence().generateId()));
         long id1 = this.persistenceController.query(x -> x.getNumber());
         reloadController(SequenceSystem.class);
-        this.persistenceController.execute((x) -> x.setNumber(x.getSequence().generateId()));
+        this.persistenceController.executeVoid((x) -> x.setNumber(x.getSequence().generateId()));
         long id2 = this.persistenceController.query(x -> x.getNumber());
         Assert.assertEquals(id1 + 1, id2);
 

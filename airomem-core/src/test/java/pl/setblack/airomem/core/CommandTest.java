@@ -28,8 +28,8 @@ public class CommandTest {
     public void testExecuteWithContext() {
         StorableObject s = StorableObject.createTestObject();
         assertNotSame(COMMAND_PERFORMED_MARKER, s.getImmutable().get("test"));
-        Command<StorableObject> cmd = x -> x.internalMap.put("test", COMMAND_PERFORMED_MARKER);
-        cmd.execute(s, new PrevalanceContext( new Date()));
+        VoidCommand<StorableObject> cmd = x -> x.internalMap.put("test", COMMAND_PERFORMED_MARKER);
+        cmd.execute(s, new PrevalanceContext(new Date()));
         assertEquals(COMMAND_PERFORMED_MARKER, s.getImmutable().get("test"));
     }
 

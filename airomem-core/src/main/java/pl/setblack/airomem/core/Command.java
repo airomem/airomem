@@ -13,11 +13,11 @@ package pl.setblack.airomem.core;
  * @author jarekr
  */
 @FunctionalInterface
-public interface Command<T> extends ContextCommand<T> {
+public interface Command<T, R> extends ContextCommand<T, R> {
 
     @Override
-    default void execute(T system, PrevalanceContext context) {
-        this.execute(system);
+    default R execute(T system, PrevalanceContext context) {
+        return this.execute(system);
     }
 
     /**
@@ -25,5 +25,5 @@ public interface Command<T> extends ContextCommand<T> {
      *
      * @param system - reference to mutable system
      */
-    void execute(T system);
+    R execute(T system);
 }
