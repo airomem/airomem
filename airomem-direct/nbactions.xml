@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>test.single</actionName>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>test-compile</goal>
+                <goal>surefire:test</goal>
+            </goals>
+            <properties>
+                <test>${packageClassName}</test>
+                <argLine>-XX:MaxJavaStackTraceDepth=2048</argLine>
+                
+            </properties>
+        </action>
+    </actions>

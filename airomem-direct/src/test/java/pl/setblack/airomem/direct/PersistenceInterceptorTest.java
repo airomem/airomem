@@ -1,6 +1,6 @@
 /*
  *  Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0
- *  http://www.apache.org/licenses/LICENSE-2.0 
+ *  http://www.apache.org/licenses/LICENSE-2.0
  */
 package pl.setblack.airomem.direct;
 
@@ -11,6 +11,7 @@ import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -40,11 +41,11 @@ public class PersistenceInterceptorTest {
     private SampleController getController() {
         return this.controller;
     }
-    
+
     @Before
     public void setUp() throws Exception {
         context = Mockito.mock(InvocationContext.class);
-         controller = Mockito.mock(SampleController.class);
+        controller = Mockito.mock(SampleController.class);
 
         Mockito.when(context.proceed()).thenAnswer(new Answer<Object>() {
 
@@ -66,7 +67,7 @@ public class PersistenceInterceptorTest {
      */
     @Test
     public void shouldCallBusinnesMethod() throws Exception {
-        
+
         //when
         instance.preparePersistence(context);
         //then
@@ -74,19 +75,20 @@ public class PersistenceInterceptorTest {
     }
 
     @Test
-    public void shoudInstantiatePersistentObjectBeforeCall() {
-       controller = new SampleController() {
 
-           @Override
-           public void writeMethod() {
-               assertNotNull(this.object);
-           }
-           
-       };
+    public void shoudInstantiatePersistentObjectBeforeCall() {
+        controller = new SampleController() {
+
+            @Override
+            public void writeMethod() {
+                assertNotNull(this.object);
+            }
+
+        };
         //when
         instance.preparePersistence(context);
         //then
-        
+
     }
 
 }
