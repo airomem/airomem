@@ -62,12 +62,20 @@ public class SimpleController<T extends Serializable> implements AutoCloseable {
         return controller.isOpen();
     }
 
-    public <R> R execute(ContextCommand<T, R> cmd) {
+    public <R> R executeAndQuery(ContextCommand<T, R> cmd) {
         return controller.executeAndQuery((ContextCommand<DataRoot<T, T>, R>) ((x, ctx) -> cmd.execute(x.getDataObject(), ctx)));
     }
 
-    public <R> R execute(Command<T, R> cmd) {
+    public <R> R executeAndQuery(Command<T, R> cmd) {
         return controller.executeAndQuery((Command<DataRoot<T, T>, R>) (x -> cmd.execute(x.getDataObject())));
+    }
+
+    public void execute(VoidContextCommand<T> cmd) {
+        controller.execute((VoidContextCommand<DataRoot<T, T>>) ((x, ctx) -> cmd.execute(x.getDataObject(), ctx)));
+    }
+
+    public void execute(VoidCommand<T> cmd) {
+        controller.execute((VoidCommand<DataRoot<T, T>>) (x -> cmd.execute(x.getDataObject())));
     }
 
 }

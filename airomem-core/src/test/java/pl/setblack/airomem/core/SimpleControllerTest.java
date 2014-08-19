@@ -66,7 +66,19 @@ public class SimpleControllerTest {
         try (
                 final SimpleController<HashMap<String, String>> simpleController = SimpleController.create("test", StorableObject.createTestHashMap());) {
             //WHEN
-            simpleController.execute((x, ctx) -> x.put("key:1", "otherVal"));
+            simpleController.executeAndQuery((x, ctx) -> x.put("key:1", "otherVal"));
+            //THEN
+            assertEquals("otherVal", simpleController.query(x -> x.get("key:1")));
+        }
+    }
+
+    @Test
+    public void testExecuteAndQueryWithoutContextPerformed() {
+        //GIVEN
+        try (
+                final SimpleController<HashMap<String, String>> simpleController = SimpleController.create("test", StorableObject.createTestHashMap());) {
+            //WHEN
+            simpleController.executeAndQuery((x) -> x.put("key:1", "otherVal"));
             //THEN
             assertEquals("otherVal", simpleController.query(x -> x.get("key:1")));
         }
