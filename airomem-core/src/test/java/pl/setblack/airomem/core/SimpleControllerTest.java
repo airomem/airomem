@@ -54,6 +54,16 @@ public class SimpleControllerTest {
         assertFalse(simpleController.isOpen());
     }
 
+    @Test
+    public void testSimpleControllerShut() {
+        //GIVEN
+        final SimpleController<HashMap<String, String>> simpleController = SimpleController.create("test", StorableObject.createTestHashMap());
+        //WHEN
+        simpleController.shut();
+        //THEN
+        assertFalse(simpleController.isOpen());
+    }
+
     @Test(expected = IllegalStateException.class)
     public void testLoadWithNoStoredSystemShouldFail() {
         //WHEN
