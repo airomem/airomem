@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import pl.setblack.airomem.direct.impl.ClassContext;
 
 /**
  *
@@ -22,11 +23,12 @@ public class PersistenceInterceptor {
     @AroundInvoke
     public Object preparePersistence(InvocationContext ctx) {
         try {
-             
-            return ctx.proceed();
+            final ClassContext classContext = new ClassContext(ctx.getTarget());
+            return classContext.performTransaction(ctx.getTarget(), ctx.getMethod());
+
         } catch (Exception ex) {
 
             throw new RuntimeException(ex);
-        }     
+        }
     }
 }

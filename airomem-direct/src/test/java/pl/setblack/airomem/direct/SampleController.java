@@ -17,7 +17,8 @@ public class SampleController {
     protected SampleObject object;
 
     public void writeMethod() {
-
+        assertNotNull(object);
+        object.setField1("changed field1");
     }
 
     public SampleObject getObject() {

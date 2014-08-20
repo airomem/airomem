@@ -47,6 +47,10 @@ public class PersistenceInterceptorTest {
         context = Mockito.mock(InvocationContext.class);
         controller = Mockito.mock(SampleController.class);
 
+        Method method = SampleController.class.getMethod("writeMethod");
+
+        Mockito.when(context.getTarget()).thenReturn(controller);
+        Mockito.when(context.getMethod()).thenReturn(method);
         Mockito.when(context.proceed()).thenAnswer(new Answer<Object>() {
 
             @Override

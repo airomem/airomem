@@ -4,10 +4,12 @@
  */
 package pl.setblack.airomem.direct.impl;
 
+import java.lang.reflect.Method;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import pl.setblack.airomem.direct.SampleController;
+import pl.setblack.airomem.direct.SampleObject;
 
 /**
  *
@@ -23,14 +25,17 @@ public class ClassContextTest {
     }
 
     @Test
-    public void shouldInstantiateSampleObjectField() {
+    public void shouldInstantiateSampleObjectField() throws NoSuchMethodException {
         //GIVEN
         SampleController ctrl = new SampleController();
+        final Method method = ctrl.getClass().getMethod("writeMethod");
         //WHEN
         final ClassContext ctx = new ClassContext(ctrl);
-        ctx.initMutable();
+
+        ctx.performTransaction(ctrl, method);
         //THEN
-        assertNotNull(ctrl.getObject());
+        assertEquals("changed field1",
+                PrevaylerRegister.getInstance().getController(SampleObject.class, "object").query(o -> o.getField1()));
     }
 
 }

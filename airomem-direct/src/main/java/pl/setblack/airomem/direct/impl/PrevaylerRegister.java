@@ -7,9 +7,7 @@ package pl.setblack.airomem.direct.impl;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.concurrent.ConcurrentHashMap;
-import pl.setblack.airomem.core.PersistenceController;
 import pl.setblack.airomem.core.SimpleController;
-import pl.setblack.airomem.core.Storable;
 import pl.setblack.badass.Politician;
 
 /**
@@ -27,6 +25,9 @@ public final class PrevaylerRegister {
     }
 
     public void clear() {
+        for (final SimpleController ctrl : this.prevaylers.values()) {
+            ctrl.close();
+        }
         this.prevaylers.clear();
     }
 
