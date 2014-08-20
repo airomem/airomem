@@ -13,6 +13,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import pl.setblack.airomem.direct.Persistent;
+import pl.setblack.airomem.direct.PersistentObject;
 import pl.setblack.airomem.direct.banksample.api.AccountAdapter;
 import pl.setblack.airomem.direct.banksample.api.AccountDto;
 import pl.setblack.airomem.direct.banksample.domain.Bank;
@@ -28,14 +29,14 @@ public class BankResource {
 
     @Context
     private UriInfo context;
-
+    @PersistentObject
     private Bank bank;
 
     /**
      * Creates a new instance of BankResource
      */
     public BankResource() {
-        this.bank = new Bank();
+
     }
 
     /**
