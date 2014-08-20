@@ -4,7 +4,6 @@
 package pl.setblack.airomem.direct.banksample.api;
 
 import java.math.BigDecimal;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 

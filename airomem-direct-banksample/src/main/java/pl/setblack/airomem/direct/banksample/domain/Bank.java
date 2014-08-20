@@ -7,6 +7,8 @@ import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.RandomBasedGenerator;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,14 +18,22 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class Bank implements Serializable {
 
+    private static final long serialVersionUID = 1l;
     private final Random random = new Random(42);
 
-    private final RandomBasedGenerator uuidGenerator;
+    private transient RandomBasedGenerator uuidGenerator;
 
     private Map<String, Account> accounts = new ConcurrentHashMap<>();
 
     public Bank() {
-        uuidGenerator = Generators.randomBasedGenerator(random);
+
+    }
+
+    private synchronized String generateId() {
+        if (uuidGenerator == null) {
+            uuidGenerator = Generators.randomBasedGenerator(random);
+        }
+        return uuidGenerator.generate().toString();
     }
 
     public BigDecimal getTotalAmount() {
@@ -31,7 +41,7 @@ public final class Bank implements Serializable {
     }
 
     public Account registerNewAccount(BigDecimal value) {
-        final Account acc = new Account(uuidGenerator.generate().toString(), value);
+        final Account acc = new Account(generateId(), value);
         this.accounts.put(acc.id, acc);
         return acc;
     }
@@ -48,5 +58,9 @@ public final class Bank implements Serializable {
     public void deposit(String id, BigDecimal value) {
         Account changed = this.accounts.get(id).change(value);
         this.accounts.put(id, changed);
+    }
+
+    public Iterable<Account> getAllAccounts() {
+        return Collections.unmodifiableCollection(this.accounts.values());
     }
 }

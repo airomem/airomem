@@ -16,7 +16,10 @@ import pl.setblack.airomem.direct.Persistent;
 import pl.setblack.airomem.direct.PersistentObject;
 import pl.setblack.airomem.direct.banksample.api.AccountAdapter;
 import pl.setblack.airomem.direct.banksample.api.AccountDto;
+import pl.setblack.airomem.direct.banksample.api.BankAdapter;
+import pl.setblack.airomem.direct.banksample.api.BankDto;
 import pl.setblack.airomem.direct.banksample.domain.Bank;
+import pl.setblack.badass.Politician;
 
 /**
  * REST Web Service
@@ -46,9 +49,18 @@ public class BankResource {
      * @return an instance of java.lang.String
      */
     @GET
-    @Produces("application/json")
-    public String getJson() {
-        return "test";
+    @Produces(MediaType.APPLICATION_JSON)
+    public BankDto getJson() {
+        final BankAdapter adapter = new BankAdapter();
+        return Politician.beatAroundTheBush(() -> adapter.marshal(this.bank));
+    }
+
+    @GET
+    @Path("/bank2")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Bank getBank() {
+
+        return this.bank;
     }
 
     /**
