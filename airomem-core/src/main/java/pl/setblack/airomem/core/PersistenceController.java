@@ -37,9 +37,11 @@ public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE>
      */
     public void close() {
         Politician.beatAroundTheBush(() -> {
-            this.prevayler.takeSnapshot();
-            this.prevayler.close();
-            this.prevayler = null;
+            if (this.prevayler != null) {
+                this.prevayler.takeSnapshot();
+                this.prevayler.close();
+                this.prevayler = null;
+            }
         });
     }
 

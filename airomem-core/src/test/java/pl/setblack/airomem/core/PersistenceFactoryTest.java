@@ -80,6 +80,14 @@ public class PersistenceFactoryTest {
 
     }
 
+    @Test
+    public void shouldCloseNicelyMutipleTimes() {
+        PersistenceController<StorableObject, Map<String, String>> controller = createController();
+        controller.close();
+        controller.close();
+        controller.close();
+    }
+
     @Test(expected = NullPointerException.class)
     public void testShut() {
         PersistenceController<StorableObject, Map<String, String>> controller = createController();
