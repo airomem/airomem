@@ -59,4 +59,11 @@ public final class PrevaylerRegister {
     private static <T> String calcName(final Class<T> clazz, final String name) {
         return clazz.getCanonicalName() + name;
     }
+
+    public void shut() {
+        for (final SimpleController ctrl : this.prevaylers.values()) {
+            ctrl.shut();
+        }
+        this.prevaylers.clear();
+    }
 }

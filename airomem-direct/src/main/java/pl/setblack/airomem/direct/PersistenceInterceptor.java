@@ -5,12 +5,11 @@
  */
 package pl.setblack.airomem.direct;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import pl.setblack.airomem.direct.impl.ClassContext;
+import pl.setblack.badass.Politician;
 
 /**
  *
@@ -20,15 +19,24 @@ import pl.setblack.airomem.direct.impl.ClassContext;
 @Persistent
 public class PersistenceInterceptor {
 
+    private static final ThreadLocal<Boolean> MARKER = new ThreadLocal<>();
+
     @AroundInvoke
     public Object preparePersistence(InvocationContext ctx) {
         try {
-            final ClassContext classContext = new ClassContext(ctx.getTarget());
-            return classContext.performTransaction(ctx.getTarget(), ctx.getMethod());
+            if (!Boolean.TRUE.equals(MARKER.get())) {
+                final ClassContext classContext = new ClassContext(ctx.getTarget());
+                return classContext.performTransaction(ctx.getTarget(), ctx.getMethod());
 
-        } catch (Exception ex) {
-
-            throw new RuntimeException(ex);
+            } else {
+                return Politician.beatAroundTheBush(() -> ctx.proceed());
+            }
+        } finally {
+            MARKER.remove();
         }
+    }
+
+    public static void setMarker() {
+        MARKER.set(Boolean.TRUE);
     }
 }

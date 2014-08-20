@@ -9,13 +9,18 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.criteria.CriteriaBuilder;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import pl.setblack.airomem.core.ContextCommand;
 import pl.setblack.airomem.core.PrevalanceContext;
 import pl.setblack.airomem.core.SimpleController;
+import pl.setblack.airomem.direct.PersistenceInterceptor;
 import pl.setblack.airomem.direct.PersistentObject;
 import pl.setblack.badass.Politician;
 
@@ -29,8 +34,6 @@ public class ClassContext {
 
     private ElemHandler elem;
 
-    private SimpleController controller;
-
     public ClassContext(final Object target) {
         this.targetClass = target.getClass();
         scan();
@@ -43,10 +46,6 @@ public class ClassContext {
         } else {
             throw new IllegalStateException("must have exactly one PersistentObject");
         }
-    }
-
-    public void close() {
-
     }
 
     private List<ElemHandler> scanFields(Class<? extends Object> aClass) {
@@ -66,12 +65,17 @@ public class ClassContext {
 
     private void prepare(ElemHandler elem) {
         this.elem = elem;
-        this.controller = PrevaylerRegister.getInstance().getController(elem.getTargetType(), elem.getName());
+
+    }
+
+    private Class calcTargetClass(Object obj) {
+        return obj.getClass().getSuperclass();
     }
 
     public Object performTransaction(final Object target, Method method) {
-        final WraperTransaction transaction = new WraperTransaction(target, method.getName());
-        return this.controller.executeAndQuery(transaction
+        final SimpleController controller = PrevaylerRegister.getInstance().getController(elem.getTargetType(), elem.getName());
+        final WraperTransaction transaction = new WraperTransaction(calcTargetClass(target).getCanonicalName(), method.getName());
+        return controller.executeAndQuery(transaction
         );
     }
 
@@ -79,82 +83,61 @@ public class ClassContext {
         this.elem.storeValue(target, system);
     }
 
+    private void clean(Object target) {
+        this.elem.cleanValue(target);
+    }
+
     private static class WraperTransaction implements ContextCommand<Object, Object>, Serializable {
 
         private static final long serialVersionUID = 1l;
 
-        private final Object target;
+        private static final ThreadLocal<Boolean> MARKER = new ThreadLocal<>();
+
+        private final String targetClass;
 
         private final String methodName;
 
-        public WraperTransaction(Object target, String methodName) {
-            this.target = target;
+        public WraperTransaction(String targetClass, String methodName) {
+            this.targetClass = targetClass;
             this.methodName = methodName;
         }
 
+        private BeanManager getBeanManager() {
+            return Politician.beatAroundTheBush(()
+                    -> (BeanManager) InitialContext.doLookup("java:comp/BeanManager"));
+
+        }
+
+        private Object instantiateTarget() throws ClassNotFoundException {
+
+            final Class cls = Class.forName(this.targetClass);
+            final BeanManager beanManager = getBeanManager();
+            for (Bean<?> bean : beanManager.getBeans(cls)) {
+                final CreationalContext context = beanManager.createCreationalContext(bean);
+                return beanManager.getReference(bean, cls, context);
+            }
+            throw new IllegalStateException("no bean");
+        }
+
         @Override
-        public Object execute(Object system, PrevalanceContext context) {
+        public Object execute(Object system, PrevalanceContext context
+        ) {
+            PersistenceInterceptor.setMarker();
+            final Object target = Politician.beatAroundTheBush(() -> instantiateTarget());
             final ClassContext ctx = new ClassContext(target);
             ctx.inject(target, system);
-            return Politician.beatAroundTheBush(() -> {
-                final Method method = target.getClass().getMethod(methodName);
-                return method.invoke(target);
+            try {
+                return Politician.beatAroundTheBush(() -> {
+                    final Method method = target.getClass().getMethod(methodName);
+                    return method.invoke(target);
+                }
+                );
+            } finally {
+                ctx.clean(target);
             }
-            );
 
         }
 
     }
 
-    private static interface ElemHandler {
-
-        Class getTargetType();
-
-        void storeValue(Object target, Object val);
-
-        void cleanValue(Object target);
-
-        public String getName();
-
-    }
-
-    private static class FieldHandler implements ElemHandler {
-
-        private final Field field;
-
-        private final String name;
-
-        private final Class<?> type;
-
-        public FieldHandler(Field field) {
-            this.field = field;
-            this.type = field.getType();
-            this.field.setAccessible(true);
-            this.name = this.field.getName();
-        }
-
-        @Override
-        public void storeValue(Object target, Object val) {
-            Politician.beatAroundTheBush(()
-                    -> this.field.set(target, val));
-
-        }
-
-        @Override
-        public void cleanValue(Object target) {
-            Politician.beatAroundTheBush(()
-                    -> this.field.set(target, null));
-        }
-
-        @Override
-        public Class getTargetType() {
-            return this.type;
-        }
-
-        @Override
-        public String getName() {
-            return this.name;
-        }
-
-    }
 }

@@ -21,6 +21,11 @@ public class SampleController {
         object.setField1("changed field1");
     }
 
+    public String readMethod() {
+        assertNotNull(object);
+        return object.getField1();
+    }
+
     public SampleObject getObject() {
         return this.object;
     }

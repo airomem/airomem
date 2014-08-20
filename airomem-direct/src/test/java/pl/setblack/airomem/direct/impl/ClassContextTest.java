@@ -4,17 +4,23 @@
  */
 package pl.setblack.airomem.direct.impl;
 
+import java.io.File;
 import java.lang.reflect.Method;
-import static org.junit.Assert.*;
+import org.apache.commons.io.FileUtils;
+import org.jglue.cdiunit.CdiRunner;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import pl.setblack.airomem.core.PersistenceFactory;
 import pl.setblack.airomem.direct.SampleController;
-import pl.setblack.airomem.direct.SampleObject;
+import pl.setblack.badass.Politician;
 
 /**
  *
  * @author jarek ratajski
  */
+@RunWith(CdiRunner.class)
 public class ClassContextTest {
 
     public ClassContextTest() {
@@ -22,20 +28,38 @@ public class ClassContextTest {
 
     @Before
     public void setUp() {
+        PrevaylerRegister.getInstance().clear();
+        Politician.beatAroundTheBush(() -> {
+            FileUtils.deleteDirectory(new File(PersistenceFactory.STORAGE_FOLDER));
+        });
     }
 
-    @Test
-    public void shouldInstantiateSampleObjectField() throws NoSuchMethodException {
+    @After
+    public void tearDown() {
+        PrevaylerRegister.getInstance().clear();
+        Politician.beatAroundTheBush(() -> {
+            FileUtils.deleteDirectory(new File(PersistenceFactory.STORAGE_FOLDER));
+        });
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void shouldNotInstantiateNoCDIBean() throws NoSuchMethodException {
+
+        //WHEN
+        final ClassContext ctx = new ClassContext(new Object());
+
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void shouldFailOnNoBeanClass() throws NoSuchMethodException {
         //GIVEN
-        SampleController ctrl = new SampleController();
+        SampleController ctrl = new SampleController() {
+        };
         final Method method = ctrl.getClass().getMethod("writeMethod");
         //WHEN
         final ClassContext ctx = new ClassContext(ctrl);
 
         ctx.performTransaction(ctrl, method);
-        //THEN
-        assertEquals("changed field1",
-                PrevaylerRegister.getInstance().getController(SampleObject.class, "object").query(o -> o.getField1()));
     }
 
 }
