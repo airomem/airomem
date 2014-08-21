@@ -4,6 +4,7 @@
  */
 package pl.setblack.airomem.direct;
 
+import javax.ws.rs.GET;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -19,10 +20,13 @@ public class SampleController {
     public void writeMethod() {
         assertNotNull(object);
         object.setField1("changed field1");
+        object.value += 14;
     }
 
+    @GET
     public String readMethod() {
         assertNotNull(object);
+        object.value += 7;
         return object.getField1();
     }
 

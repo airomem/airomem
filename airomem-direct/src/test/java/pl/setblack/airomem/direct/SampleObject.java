@@ -1,8 +1,7 @@
 /*
  *  Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0
- *  http://www.apache.org/licenses/LICENSE-2.0 
+ *  http://www.apache.org/licenses/LICENSE-2.0
  */
-
 package pl.setblack.airomem.direct;
 
 import java.io.Serializable;
@@ -11,12 +10,18 @@ import java.io.Serializable;
  *
  * @author jratajsk
  */
-public class SampleObject implements Serializable{
+public class SampleObject implements Serializable {
+
     private static final long serialVersionUID = 1l;
-    
+
     private String field1;
-    
+
     private String field2;
+
+    public int value;
+
+    public SampleObject() {
+    }
 
     public String getField1() {
         return field1;
@@ -33,5 +38,5 @@ public class SampleObject implements Serializable{
     public void setField2(String field2) {
         this.field2 = field2;
     }
-    
+
 }

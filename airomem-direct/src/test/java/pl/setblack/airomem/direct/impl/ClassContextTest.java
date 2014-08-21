@@ -46,7 +46,7 @@ public class ClassContextTest {
     public void shouldNotInstantiateNoCDIBean() throws NoSuchMethodException {
 
         //WHEN
-        final ClassContext ctx = new ClassContext(new Object());
+        final ClassContext ctx = new ClassContext(Object.class);
 
     }
 
@@ -57,7 +57,7 @@ public class ClassContextTest {
         };
         final Method method = ctrl.getClass().getMethod("writeMethod");
         //WHEN
-        final ClassContext ctx = new ClassContext(ctrl);
+        final ClassContext ctx = new ClassContext(ctrl.getClass());
 
         ctx.performTransaction(ctrl, method);
     }

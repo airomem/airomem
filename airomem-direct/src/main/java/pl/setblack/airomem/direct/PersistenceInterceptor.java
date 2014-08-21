@@ -5,10 +5,12 @@
  */
 package pl.setblack.airomem.direct;
 
+import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import pl.setblack.airomem.direct.impl.ClassContext;
+import pl.setblack.airomem.direct.impl.ClassContextRegistry;
 import pl.setblack.badass.Politician;
 
 /**
@@ -21,11 +23,14 @@ public class PersistenceInterceptor {
 
     private static final ThreadLocal<Boolean> MARKER = new ThreadLocal<>();
 
+    @Inject
+    private ClassContextRegistry registry;
+
     @AroundInvoke
     public Object preparePersistence(InvocationContext ctx) {
         try {
             if (!Boolean.TRUE.equals(MARKER.get())) {
-                final ClassContext classContext = new ClassContext(ctx.getTarget());
+                final ClassContext classContext = registry.getContext(ctx.getTarget());
                 return classContext.performTransaction(ctx.getTarget(), ctx.getMethod());
 
             } else {

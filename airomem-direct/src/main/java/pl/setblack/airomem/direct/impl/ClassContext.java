@@ -9,17 +9,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import pl.setblack.airomem.core.ContextCommand;
 import pl.setblack.airomem.core.PrevalanceContext;
 import pl.setblack.airomem.core.SimpleController;
+import pl.setblack.airomem.direct.OperationType;
 import pl.setblack.airomem.direct.PersistenceInterceptor;
 import pl.setblack.airomem.direct.PersistentObject;
 import pl.setblack.badass.Politician;
@@ -34,8 +31,8 @@ public class ClassContext {
 
     private ElemHandler elem;
 
-    public ClassContext(final Object target) {
-        this.targetClass = target.getClass();
+    ClassContext(final Class target) {
+        this.targetClass = target;
         scan();
     }
 
@@ -73,10 +70,22 @@ public class ClassContext {
     }
 
     public Object performTransaction(final Object target, Method method) {
+
         final SimpleController controller = PrevaylerRegister.getInstance().getController(elem.getTargetType(), elem.getName());
-        final WraperTransaction transaction = new WraperTransaction(calcTargetClass(target).getCanonicalName(), method.getName());
-        return controller.executeAndQuery(transaction
-        );
+        final OperationType opType = findRegistry().sayTypeOfMethod(method);
+        if (opType == OperationType.WRITE) {
+            final WraperTransaction transaction = new WraperTransaction(calcTargetClass(target).getCanonicalName(), method.getName());
+            return controller.executeAndQuery(transaction
+            );
+        } else {
+            try {
+                inject(target, controller.query(immutable -> immutable));
+                return Politician.beatAroundTheBush(() -> method.invoke(target));
+            } finally {
+                clean(target);
+            }
+
+        }
     }
 
     private void inject(Object target, Object system) {
@@ -85,6 +94,25 @@ public class ClassContext {
 
     private void clean(Object target) {
         this.elem.cleanValue(target);
+    }
+
+    private static BeanManager getBeanManager() {
+        return Politician.beatAroundTheBush(()
+                -> (BeanManager) InitialContext.doLookup("java:comp/BeanManager"));
+
+    }
+
+    private static Object instantiateBean(final Class cls) throws IllegalStateException {
+        final BeanManager beanManager = getBeanManager();
+        for (Bean<?> bean : beanManager.getBeans(cls)) {
+            final CreationalContext context = beanManager.createCreationalContext(bean);
+            return beanManager.getReference(bean, cls, context);
+        }
+        throw new IllegalStateException("no bean of class" + cls);
+    }
+
+    private static ClassContextRegistry findRegistry() {
+        return (ClassContextRegistry) instantiateBean(ClassContextRegistry.class);
     }
 
     private static class WraperTransaction implements ContextCommand<Object, Object>, Serializable {
@@ -102,21 +130,9 @@ public class ClassContext {
             this.methodName = methodName;
         }
 
-        private BeanManager getBeanManager() {
-            return Politician.beatAroundTheBush(()
-                    -> (BeanManager) InitialContext.doLookup("java:comp/BeanManager"));
-
-        }
-
         private Object instantiateTarget() throws ClassNotFoundException {
-
             final Class cls = Class.forName(this.targetClass);
-            final BeanManager beanManager = getBeanManager();
-            for (Bean<?> bean : beanManager.getBeans(cls)) {
-                final CreationalContext context = beanManager.createCreationalContext(bean);
-                return beanManager.getReference(bean, cls, context);
-            }
-            throw new IllegalStateException("no bean");
+            return instantiateBean(cls);
         }
 
         @Override
@@ -124,7 +140,7 @@ public class ClassContext {
         ) {
             PersistenceInterceptor.setMarker();
             final Object target = Politician.beatAroundTheBush(() -> instantiateTarget());
-            final ClassContext ctx = new ClassContext(target);
+            final ClassContext ctx = findRegistry().getContext(target);
             ctx.inject(target, system);
             try {
                 return Politician.beatAroundTheBush(() -> {

@@ -5,6 +5,7 @@
 package pl.setblack.airomem.direct;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import javax.inject.Inject;
 import org.apache.commons.io.FileUtils;
 import org.jglue.cdiunit.AdditionalClasses;
@@ -49,6 +50,30 @@ public class ContainerTest {
         PrevaylerRegister.getInstance().shut();
         final String val = controller2.readMethod();
         Assert.assertEquals("changed field1", val);
+    }
+
+    @Test
+    public void shouldNotStoreHTTPGetMethodChanges() {
+        //GIVEN
+
+        //WHEN
+        controller.readMethod();
+        PrevaylerRegister.getInstance().shut();
+        int value = PrevaylerRegister.getInstance().getController(SampleObject.class, "object").query(v -> v.value); //THEN
+        //THEN
+        Assert.assertEquals(0, value);
+    }
+
+    @Test
+    public void shouldNotStoreWriteMethodChanges() {
+        //GIVEN
+
+        //WHEN
+        controller.writeMethod();
+        PrevaylerRegister.getInstance().shut();
+        int value = PrevaylerRegister.getInstance().getController(SampleObject.class, "object").query(v -> v.value); //THEN
+        //THEN
+        Assert.assertEquals(14, value);
     }
 
 }
