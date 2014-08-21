@@ -12,10 +12,13 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import pl.setblack.airomem.direct.banksample.api.BankAdapter;
 
 /**
  *
  */
+@XmlJavaTypeAdapter(BankAdapter.class)
 public final class Bank implements Serializable {
 
     private static final long serialVersionUID = 1l;

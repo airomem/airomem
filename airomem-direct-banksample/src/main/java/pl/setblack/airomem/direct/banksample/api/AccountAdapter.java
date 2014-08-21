@@ -18,7 +18,6 @@ public class AccountAdapter extends XmlAdapter<AccountDto, Account> {
 
     @Override
     public AccountDto marshal(Account v) throws Exception {
-        System.out.println("marschalling");
         final AccountDto acc = new AccountDto();
         acc.setId(v.id);
         acc.setValue(v.value);
