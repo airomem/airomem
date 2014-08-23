@@ -19,7 +19,7 @@
             </script>
             <script type="text/javascript" src="js/lib/less.js"></script>
     </head>
-    <body data-ng-app="bank" data-ng-controller="bankCtrl">
+    <body class="bank" data-ng-app="bank" data-ng-controller="bankCtrl">
         <h1>Welcome to Airomem Bank</h1>
         <nav>
             <ul>
@@ -30,13 +30,18 @@
         </nav>
         <section class="main">
             <header>
-                <h1>UUID</h1>
+                <h1>{{selectedAccount.id}}</h1>
             </header>
             <p>
-                555.555.555,00
+                <label>Value:</label>
+                <output>{{selectedAccount.value}}</output>
             </p>
-            <button>Withdraw</button>
-            <button>Deposit</button>
+            <p>
+                <input data-ng-model="selected.value">
+            </p>
+            
+            <button ng-click="withdraw()">Withdraw</button>
+            <button ng-click="deposit()"> Deposit</button>
         </section>
         <section class="account">
             <button data-ng-click="register()">Register</button>

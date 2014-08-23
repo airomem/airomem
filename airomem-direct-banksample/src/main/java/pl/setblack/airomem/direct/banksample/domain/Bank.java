@@ -58,9 +58,10 @@ public final class Bank implements Serializable {
         this.accounts.put(id, changed);
     }
 
-    public void deposit(String id, BigDecimal value) {
+    public Account deposit(String id, BigDecimal value) {
         Account changed = this.accounts.get(id).change(value);
         this.accounts.put(id, changed);
+        return changed;
     }
 
     public Iterable<Account> getAllAccounts() {
