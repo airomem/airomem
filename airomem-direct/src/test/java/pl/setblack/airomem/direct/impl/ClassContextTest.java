@@ -59,7 +59,7 @@ public class ClassContextTest {
         //WHEN
         final ClassContext ctx = new ClassContext(ctrl.getClass());
 
-        ctx.performTransaction(ctrl, method);
+        ctx.performTransaction(ctrl, method, new Object[]{});
     }
 
 }

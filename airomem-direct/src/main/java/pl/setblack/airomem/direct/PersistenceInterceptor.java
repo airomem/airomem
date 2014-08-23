@@ -31,7 +31,7 @@ public class PersistenceInterceptor {
         try {
             if (!Boolean.TRUE.equals(MARKER.get())) {
                 final ClassContext classContext = registry.getContext(ctx.getTarget());
-                return classContext.performTransaction(ctx.getTarget(), ctx.getMethod());
+                return classContext.performTransaction(ctx);
 
             } else {
                 return Politician.beatAroundTheBush(() -> ctx.proceed());

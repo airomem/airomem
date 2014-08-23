@@ -12,6 +12,7 @@ import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.CdiRunner;
 import org.junit.After;
 import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import pl.setblack.airomem.core.PersistenceFactory;
@@ -45,11 +46,36 @@ public class ContainerTest {
     }
 
     @Test
+    public void shouldRunGetMethodWithParamsWithoutErrors() {
+        //GIVEN
+        //WHEN
+        controller.writeMethod();
+        final String val = controller.readMethod(".fix");
+        //THEN
+        assertEquals("changed field1.fix", val);
+    }
+
+    @Test
+    public void shouldRunWriteMethodWithParamsWithoutErrors() {
+        controller.writeMethod2(1, "dzyn");
+        //THEN
+        assertEquals("dzyn", controller.getObject().getField1());
+    }
+
+    @Test
     public void shouldRestoreResults() {
         controller.writeMethod();
         PrevaylerRegister.getInstance().shut();
         final String val = controller2.readMethod();
         Assert.assertEquals("changed field1", val);
+    }
+
+    @Test
+    public void shouldRestoreResultsOfMethodWithParams() {
+        controller.writeMethod();
+        PrevaylerRegister.getInstance().shut();
+        final String val = controller2.readMethod(".test");
+        Assert.assertEquals("changed field1.test", val);
     }
 
     @Test

@@ -23,11 +23,24 @@ public class SampleController {
         object.value += 14;
     }
 
+    public void writeMethod2(int val1, String val2) {
+        assertNotNull(object);
+        object.setField1(val2);
+        object.value += val1;
+    }
+
     @GET
     public String readMethod() {
         assertNotNull(object);
         object.value += 7;
         return object.getField1();
+    }
+
+    @GET
+    public String readMethod(String postfix) {
+        assertNotNull(object);
+        object.value += 7;
+        return object.getField1() + postfix;
     }
 
     public SampleObject getObject() {

@@ -12,7 +12,9 @@ import java.util.List;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.interceptor.InvocationContext;
 import javax.naming.InitialContext;
+import org.apache.commons.lang.ClassUtils;
 import pl.setblack.airomem.core.ContextCommand;
 import pl.setblack.airomem.core.PrevalanceContext;
 import pl.setblack.airomem.core.SimpleController;
@@ -69,23 +71,13 @@ public class ClassContext {
         return obj.getClass().getSuperclass();
     }
 
-    public Object performTransaction(final Object target, Method method) {
+    Object performTransaction(final Object target, Method method, final Object[] args) {
 
         final SimpleController controller = PrevaylerRegister.getInstance().getController(elem.getTargetType(), elem.getName());
-        final OperationType opType = findRegistry().sayTypeOfMethod(method);
-        if (opType == OperationType.WRITE) {
-            final WraperTransaction transaction = new WraperTransaction(calcTargetClass(target).getCanonicalName(), method.getName());
-            return controller.executeAndQuery(transaction
-            );
-        } else {
-            try {
-                inject(target, controller.query(immutable -> immutable));
-                return Politician.beatAroundTheBush(() -> method.invoke(target));
-            } finally {
-                clean(target);
-            }
 
-        }
+        final WraperTransaction transaction = new WraperTransaction(calcTargetClass(target).getCanonicalName(), method, args);
+        return controller.executeAndQuery(transaction);
+
     }
 
     private void inject(Object target, Object system) {
@@ -109,10 +101,32 @@ public class ClassContext {
             return beanManager.getReference(bean, cls, context);
         }
         throw new IllegalStateException("no bean of class" + cls);
+
     }
 
     private static ClassContextRegistry findRegistry() {
-        return (ClassContextRegistry) instantiateBean(ClassContextRegistry.class);
+        return (ClassContextRegistry) instantiateBean(ClassContextRegistry.class
+        );
+    }
+
+    public Object performTransaction(InvocationContext ctx) {
+        final Method method = ctx.getMethod();
+        final OperationType opType = findRegistry().sayTypeOfMethod(method);
+        if (opType == OperationType.WRITE) {
+            return this.performTransaction(ctx.getTarget(), method, ctx.getParameters());
+        } else {
+            try {
+
+                final SimpleController controller = PrevaylerRegister.getInstance().getController(elem.getTargetType(), elem.getName());
+
+                inject(ctx.getTarget(), controller.query(immutable -> immutable));
+                return Politician.beatAroundTheBush(() -> ctx.proceed());
+            } finally {
+                clean(ctx.getTarget());
+
+            }
+        }
+
     }
 
     private static class WraperTransaction implements ContextCommand<Object, Object>, Serializable {
@@ -125,14 +139,29 @@ public class ClassContext {
 
         private final String methodName;
 
-        public WraperTransaction(String targetClass, String methodName) {
+        private String[] paramClasses;
+
+        private final Object[] arguments;
+
+        public WraperTransaction(String targetClass, final Method method, final Object[] args) {
             this.targetClass = targetClass;
-            this.methodName = methodName;
+            this.methodName = method.getName();
+            this.arguments = args;
+            storeParams(method);
         }
 
         private Object instantiateTarget() throws ClassNotFoundException {
             final Class cls = Class.forName(this.targetClass);
             return instantiateBean(cls);
+        }
+
+        private Class[] getParams() {
+            final Class[] result = new Class[this.paramClasses.length];
+            for (int i = 0; i < result.length; i++) {
+                final String className = this.paramClasses[i];
+                result[i] = Politician.beatAroundTheBush(() -> ClassUtils.getClass(className));
+            }
+            return result;
         }
 
         @Override
@@ -144,14 +173,24 @@ public class ClassContext {
             ctx.inject(target, system);
             try {
                 return Politician.beatAroundTheBush(() -> {
-                    final Method method = target.getClass().getMethod(methodName);
-                    return method.invoke(target);
+                    final Method method = target.getClass().getMethod(methodName, getParams());
+                    return method.invoke(target, this.arguments);
                 }
                 );
             } finally {
                 ctx.clean(target);
             }
 
+        }
+
+        private void storeParams(Method method) {
+            final List<String> params = new ArrayList<>(method.getParameterCount());
+
+            for (final Class cls : method.getParameterTypes()) {
+                params.add(cls.getCanonicalName());
+            }
+
+            this.paramClasses = params.toArray(new String[params.size()]);
         }
 
     }
