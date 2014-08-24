@@ -18,6 +18,10 @@ angular.module('bank', ['ngResource'])
                         var account = bankHandle.deposit(   {id: accountId}, value);
                         return account;
                     },
+                    withdraw: function(accountId, value) {
+                        var account = bankHandle.deposit(   {id: accountId}, -value);
+                        return account;
+                    },
                        
                     show: function(accountId) {
                         var account = bankHandle.show( {id: accountId});
@@ -51,6 +55,10 @@ angular.module('bank').controller('bankCtrl', ['$scope', 'bankService',
         
         $scope.deposit = function() {
              $scope.selectedAccount = bankService.deposit($scope.selectedId, $scope.value);
+        };
+        
+        $scope.withdraw = function() {
+             $scope.selectedAccount = bankService.withdraw($scope.selectedId, $scope.value);
         };
         
     }]);
