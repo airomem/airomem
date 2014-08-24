@@ -7,7 +7,6 @@ package pl.setblack.airomem.core;
 import java.io.Serializable;
 import java.util.function.Supplier;
 import pl.setblack.airomem.data.DataRoot;
-import pl.setblack.badass.Politician;
 
 /**
  * Simplified version of persistence controller.

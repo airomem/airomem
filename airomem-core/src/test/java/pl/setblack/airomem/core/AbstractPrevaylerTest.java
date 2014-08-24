@@ -7,6 +7,7 @@ import java.io.File;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
+import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 import pl.setblack.badass.Politician;
 
 /**
@@ -44,9 +45,7 @@ public abstract class AbstractPrevaylerTest<T extends Storable<R>, R> {
     }
 
     static void deletePrevaylerFolder() {
-        Politician.beatAroundTheBush(() -> {
-            FileUtils.deleteDirectory(new File(PersistenceFactory.STORAGE_FOLDER));
-        });
+        PersistenceDiskHelper.deletePrevaylerFolder();
     }
 
 }

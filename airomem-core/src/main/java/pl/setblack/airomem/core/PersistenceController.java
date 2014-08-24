@@ -57,6 +57,11 @@ public class PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE>
         });
     }
 
+    void initSystem(final Prevayler<Optional<T>> prevayler) {
+        this.prevayler = prevayler;
+        Politician.beatAroundTheBush(() -> this.prevayler.takeSnapshot());
+    }
+
     void initSystem(T object) {
         this.prevayler = createPrevayler(object);
         Politician.beatAroundTheBush(() -> this.prevayler.takeSnapshot());

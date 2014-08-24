@@ -7,6 +7,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Supplier;
+import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 
 /**
  * Simple factory for PersistenceController.
@@ -17,7 +18,7 @@ import java.util.function.Supplier;
  */
 public class PersistenceFactory {
 
-    public static final String STORAGE_FOLDER = "prevayler";
+    public static final String STORAGE_FOLDER = PersistenceDiskHelper.STORAGE_FOLDER;
 
     /**
      * Init previously stored system.
@@ -30,7 +31,7 @@ public class PersistenceFactory {
      */
     public <T extends Storable<R>, R> PersistenceController<T, R> load(String name) {
         Preconditions.checkState(exists(name));
-        PersistenceController<T, R> controller = new PersistenceController<>(calcFolderName(name));
+        PersistenceController<T, R> controller = new PersistenceController<>(PersistenceDiskHelper.calcFolderName(name));
         controller.loadSystem();
         return controller;
     }
@@ -45,7 +46,7 @@ public class PersistenceFactory {
      * @return PersistenceController for further use
      */
     public <T extends Storable<R>, R> PersistenceController<T, R> init(String name, T initial) {
-        PersistenceController<T, R> controller = new PersistenceController<>(calcFolderName(name));
+        PersistenceController<T, R> controller = new PersistenceController<>(PersistenceDiskHelper.calcFolderName(name));
         controller.initSystem(initial);
         return controller;
     }
@@ -69,15 +70,8 @@ public class PersistenceFactory {
         }
     }
 
-    /**
-     * Check if save of given name exists.
-     */
-    public boolean exists(String name) {
-        final Path path = FileSystems.getDefault().getPath(STORAGE_FOLDER, name);
-        return Files.exists(path);
+    public boolean exists(final String name) {
+        return PersistenceDiskHelper.exists(name);
     }
 
-    private String calcFolderName(final String name) {
-        return STORAGE_FOLDER + "/" + name;
-    }
 }
