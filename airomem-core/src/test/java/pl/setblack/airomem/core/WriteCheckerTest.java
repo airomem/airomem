@@ -3,6 +3,7 @@
  */
 package pl.setblack.airomem.core;
 
+import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +25,13 @@ public class WriteCheckerTest {
     public void setUp() {
         ctx1 = Mockito.mock(PrevalanceContext.class);
         ctx2 = Mockito.mock(PrevalanceContext.class);
+        if (WriteChecker.hasPrevalanceContext()) {
+            WriteChecker.clearContext();
+        }
+    }
+    
+    @After
+    public void tearDown() {
         if (WriteChecker.hasPrevalanceContext()) {
             WriteChecker.clearContext();
         }
