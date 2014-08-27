@@ -49,13 +49,13 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
     }
 
     private PrevaylerBuilder(final PrevaylerBuilder original) {
-        this.initialSystem = original.initialSystem;
-        this.allowOverwrite = original.allowOverwrite;
-        this.allowCreate = original.allowCreate;
-        this.folder = original.folder;
-        this.journalDiskSync = original.journalDiskSync;
-        this.useFastJournalSerialization = original.useFastJournalSerialization;
-        this.useFastSnapshotSerialization = original.useFastSnapshotSerialization;
+        this.initialSystem = original.getInitialSystem();
+        this.allowOverwrite = original.isAllowOverwrite();
+        this.allowCreate = original.isAllowCreate();
+        this.folder = original.getFolder();
+        this.journalDiskSync = original.isJournalDiskSync();
+        this.useFastJournalSerialization = original.isUseFastJournalSerialization();
+        this.useFastSnapshotSerialization = original.isUseFastSnapshotSerialization();
     }
 
     public static PrevaylerBuilder newBuilder() {
@@ -63,9 +63,6 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
     }
 
     public PersistenceController<T, R> build() {
-        if (this.getInitialSystem() == null) {
-            throw new IllegalStateException("supplier of initial state not given");
-        }
         PersistenceController<T, R> result = new PersistenceController<>("test");
         result.initSystem(createPrevayler(this.getInitialSystem().get()));
         return result;
