@@ -5,7 +5,7 @@ package pl.setblack.airomem.core.sequnce;
 
 import junit.framework.Assert;
 import org.junit.Test;
-import pl.setblack.airomem.core.AbstractPrevaylerTest;
+import pl.setblack.airomem.core.builders.AbstractPrevaylerTest;
 
 /**
  *

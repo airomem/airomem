@@ -6,12 +6,10 @@
 package pl.setblack.airomem.core;
 
 import java.util.Date;
-import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import pl.setblack.airomem.core.PrevalanceContext;
+import pl.setblack.airomem.core.VoidCommand;
 
 /**
  *

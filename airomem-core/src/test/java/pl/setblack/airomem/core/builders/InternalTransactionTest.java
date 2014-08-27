@@ -3,19 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.setblack.airomem.core;
+package pl.setblack.airomem.core.builders;
 
+import pl.setblack.airomem.core.StorableObject;
 import com.google.common.base.Optional;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneOffset;
 import java.util.Date;
-import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import pl.setblack.airomem.core.PrevalanceContext;
+import pl.setblack.airomem.core.VoidContextCommand;
+import pl.setblack.airomem.core.WriteChecker;
 
 /**
  *

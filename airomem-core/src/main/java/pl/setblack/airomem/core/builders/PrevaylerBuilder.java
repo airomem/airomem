@@ -2,14 +2,17 @@
  *  Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0
  *  http://www.apache.org/licenses/LICENSE-2.0
  */
-package pl.setblack.airomem.core;
+package pl.setblack.airomem.core.builders;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import java.io.Serializable;
-import java.util.Map;
 import java.util.function.Supplier;
 import org.prevayler.Prevayler;
 import org.prevayler.PrevaylerFactory;
+import org.prevayler.foundation.serialization.JavaSerializer;
+import pl.setblack.airomem.core.PersistenceController;
+import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 import pl.setblack.airomem.core.kryo.KryoSerializer;
 import pl.setblack.badass.Politician;
@@ -22,9 +25,9 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
     /**
      * Must be defined for create initialSystem.
      */
-    private Supplier<T> initialSystem;
+    private Optional<Supplier<T>> initialSystem;
 
-    private boolean allowOverwrite;
+    private boolean forceOverwrite;
 
     private boolean allowCreate;
 
@@ -37,10 +40,8 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
     private boolean useFastSnapshotSerialization;
 
     PrevaylerBuilder() {
-        initialSystem = () -> {
-            throw new IllegalStateException();
-        };
-        allowOverwrite = false;
+        initialSystem = Optional.absent();
+        forceOverwrite = false;
         allowCreate = false;
         folder = "";
         journalDiskSync = false;
@@ -50,7 +51,7 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
 
     private PrevaylerBuilder(final PrevaylerBuilder original) {
         this.initialSystem = original.getInitialSystem();
-        this.allowOverwrite = original.isAllowOverwrite();
+        this.forceOverwrite = original.isForceOverwrite();
         this.allowCreate = original.isAllowCreate();
         this.folder = original.getFolder();
         this.journalDiskSync = original.isJournalDiskSync();
@@ -63,17 +64,20 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
     }
 
     public PersistenceController<T, R> build() {
-        PersistenceController<T, R> result = new PersistenceController<>("test");
-        result.initSystem(createPrevayler(this.getInitialSystem().get()));
+        PersistenceControllerImpl<T, R> result = new PersistenceControllerImpl<>(getFolder());
+        if (this.isForceOverwrite()) {
+            result.deleteFolder();
+        }
+        result.initSystem(createPrevayler());
         return result;
     }
 
-    Supplier<T> getInitialSystem() {
+    Optional<Supplier<T>> getInitialSystem() {
         return initialSystem;
     }
 
-    boolean isAllowOverwrite() {
-        return allowOverwrite;
+    boolean isForceOverwrite() {
+        return forceOverwrite;
     }
 
     boolean isAllowCreate() {
@@ -98,18 +102,31 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
 
     public PrevaylerBuilder<T, R> useSupplier(final Supplier<Serializable> supplier) {
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
-        copy.initialSystem = supplier;
+        copy.initialSystem = Optional.of(supplier);
         return copy;
     }
 
-    private Prevayler createPrevayler(final Serializable system) {
+    private JavaSerializer createSerializer(boolean fast) {
+        if (fast) {
+            return new KryoSerializer();
+        } else {
+            return new JavaSerializer();
+        }
+    }
+
+    private Prevayler createPrevayler() {
+        Preconditions.checkArgument(getInitialSystem().isPresent() || PersistenceDiskHelper.exists(this.getFolder()));
         return Politician.beatAroundTheBush(() -> {
             PrevaylerFactory<Optional> factory = new PrevaylerFactory<>();
-            factory.configurePrevalentSystem(Optional.of(system));
+            if (getInitialSystem().isPresent()) {
+                factory.configurePrevalentSystem(Optional.of(getInitialSystem().get().get()));
+            } else {
+                factory.configurePrevalentSystem(Optional.absent());
+            }
             factory.configureJournalDiskSync(false);
             factory.configurePrevalenceDirectory(PersistenceDiskHelper.calcFolderName(this.getFolder()));
 
-            factory.configureJournalSerializer(new KryoSerializer());
+            factory.configureJournalSerializer(createSerializer(isUseFastJournalSerialization()));
             final Prevayler prev = factory.create();
             return prev;
         });
@@ -119,6 +136,18 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
     public PrevaylerBuilder<T, R> withFolder(final String folderName) {
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
         copy.folder = folderName;
+        return copy;
+    }
+
+    public PrevaylerBuilder<T, R> forceOverwrite(final boolean overwrite) {
+        final PrevaylerBuilder copy = new PrevaylerBuilder(this);
+        copy.forceOverwrite = overwrite;
+        return copy;
+    }
+
+    public PrevaylerBuilder<T, R> withJournalFastSerialization(boolean fastSerialization) {
+        final PrevaylerBuilder copy = new PrevaylerBuilder(this);
+        copy.useFastJournalSerialization = fastSerialization;
         return copy;
     }
 

@@ -1,11 +1,15 @@
 /* Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package pl.setblack.airomem.core;
+package pl.setblack.airomem.core.builders;
 
 import com.google.common.base.Optional;
 import java.util.Date;
-import org.prevayler.Transaction;
 import org.prevayler.TransactionWithQuery;
+import pl.setblack.airomem.core.ContextCommand;
+
+import pl.setblack.airomem.core.PrevalanceContext;
+import pl.setblack.airomem.core.Storable;
+import pl.setblack.airomem.core.WriteChecker;
 
 /**
  * Class used internally to wrap user Command.

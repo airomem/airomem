@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0   http://www.apache.org/licenses/LICENSE-2.0 
+ *  Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0   http://www.apache.org/licenses/LICENSE-2.0
  */
 package pl.setblack.airomem.core;
 
@@ -7,14 +7,13 @@ import java.beans.Transient;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import pl.setblack.airomem.core.Storable;
 
 /**
  *
  * @author jarekr
  */
 public class StorableObject implements Storable<Map<String, String>> {
-
-    
 
     public final HashMap<String, String> internalMap;
 
@@ -32,7 +31,7 @@ public class StorableObject implements Storable<Map<String, String>> {
         return immutable;
     }
 
-    static HashMap createTestHashMap() {
+    public static HashMap createTestHashMap() {
         final HashMap<String, String> result = new HashMap<>();
         for (int i = 0; i < 10; i++) {
             result.put("key:" + i, "val:" + i);
@@ -40,7 +39,7 @@ public class StorableObject implements Storable<Map<String, String>> {
         return result;
     }
 
-    static StorableObject createTestObject() {
+    public static StorableObject createTestObject() {
         return new StorableObject(createTestHashMap());
     }
 }

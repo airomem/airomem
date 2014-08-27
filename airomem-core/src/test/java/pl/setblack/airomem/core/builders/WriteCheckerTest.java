@@ -1,13 +1,15 @@
 /*
  *  Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0   http://www.apache.org/licenses/LICENSE-2.0
  */
-package pl.setblack.airomem.core;
+package pl.setblack.airomem.core.builders;
 
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import pl.setblack.airomem.core.PrevalanceContext;
+import pl.setblack.airomem.core.WriteChecker;
 
 /**
  *

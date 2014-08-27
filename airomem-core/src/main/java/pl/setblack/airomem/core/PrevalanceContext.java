@@ -19,7 +19,7 @@ public class PrevalanceContext {
      */
     public final Instant time;
 
-    PrevalanceContext(Date date) {
+    public PrevalanceContext(Date date) {
         time = date.toInstant();
     }
 }

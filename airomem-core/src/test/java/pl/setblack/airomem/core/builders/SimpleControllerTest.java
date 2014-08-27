@@ -2,8 +2,11 @@
  *  Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0
  *  http://www.apache.org/licenses/LICENSE-2.0
  */
-package pl.setblack.airomem.core;
+package pl.setblack.airomem.core.builders;
 
+import pl.setblack.airomem.core.StorableObject;
+import pl.setblack.airomem.core.SimpleController;
+import pl.setblack.airomem.core.builders.PersistenceFactory;
 import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;

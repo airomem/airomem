@@ -1,27 +1,37 @@
-package pl.setblack.airomem.core;
-
 /*
  *  Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0   http://www.apache.org/licenses/LICENSE-2.0
  */
+package pl.setblack.airomem.core.builders;
+
+import pl.setblack.airomem.core.StorableObject;
 import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import pl.setblack.airomem.core.PersistenceController;
+import pl.setblack.airomem.core.RestoreException;
+import pl.setblack.airomem.core.VoidCommand;
 import pl.setblack.badass.Politician;
 
 /**
  *
- * @author Kanapka
  */
 public class PersistenceFactoryTest {
 
     private PersistenceFactory factory;
 
+    private static final String SYSTEM_NAME = "sample";
+
     public PersistenceFactoryTest() {
+
     }
 
     @Before
@@ -150,5 +160,5 @@ public class PersistenceFactoryTest {
                 .init(SYSTEM_NAME, StorableObject.createTestObject());
         return controller;
     }
-    private static final String SYSTEM_NAME = "sample";
+
 }

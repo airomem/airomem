@@ -1,16 +1,15 @@
 /* Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package pl.setblack.airomem.core;
+package pl.setblack.airomem.core.builders;
 
 import com.google.common.base.Preconditions;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.function.Supplier;
+import pl.setblack.airomem.core.PersistenceController;
+import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 
 /**
- * Simple factory for PersistenceController.
+ * Simple factory for PersistenceControllerImpl.
  *
  * (Better builder based solution will be created later).
  *
@@ -27,13 +26,13 @@ public class PersistenceFactory {
      * @param <R> Immutable view of system
      * @param name name of automatically created folder (to store jounal and
      * snapshots)
-     * @return PersistenceController for later use
+     * @return PersistenceControllerImpl for later use
      */
     public <T extends Storable<R>, R> PersistenceController<T, R> load(String name) {
         Preconditions.checkState(exists(name));
-        PersistenceController<T, R> controller = new PersistenceController<>(PersistenceDiskHelper.calcFolderName(name));
-        controller.loadSystem();
-        return controller;
+
+        PrevaylerBuilder<T, R> builder = PrevaylerBuilder.newBuilder().withFolder(name);
+        return builder.build();
     }
 
     /**
@@ -43,12 +42,12 @@ public class PersistenceFactory {
      * @param <R> Immutable view of system
      * @param name name of automatically created folder (to store jounal and
      * snapshots)
-     * @return PersistenceController for further use
+     * @return PersistenceControllerImpl for further use
      */
     public <T extends Storable<R>, R> PersistenceController<T, R> init(String name, T initial) {
-        PersistenceController<T, R> controller = new PersistenceController<>(PersistenceDiskHelper.calcFolderName(name));
-        controller.initSystem(initial);
-        return controller;
+        pl.setblack.airomem.core.builders.PersistenceControllerImpl<T, R> controller = new pl.setblack.airomem.core.builders.PersistenceControllerImpl<>(PersistenceDiskHelper.calcFolderName(name));
+        PrevaylerBuilder<T, R> builder = PrevaylerBuilder.newBuilder().withFolder(name);
+        return builder.useSupplier(() -> initial).build();
     }
 
     /**
@@ -60,7 +59,7 @@ public class PersistenceFactory {
      * snapshots)
      * @param supplier factory creating initial state of system (if nothing was
      * saved)
-     * @return PersistenceController for further use
+     * @return PersistenceControllerImpl for further use
      */
     public <T extends Storable<R>, R> PersistenceController<T, R> initOptional(String name, Supplier<T> supplier) {
         if (exists(name)) {
@@ -74,4 +73,11 @@ public class PersistenceFactory {
         return PersistenceDiskHelper.exists(name);
     }
 
+    private static class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE> extends pl.setblack.airomem.core.builders.PersistenceControllerImpl<T, IMMUTABLE> {
+
+        PersistenceControllerImpl(final String name) {
+            super(name);
+        }
+
+    }
 }

@@ -5,7 +5,7 @@ package pl.setblack.airomem.core.sequnce;
 
 import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.WriteChecker;
-import pl.setblack.airomem.core.WriteCheckerTest;
+import pl.setblack.airomem.core.builders.WriteCheckerTest;
 
 /**
  *

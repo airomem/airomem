@@ -6,17 +6,12 @@ package pl.setblack.airomem.core.kryo;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.io.UnsafeInput;
-import com.esotericsoftware.kryo.io.UnsafeOutput;
 import com.esotericsoftware.kryo.pool.KryoPool;
-import com.esotericsoftware.kryo.serializers.ClosureSerializer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 import org.prevayler.foundation.serialization.JavaSerializer;
-import pl.setblack.airomem.core.Command;
-import pl.setblack.airomem.core.ContextCommand;
 
 /**
  *
