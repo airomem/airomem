@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import pl.setblack.airomem.core.PersistenceFactory;
+import pl.setblack.airomem.core.builders.PersistenceFactory;
 import pl.setblack.airomem.core.SimpleController;
 import pl.setblack.airomem.direct.SampleObject;
 import pl.setblack.badass.Politician;

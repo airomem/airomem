@@ -15,7 +15,7 @@ import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import pl.setblack.airomem.core.PersistenceFactory;
+import pl.setblack.airomem.core.builders.PersistenceFactory;
 import pl.setblack.airomem.direct.impl.PrevaylerRegister;
 import pl.setblack.badass.Politician;
 

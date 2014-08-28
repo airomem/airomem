@@ -12,7 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import pl.setblack.airomem.core.PersistenceFactory;
+import pl.setblack.airomem.core.builders.PersistenceFactory;
 import pl.setblack.airomem.direct.SampleController;
 import pl.setblack.badass.Politician;
 
