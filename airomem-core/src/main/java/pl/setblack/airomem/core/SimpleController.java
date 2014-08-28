@@ -4,14 +4,8 @@
  */
 package pl.setblack.airomem.core;
 
-import pl.setblack.airomem.core.builders.PersistenceFactory;
 import java.io.Serializable;
 import java.util.function.Supplier;
-import pl.setblack.airomem.core.Command;
-import pl.setblack.airomem.core.ContextCommand;
-import pl.setblack.airomem.core.Query;
-import pl.setblack.airomem.core.VoidCommand;
-import pl.setblack.airomem.core.VoidContextCommand;
 import pl.setblack.airomem.core.builders.PersistenceFactory;
 import pl.setblack.airomem.data.DataRoot;
 

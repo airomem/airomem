@@ -73,11 +73,4 @@ public class PersistenceFactory {
         return PersistenceDiskHelper.exists(name);
     }
 
-    private static class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE> extends pl.setblack.airomem.core.builders.PersistenceControllerImpl<T, IMMUTABLE> {
-
-        PersistenceControllerImpl(final String name) {
-            super(name);
-        }
-
-    }
 }

@@ -5,6 +5,7 @@
 package pl.setblack.airomem.core.disk;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,8 +47,13 @@ public final class PersistenceDiskHelper {
     }
 
     public static void deletePrevaylerFolder() {
-        Politician.beatAroundTheBush(() -> {
+        try {
             FileUtils.deleteDirectory(new File(PersistenceFactory.STORAGE_FOLDER));
-        });
+        } catch (IOException ioe) {
+            System.gc();
+            Politician.beatAroundTheBush(() -> Thread.sleep(100));
+            Politician.beatAroundTheBush(() -> FileUtils.deleteDirectory(new File(PersistenceFactory.STORAGE_FOLDER)));
+        }
+
     }
 }

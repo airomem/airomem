@@ -12,6 +12,7 @@ import org.prevayler.Prevayler;
 import org.prevayler.PrevaylerFactory;
 import org.prevayler.foundation.serialization.JavaSerializer;
 import pl.setblack.airomem.core.PersistenceController;
+import pl.setblack.airomem.core.RestoreException;
 import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 import pl.setblack.airomem.core.kryo.KryoSerializer;
@@ -116,8 +117,9 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
 
     private Prevayler createPrevayler() {
         Preconditions.checkArgument(getInitialSystem().isPresent() || PersistenceDiskHelper.exists(this.getFolder()));
-        return Politician.beatAroundTheBush(() -> {
+        try {
             PrevaylerFactory<Optional> factory = new PrevaylerFactory<>();
+
             if (getInitialSystem().isPresent()) {
                 factory.configurePrevalentSystem(Optional.of(getInitialSystem().get().get()));
             } else {
@@ -129,7 +131,9 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
             factory.configureJournalSerializer(createSerializer(isUseFastJournalSerialization()));
             final Prevayler prev = factory.create();
             return prev;
-        });
+        } catch (Error | Exception e) {
+            throw new RestoreException(e);
+        }
 
     }
 

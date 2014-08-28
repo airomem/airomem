@@ -72,11 +72,6 @@ class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
         Politician.beatAroundTheBush(() -> this.prevayler.takeSnapshot());
     }
 
-    void initSystem(T object) {
-        this.prevayler = createPrevayler(object);
-        Politician.beatAroundTheBush(() -> this.prevayler.takeSnapshot());
-    }
-
     /**
      * Query system (immutable view of it).
      *
@@ -134,27 +129,6 @@ class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
 
     private IMMUTABLE getImmutable() {
         return this.getObject().getImmutable();
-    }
-
-    private Prevayler createPrevayler(final Serializable system) {
-        try {
-
-            PrevaylerFactory<Optional> factory = new PrevaylerFactory<>();
-            factory.configurePrevalentSystem(Optional.of(system));
-            factory.configureJournalDiskSync(false);
-            factory.configurePrevalenceDirectory(this.uniqueName);
-
-            factory.configureJournalSerializer(new KryoSerializer());
-            final Prevayler prev = factory.create();
-            return prev;
-        } catch (Exception ncf) {
-            throw new RestoreException(ncf);
-        }
-
-    }
-
-    void loadSystem() {
-        this.prevayler = createPrevayler(Optional.absent());
     }
 
     @Override
