@@ -25,7 +25,6 @@ public class ApplicationConfig extends Application {
      * out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(pl.setblack.airomem.direct.banksample.api.AccountWriter.class);
         resources.add(pl.setblack.airomem.direct.banksample.rest.BankResource.class);
     }
 
