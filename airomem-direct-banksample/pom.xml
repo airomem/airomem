@@ -12,8 +12,12 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jetty-version>9.1.5.v20140505</jetty-version>
+        <weld-version>2.2.4.Final</weld-version>
+        <jersey-version>1.13</jersey-version>
     </properties>
-    
+     
+        
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -30,6 +34,43 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>airomem-direct</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <!-- weld -->
+        <dependency>
+            <groupId>org.jboss.weld.servlet</groupId>
+            <artifactId>weld-servlet</artifactId>
+            <version>${weld-version}</version>
+        </dependency>
+ 
+        <!-- jersey -->
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-core</artifactId>
+            <version>${jersey-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-servlet</artifactId>
+            <version>${jersey-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-json</artifactId>
+            <version>${jersey-version}</version>
+        </dependency>
+ 
+        <!-- test -->
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jettison</artifactId>
+            <version>2.11</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-annotations</artifactId>
+            <version>9.1.5.v20140505</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax</groupId>
@@ -88,5 +129,40 @@
             </plugin>
         </plugins>
     </build>
-
+    <profiles>
+        <profile>
+            <id>run</id>
+            <build>
+                <defaultGoal>clean jetty:run-forked</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-maven-plugin</artifactId>
+                        <version>${jetty-version}</version>
+                        <configuration>
+                            <stopKey>quit</stopKey>
+                            <stopPort>5101</stopPort>
+                            <scanIntervalSeconds>10</scanIntervalSeconds>
+                            <webAppConfig>
+                                <contextPath>/</contextPath>
+                            </webAppConfig>
+                            <contextXml>src/main/webapp/WEB-INF/jetty-context.xml</contextXml>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.ow2.asm</groupId>
+                                <artifactId>asm</artifactId>
+                                <version>5.0.2</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.ow2.asm</groupId>
+                                <artifactId>asm-commons</artifactId>
+                                <version>5.0.2</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
