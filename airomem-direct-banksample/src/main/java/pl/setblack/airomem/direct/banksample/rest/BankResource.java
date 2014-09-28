@@ -20,7 +20,6 @@ import pl.setblack.airomem.direct.banksample.api.AccountAdapter;
 import pl.setblack.airomem.direct.banksample.api.AccountDto;
 import pl.setblack.airomem.direct.banksample.api.BankAdapter;
 import pl.setblack.airomem.direct.banksample.api.BankDto;
-import pl.setblack.airomem.direct.banksample.domain.Account;
 import pl.setblack.airomem.direct.banksample.domain.Bank;
 import pl.setblack.badass.Politician;
 
@@ -49,17 +48,16 @@ public class BankResource {
     @GET
     @Path("/bank")
     @Produces(MediaType.APPLICATION_JSON)
-    public Bank getJson() {
-        //return Politician.beatAroundTheBush(() -> bankAdapter.marshal(this.bank));
-        System.out.println("bank" + this.bank.getTotalAmount());
-        return this.bank;
+    public BankDto getJson() {
+        return Politician.beatAroundTheBush(() -> bankAdapter.marshal(this.bank));
     }
 
     @GET
     @Path("/account/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Account getAccount(@PathParam("id") final String id) {
-        return this.bank.getAccount(id);
+    public AccountDto getAccount(@PathParam("id") final String id) {
+        return Politician.beatAroundTheBush(()
+                -> accountAdapter.marshal(this.bank.getAccount(id)));
     }
 
     @PUT
