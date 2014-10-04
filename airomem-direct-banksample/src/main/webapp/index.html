@@ -30,25 +30,39 @@
         </nav>
         <section class="main">
             <header>
-                <h1>{{selectedAccount.id}}</h1>
+                <input data-ng-model="selectedId"/>
             </header>
             <p>
                 <label>Value:</label>
                 <output>{{selectedAccount.value}}</output>
             </p>
             <p>
-                <input data-ng-model="selected.value">
+                <input data-ng-model="value"/>
             </p>
             
+            <button ng-click="status()">Status</button>
             <button ng-click="withdraw()">Withdraw</button>
             <button ng-click="deposit()"> Deposit</button>
         </section>
         <section class="account">
             <button data-ng-click="register()">Register</button>
         </section>
-        
+        <section class="control">
+            <table>
+                <tr data-ng-repeat="acc in storedAccounts">
+                    <td>
+                        {{acc.id}}
+                    </td>
+                    <td>
+                        {{acc.value}}
+                    </td>
+                </tr>
+            </table>
+            <button ng-click="clear()"> Clear</button>
+        </section>
         <script type="text/javascript" src="js/lib/angular.min.js"></script>
         <script type="text/javascript" src="js/lib/angular-resource.min.js"></script>
+        <script type="text/javascript" src="js/lib/angular-local-storage.min.js"></script>
         <script type="text/javascript" src="js/local/bank.js"></script>
     </body>
     
