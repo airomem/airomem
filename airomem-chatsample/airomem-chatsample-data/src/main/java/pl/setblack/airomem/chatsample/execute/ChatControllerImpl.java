@@ -33,7 +33,11 @@ public class ChatControllerImpl implements ChatController {
     @Override
     public void addMessage(String nick, String message) {
         controller.execute((chat, ctx) -> {
+
             chat.getDataObject().addMessage(nick, message, LocalDateTime.ofInstant(ctx.time, ZoneId.systemDefault()));
+            if (nick.equals("badguy")) {
+                throw new SecurityException();
+            }
         });
     }
 
