@@ -16,6 +16,7 @@ import org.junit.Test;
 import pl.setblack.airomem.core.PrevalanceContext;
 import pl.setblack.airomem.core.VoidContextCommand;
 import pl.setblack.airomem.core.WriteChecker;
+import pl.setblack.airomem.core.impl.RoyalFoodTester;
 
 /**
  *
@@ -27,20 +28,20 @@ public class InternalTransactionTest {
      * Test of executeOn method, of class InternalTransaction.
      */
     @Test
-    public void testExecuteOn() {
+    public void testExecuteOn() throws Exception {
         final LocalDateTime time = LocalDateTime.of(1977, Month.MAY, 20, 1, 1);
         final Date date = Date.from(time.toInstant(ZoneOffset.UTC));
         final VoidContextCommand<StorableObject> myCmd = (x, ctx) -> x.internalMap.put("date", ctx.time.toString());
-        final Optional<StorableObject> testSystem = Optional.of(StorableObject.createTestObject());
+        final RoyalFoodTester<StorableObject> testSystem = RoyalFoodTester.of(StorableObject.createTestObject());
 
         final InternalTransaction instance = new InternalTransaction(myCmd);
         instance.executeAndQuery(testSystem, date);
 
-        assertEquals(testSystem.get().internalMap.get("date"), time.toInstant(ZoneOffset.UTC).toString());
+        assertEquals(testSystem.getFoodTester().internalMap.get("date"), time.toInstant(ZoneOffset.UTC).toString());
     }
 
     @Test
-    public void testWriteCheckerContext() {
+    public void testWriteCheckerContext() throws Exception {
         final LocalDateTime time = LocalDateTime.of(1977, Month.MAY, 20, 1, 1);
         final Date date = Date.from(time.toInstant(ZoneOffset.UTC));
         final VoidContextCommand<StorableObject> myCmd = (x, ctx) -> {
@@ -48,12 +49,12 @@ public class InternalTransactionTest {
             assertEquals(ctx, WriteChecker.getContext());
         };
         InternalTransaction instance = new InternalTransaction(myCmd);
-        final Optional<StorableObject> testSystem = Optional.of(StorableObject.createTestObject());
+        final RoyalFoodTester<StorableObject> testSystem = RoyalFoodTester.of(StorableObject.createTestObject());
         instance.executeAndQuery(testSystem, date);
     }
 
     @Test
-    public void testWriteCheckerContextClearedWhenExceptionOccured() {
+    public void testWriteCheckerContextClearedWhenExceptionOccured() throws Exception {
         final LocalDateTime time = LocalDateTime.of(1977, Month.MAY, 20, 1, 1);
         final Date date = Date.from(time.toInstant(ZoneOffset.UTC));
         final RuntimeException exception = new RuntimeException("fail");
@@ -63,10 +64,10 @@ public class InternalTransactionTest {
             throw exception;
         };
         InternalTransaction instance = new InternalTransaction(myCmd);
-        final Optional<StorableObject> testSystem = Optional.of(StorableObject.createTestObject());
+        final RoyalFoodTester<StorableObject> testSystem = RoyalFoodTester.of(StorableObject.createTestObject());
         try {
             instance.executeAndQuery(testSystem, date);
-        } catch (RuntimeException re) {
+        } catch (Exception re) {
             assertEquals(exception, re);
         }
         assertNull(WriteChecker.getContext());

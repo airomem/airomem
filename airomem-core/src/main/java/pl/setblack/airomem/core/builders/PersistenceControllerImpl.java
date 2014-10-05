@@ -3,19 +3,16 @@
 package pl.setblack.airomem.core.builders;
 
 import com.google.common.base.Optional;
-import java.io.Serializable;
 import org.prevayler.Prevayler;
-import org.prevayler.PrevaylerFactory;
 import pl.setblack.airomem.core.Command;
 import pl.setblack.airomem.core.ContextCommand;
 import pl.setblack.airomem.core.PersistenceController;
 import pl.setblack.airomem.core.Query;
-import pl.setblack.airomem.core.RestoreException;
 import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.VoidCommand;
 import pl.setblack.airomem.core.VoidContextCommand;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
-import pl.setblack.airomem.core.kryo.KryoSerializer;
+import pl.setblack.airomem.core.impl.RoyalFoodTester;
 import pl.setblack.badass.Politician;
 
 /**
@@ -30,7 +27,7 @@ import pl.setblack.badass.Politician;
 class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
         implements PersistenceController<T, IMMUTABLE> {
 
-    private Prevayler<Optional<T>> prevayler;
+    private Prevayler<RoyalFoodTester<T>> prevayler;
 
     private final String uniqueName;
 
@@ -67,7 +64,7 @@ class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
         });
     }
 
-    void initSystem(final Prevayler<Optional<T>> prevayler) {
+    void initSystem(final Prevayler<RoyalFoodTester<T>> prevayler) {
         this.prevayler = prevayler;
         Politician.beatAroundTheBush(() -> this.prevayler.takeSnapshot());
     }
@@ -124,7 +121,7 @@ class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
     }
 
     private T getObject() {
-        return this.prevayler.prevalentSystem().get();
+        return this.prevayler.prevalentSystem().getFoodTester();
     }
 
     private IMMUTABLE getImmutable() {

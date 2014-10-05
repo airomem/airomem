@@ -5,11 +5,7 @@ package pl.setblack.airomem.core.builders;
 
 import pl.setblack.airomem.core.StorableObject;
 import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -17,8 +13,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import pl.setblack.airomem.core.PersistenceController;
-import pl.setblack.airomem.core.RestoreException;
-import pl.setblack.airomem.core.VoidCommand;
 import pl.setblack.badass.Politician;
 
 /**

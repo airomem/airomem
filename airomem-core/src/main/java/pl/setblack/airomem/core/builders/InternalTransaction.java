@@ -10,13 +10,14 @@ import pl.setblack.airomem.core.ContextCommand;
 import pl.setblack.airomem.core.PrevalanceContext;
 import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.WriteChecker;
+import pl.setblack.airomem.core.impl.RoyalFoodTester;
 
 /**
  * Class used internally to wrap user Command.
  *
  * @author jarekr
  */
-class InternalTransaction<T extends Storable, R> implements TransactionWithQuery<Optional<T>, R> {
+class InternalTransaction<T extends Storable, R> implements TransactionWithQuery<RoyalFoodTester<T>, R> {
 
     private static final long serialVersionUID = 1l;
 
@@ -27,11 +28,16 @@ class InternalTransaction<T extends Storable, R> implements TransactionWithQuery
     }
 
     @Override
-    public R executeAndQuery(Optional<T> p, Date date) {
+    public R executeAndQuery(RoyalFoodTester<T> p, Date date) {
         final PrevalanceContext ctx = createContext(date);
         WriteChecker.setContext(ctx);
         try {
-            return cmd.execute(p.get(), ctx);
+            final R firstValue = cmd.execute(p.getFoodTester(), ctx);
+            cmd.execute(p.getSafeCopy(), ctx);
+            return firstValue;
+        } catch (RuntimeException re) {
+            p.restore();
+            throw re;
         } finally {
             WriteChecker.clearContext();
         }

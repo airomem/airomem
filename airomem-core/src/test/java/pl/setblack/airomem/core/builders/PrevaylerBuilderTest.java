@@ -84,6 +84,25 @@ public class PrevaylerBuilderTest {
     }
 
     @Test
+    public void shouldPreventValuesUponException() {
+        //WHEN
+        try (
+                final PersistenceController<StorableObject, Map<String, String>> ctrl = PrevaylerBuilder.newBuilder().useSupplier(() -> StorableObject.createTestObject()).build();) {
+            ctrl.execute((x) -> x.internalMap.put("myKey", "myVal"));
+            try {
+                ctrl.execute((x) -> {
+                    x.internalMap.put("myKey", "myBadVal");
+                    throw new RuntimeException();
+                });
+            } catch (RuntimeException re) {
+                //THEN
+                assertEquals("myVal", ctrl.query((x) -> x.get("myKey")));
+            }
+
+        }
+    }
+
+    @Test
     public void shouldUseGivenFolder() {
         //GIVEN
         final PrevaylerBuilder<StorableObject, Map<String, String>> builder = PrevaylerBuilder.newBuilder()

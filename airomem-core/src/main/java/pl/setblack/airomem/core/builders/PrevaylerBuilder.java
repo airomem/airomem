@@ -15,6 +15,7 @@ import pl.setblack.airomem.core.PersistenceController;
 import pl.setblack.airomem.core.RestoreException;
 import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
+import pl.setblack.airomem.core.impl.RoyalFoodTester;
 import pl.setblack.airomem.core.kryo.KryoSerializer;
 import pl.setblack.badass.Politician;
 
@@ -118,12 +119,12 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
     private Prevayler createPrevayler() {
         Preconditions.checkArgument(getInitialSystem().isPresent() || PersistenceDiskHelper.exists(this.getFolder()));
         try {
-            PrevaylerFactory<Optional> factory = new PrevaylerFactory<>();
+            PrevaylerFactory<RoyalFoodTester> factory = new PrevaylerFactory<>();
 
             if (getInitialSystem().isPresent()) {
-                factory.configurePrevalentSystem(Optional.of(getInitialSystem().get().get()));
+                factory.configurePrevalentSystem(RoyalFoodTester.of(getInitialSystem().get().get()));
             } else {
-                factory.configurePrevalentSystem(Optional.absent());
+                factory.configurePrevalentSystem(RoyalFoodTester.absent());
             }
             factory.configureJournalDiskSync(false);
             factory.configurePrevalenceDirectory(PersistenceDiskHelper.calcFolderName(this.getFolder()));
