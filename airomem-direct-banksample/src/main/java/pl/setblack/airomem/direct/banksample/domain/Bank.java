@@ -7,18 +7,15 @@ import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.RandomBasedGenerator;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import pl.setblack.airomem.direct.banksample.api.BankAdapter;
 
 /**
  *
  */
-@XmlJavaTypeAdapter(BankAdapter.class)
+
 public final class Bank implements Serializable {
 
     private static final long serialVersionUID = 1l;
@@ -28,7 +25,7 @@ public final class Bank implements Serializable {
 
     private Map<String, Account> accounts = new ConcurrentHashMap<>();
 
-    public Bank() {
+    protected Bank() {
 
     }
 
@@ -53,12 +50,9 @@ public final class Bank implements Serializable {
         return this.accounts.get(id);
     }
 
-    public void withdraw(String id, BigDecimal value) {
-        Account changed = this.accounts.get(id).change(value.negate());
-        this.accounts.put(id, changed);
-    }
+   
 
-    public Account deposit(String id, BigDecimal value) {
+    public Account change(String id, BigDecimal value) {
         Account changed = this.accounts.get(id).change(value);
         this.accounts.put(id, changed);
         return changed;

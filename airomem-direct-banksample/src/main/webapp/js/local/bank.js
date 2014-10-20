@@ -3,10 +3,10 @@ angular.module('bank', ['ngResource', 'LocalStorageModule'])
                 var bankHandle = $resource('webresources/bank/account/:id',
                         {id: '@id'},
                 {
-                    register: {method: 'PUT', url: 'webresources/bank/account'},
+                    register: {method: 'POST', url: 'webresources/bank/account'},
                     show: {method: 'GET'},
-                    deposit: {method: 'POST'},
-                    withdraw: {method: 'POST'},
+                    deposit: {method: 'PUT'},
+                    withdraw: {method: 'PUT'}
                 });
 
 
@@ -65,8 +65,8 @@ angular.module('bank', ['ngResource', 'LocalStorageModule'])
             }]);
 
 
-angular.module('bank').controller('bankCtrl', ['$scope', 'bankService',
-    function ($scope, bankService) {
+angular.module('bank').controller('bankCtrl', ['$scope', 'bankService','$timeout',
+    function ($scope, bankService,$timeout) {
         $scope.accounts = [];
         $scope.selectedId = null;
 
@@ -77,7 +77,9 @@ angular.module('bank').controller('bankCtrl', ['$scope', 'bankService',
         $scope.storedAccounts = bankService.getStored();
 
         function restore() {
-            $scope.storedAccounts = bankService.getStored();
+            $timeout(function () {
+                $scope.storedAccounts = bankService.getStored();
+            }, 1000);
         }
 
         $scope.register = function () {
@@ -86,7 +88,7 @@ angular.module('bank').controller('bankCtrl', ['$scope', 'bankService',
 
         $scope.status = function () {
             $scope.selectedAccount = bankService.show($scope.selectedId);
-            
+
         }
         ;
 

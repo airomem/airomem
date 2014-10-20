@@ -76,7 +76,7 @@ public class BankTest {
     @Test
     public void shouldChangeBalanceAfterWithdraw() {
         final Account acc1 = bank.registerNewAccount(BigDecimal.valueOf(115));
-        bank.withdraw(acc1.id, BigDecimal.valueOf(20));
+        bank.change(acc1.id, BigDecimal.valueOf(-20));
 
         BigDecimal value = bank.getAccount(acc1.id).value;
         assertEquals(95, value.longValue());
@@ -85,7 +85,7 @@ public class BankTest {
     @Test
     public void shouldChangeBalanceAfterDeposit() {
         final Account acc1 = bank.registerNewAccount(BigDecimal.valueOf(115));
-        bank.deposit(acc1.id, BigDecimal.valueOf(20));
+        bank.change(acc1.id, BigDecimal.valueOf(20));
 
         BigDecimal value = bank.getAccount(acc1.id).value;
         assertEquals(135, value.longValue());
