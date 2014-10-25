@@ -15,7 +15,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  *
  */
-
 public final class Bank implements Serializable {
 
     private static final long serialVersionUID = 1l;
@@ -23,9 +22,12 @@ public final class Bank implements Serializable {
 
     private transient RandomBasedGenerator uuidGenerator;
 
-    private Map<String, Account> accounts = new ConcurrentHashMap<>();
+    private final Map<String, Account> accounts = new ConcurrentHashMap<>();
 
-    protected Bank() {
+    /**
+     * This conctructor is needed by airomem direct.
+     */
+    public Bank() {
 
     }
 
@@ -49,8 +51,6 @@ public final class Bank implements Serializable {
     public Account getAccount(String id) {
         return this.accounts.get(id);
     }
-
-   
 
     public Account change(String id, BigDecimal value) {
         Account changed = this.accounts.get(id).change(value);
