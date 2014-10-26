@@ -8,7 +8,7 @@ package pl.setblack.airomem.core;
  * Enclose all operations that mutate system in commands. This can be easily
  * achieved with lambdas :
  *
- * Command cmd = system -> system.doSomething();
+ * Command cmd = system -&gt; system.doSomething();
  *
  * @author jarekr
  */
