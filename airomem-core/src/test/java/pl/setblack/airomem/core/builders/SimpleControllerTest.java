@@ -38,11 +38,21 @@ public class SimpleControllerTest {
     }
 
     @Test
-    public void testSimpleControllerQuery() {
+     public void testSimpleControllerQuery() {
         //GIVEN
         final SimpleController<HashMap<String, String>> simpleController = SimpleController.create("test", StorableObject.createTestHashMap());
         //WHEN
         String val = simpleController.query(x -> x.get("key:2"));
+        //THEN
+        assertEquals("val:2", val);
+    }
+
+    @Test
+    public void testSimpleControlleReadOnly() {
+        //GIVEN
+        final SimpleController<HashMap<String, String>> simpleController = SimpleController.create("test", StorableObject.createTestHashMap());
+        //WHEN
+        String val = simpleController.readOnly().get("key:2");
         //THEN
         assertEquals("val:2", val);
     }
@@ -172,7 +182,23 @@ public class SimpleControllerTest {
             //THEN
             assertEquals("otherVal", val);
         }
-
     }
+
+    @Test
+    public void schouldForgetChangesDoneInQueries() {
+        //GIVEN
+        try (
+                final SimpleController<HashMap<String, String>> simpleController = SimpleController.create("test", StorableObject.createTestHashMap());) {
+            simpleController.<Void>query((x) -> { x.put("key:1", "otherVal"); return null;} );
+        }
+        try (
+                final SimpleController<HashMap<String, String>> simpleController = SimpleController.loadOptional("test", () -> StorableObject.createTestHashMap());) {
+            //WHEN
+            final String val = simpleController.query(x -> x.get("key:1"));
+            //THEN
+            assertEquals("val:1", val);
+        }
+    }
+
 
 }
