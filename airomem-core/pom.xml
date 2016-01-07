@@ -10,8 +10,8 @@
     <url>https://github.com/airomem/airomem</url>
     <scm>
         <url>https://github.com/airomem/airomem</url>
-        <connection>scm:git:git://github.com/jarekratajski/badass.git</connection>
-        <developerConnection>scm:git:git@github.com/jarekratajski/badass.git</developerConnection>
+        <connection>scm:git:git://github.com/airomem/airomem.git</connection>
+        <developerConnection>scm:git:git@github.com/airomem/airomem.git</developerConnection>
     </scm>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
