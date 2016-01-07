@@ -54,6 +54,10 @@ public class SimpleController<T extends Serializable> implements AutoCloseable {
         return controller.query(query);
     }
 
+    public T readOnly() {
+        return controller.query( t -> t);
+    }
+
     @Override
     public void close() {
         this.controller.close();

@@ -45,7 +45,7 @@ public class PersistenceFactory {
      * @return PersistenceControllerImpl for further use
      */
     public <T extends Storable<R>, R> PersistenceController<T, R> init(String name, T initial) {
-        pl.setblack.airomem.core.builders.PersistenceControllerImpl<T, R> controller = new pl.setblack.airomem.core.builders.PersistenceControllerImpl<>(PersistenceDiskHelper.calcFolderName(name));
+        pl.setblack.airomem.core.builders.PersistenceControllerImpl<T, R> controller = new pl.setblack.airomem.core.builders.PersistenceControllerImpl<>(name);
         PrevaylerBuilder<T, R> builder = PrevaylerBuilder.newBuilder().withFolder(name);
         return builder.useSupplier(() -> initial).build();
     }
