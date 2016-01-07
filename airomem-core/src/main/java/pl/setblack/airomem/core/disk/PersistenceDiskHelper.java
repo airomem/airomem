@@ -55,13 +55,6 @@ public final class PersistenceDiskHelper {
     }
 
     public static void deletePrevaylerFolder() {
-        try {
-            FileUtils.deleteDirectory(new File(PersistenceFactory.STORAGE_FOLDER));
-        } catch (IOException ioe) {
-            System.gc();
-            Politician.beatAroundTheBush(() -> Thread.sleep(100));
-            Politician.beatAroundTheBush(() -> FileUtils.deleteDirectory(new File(PersistenceFactory.STORAGE_FOLDER)));
-        }
-
+            Politician.beatAroundTheBush( () -> FileUtils.deleteDirectory(new File(PersistenceFactory.STORAGE_FOLDER)));
     }
 }
