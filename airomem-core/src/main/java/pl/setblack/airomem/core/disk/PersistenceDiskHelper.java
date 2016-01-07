@@ -25,24 +25,32 @@ public final class PersistenceDiskHelper {
     }
 
     public static String calcFolderName(final String name) {
-        return STORAGE_FOLDER + "/" + name;
+        return getFolderPath(name).toString();
     }
 
     /**
      * Check if save of given name exists.
      */
     public static boolean exists(String name) {
-        final Path path = FileSystems.getDefault().getPath(STORAGE_FOLDER, name);
+        final Path path = getFolderPath( name);
         return Files.exists(path);
     }
 
     public static void delete(String name) {
         if (exists(name)) {
-            final Path path = FileSystems.getDefault().getPath(STORAGE_FOLDER, name);
+            final Path path = getFolderPath( name);
             Politician.beatAroundTheBush(() -> {
                 FileUtils.deleteDirectory(path.toFile());
             });
 
+        }
+    }
+
+    private static Path getFolderPath(String name) {
+        if  (name.contains(File.separator) ) {
+                return FileSystems.getDefault().getPath(name);
+        } else {
+            return FileSystems.getDefault().getPath(STORAGE_FOLDER, name);
         }
     }
 

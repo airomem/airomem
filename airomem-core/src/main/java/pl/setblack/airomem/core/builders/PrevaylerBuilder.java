@@ -7,6 +7,8 @@ package pl.setblack.airomem.core.builders;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import java.io.Serializable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.function.Supplier;
 import org.prevayler.Prevayler;
 import org.prevayler.PrevaylerFactory;
@@ -144,7 +146,16 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
         return copy;
     }
 
-    public PrevaylerBuilder<T, R> forceOverwrite(final boolean overwrite) {
+    public PrevaylerBuilder<T, R> withinUserFolder(final String folderName) {
+        final String userFolder = System.getProperty("user.home");
+        final Path userPath =  Paths.get(userFolder, folderName).toAbsolutePath();
+        final PrevaylerBuilder copy = new PrevaylerBuilder(this);
+        copy.folder = userPath.toString();
+        return copy;
+    }
+
+
+        public PrevaylerBuilder<T, R> forceOverwrite(final boolean overwrite) {
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
         copy.forceOverwrite = overwrite;
         return copy;

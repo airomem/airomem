@@ -4,17 +4,18 @@
  */
 package pl.setblack.airomem.core.builders;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 import pl.setblack.airomem.core.*;
@@ -22,7 +23,6 @@ import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 import pl.setblack.badass.Politician;
 
 /**
- *
  * @author jarek ratajski
  */
 public class PrevaylerBuilderTest {
@@ -56,7 +56,7 @@ public class PrevaylerBuilderTest {
     public void shouldFailIfInitialSystemNotGiven() {
         //WHEN
         try (final PersistenceController ctrl
-                = PrevaylerBuilder.newBuilder().build()) {
+                     = PrevaylerBuilder.newBuilder().build()) {
         }
     }
 
@@ -188,6 +188,29 @@ public class PrevaylerBuilderTest {
                 PersistenceController<StorableObject, Map<String, String>> controller2 = builder.build();) {
         }
 
+    }
+
+    @Test
+    public void shouldCreateFolderWithinUserHome() {
+        //WHEN
+        File localFolder = new File("testFolder/mytest");
+        System.setProperty("user.home",  localFolder.getAbsolutePath());
+        localFolder.mkdirs();
+        try (
+                final PersistenceController<StorableObject, Map<String, String>> ctrl =
+                        PrevaylerBuilder.newBuilder()
+                                .useSupplier(StorableObject::createTestObject)
+                                .withinUserFolder("myfolder").build();) {
+
+            ctrl.execute((x) -> x.internalMap.put("myKey", "myVal"));
+            ctrl.close();
+            //THEN
+            File testFolder = new File( localFolder, "myfolder");
+            File[] insideFiles = testFolder.listFiles();
+            Assert.assertEquals(3, insideFiles.length );
+        } finally {
+            Politician.beatAroundTheBush(  () -> FileUtils.deleteDirectory(localFolder) );
+        }
     }
 
     private static final class StrangeTransaction implements VoidCommand<StorableObject>, Serializable {
