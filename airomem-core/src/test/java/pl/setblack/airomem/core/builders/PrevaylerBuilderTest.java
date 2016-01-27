@@ -193,7 +193,7 @@ public class PrevaylerBuilderTest {
     @Test
     public void shouldCreateFolderWithinUserHome() {
         //WHEN
-        File localFolder = new File("testFolder/mytest");
+        File localFolder = new File("prevayler");
         System.setProperty("user.home",  localFolder.getAbsolutePath());
         localFolder.mkdirs();
         try (

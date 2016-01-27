@@ -31,7 +31,7 @@ public class PersistenceFactory {
     public <T extends Storable<R>, R> PersistenceController<T, R> load(String name) {
         Preconditions.checkState(exists(name));
 
-        PrevaylerBuilder<T, R> builder = PrevaylerBuilder.newBuilder().withFolder(name);
+        PrevaylerBuilder<T, R> builder = PrevaylerBuilder.newBuilder().withinUserFolder(name);
         return builder.build();
     }
 
@@ -46,7 +46,7 @@ public class PersistenceFactory {
      */
     public <T extends Storable<R>, R> PersistenceController<T, R> init(String name, T initial) {
         pl.setblack.airomem.core.builders.PersistenceControllerImpl<T, R> controller = new pl.setblack.airomem.core.builders.PersistenceControllerImpl<>(name);
-        PrevaylerBuilder<T, R> builder = PrevaylerBuilder.newBuilder().withFolder(name);
+        PrevaylerBuilder<T, R> builder = PrevaylerBuilder.newBuilder().withinUserFolder(name);
         return builder.useSupplier(() -> initial).build();
     }
 

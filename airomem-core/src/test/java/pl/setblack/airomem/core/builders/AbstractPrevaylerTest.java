@@ -32,6 +32,9 @@ public abstract class AbstractPrevaylerTest<T extends Storable<R>, R> {
 
     @Before
     public void setUp() {
+        File localFolder = new File("prevayler/");
+        localFolder.mkdir();
+        System.setProperty("user.home",  localFolder.getAbsolutePath());
         AbstractPrevaylerTest.deletePrevaylerFolder();
         this.persistenceController = factory.init("test", createSystem());
 

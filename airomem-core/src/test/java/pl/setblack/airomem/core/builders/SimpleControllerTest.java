@@ -7,6 +7,8 @@ package pl.setblack.airomem.core.builders;
 import pl.setblack.airomem.core.StorableObject;
 import pl.setblack.airomem.core.SimpleController;
 import pl.setblack.airomem.core.builders.PersistenceFactory;
+
+import java.io.File;
 import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +27,9 @@ public class SimpleControllerTest {
 
     @Before
     public void setUp() {
+        File localFolder = new File("prevayler/");
+        localFolder.mkdir();
+        System.setProperty("user.home",  localFolder.getAbsolutePath());
         AbstractPrevaylerTest.deletePrevaylerFolder();
         factory = new PersistenceFactory();
     }
