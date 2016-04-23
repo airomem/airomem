@@ -141,6 +141,26 @@ public class PrevaylerBuilderTest {
     }
 
     @Test
+    public void shouldWorkOnDisabledRFT() {
+        //GIVEN
+        final PrevaylerBuilder<StorableObject, Map<String, String>> builder = PrevaylerBuilder.newBuilder()
+                .useSupplier(StorableObject::createTestObject)
+                .disableRoyalFoodTester();
+        //WHEN
+
+                final PersistenceController<StorableObject, Map<String, String>> ctrl = builder.build();
+        try {
+            ctrl.execute((x) -> {
+                x.internalMap.put("key:1", "myVal");
+                throw new RuntimeException();
+            });
+
+        } catch (RuntimeException e) {}
+
+        assertEquals("myVal", ctrl.query(c -> c.get("key:1")));
+    }
+
+    @Test
     public void shouldUseJavaSerializerForJournaling() {
         //GIVEN
         final PrevaylerBuilder<StorableObject, Map<String, String>> builder = PrevaylerBuilder.newBuilder()
@@ -194,7 +214,7 @@ public class PrevaylerBuilderTest {
     public void shouldCreateFolderWithinUserHome() {
         //WHEN
         File localFolder = new File("prevayler");
-        System.setProperty("user.home",  localFolder.getAbsolutePath());
+        System.setProperty("user.home", localFolder.getAbsolutePath());
         localFolder.mkdirs();
         try (
                 final PersistenceController<StorableObject, Map<String, String>> ctrl =
@@ -205,11 +225,11 @@ public class PrevaylerBuilderTest {
             ctrl.execute((x) -> x.internalMap.put("myKey", "myVal"));
             ctrl.close();
             //THEN
-            File testFolder = new File( localFolder, "myfolder");
+            File testFolder = new File(localFolder, "myfolder");
             File[] insideFiles = testFolder.listFiles();
-            Assert.assertEquals(3, insideFiles.length );
+            Assert.assertEquals(3, insideFiles.length);
         } finally {
-            Politician.beatAroundTheBush(  () -> FileUtils.deleteDirectory(localFolder) );
+            Politician.beatAroundTheBush(() -> FileUtils.deleteDirectory(localFolder));
         }
     }
 

@@ -25,16 +25,16 @@ public class ReferenceResolver implements com.esotericsoftware.kryo.ReferenceRes
     private static class Value {
 
         private Object val;
-        private int hash;
+        //private int hash;
 
         public Value(Object val) {
             this.val = val;
-            this.hash = System.identityHashCode(val);
+            //this.hash =
         }
 
         @Override
         public int hashCode() {
-            return hash;
+            return System.identityHashCode(val);
         }
 
         @Override

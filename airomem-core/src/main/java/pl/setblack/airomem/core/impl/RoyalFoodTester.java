@@ -27,21 +27,30 @@ public class RoyalFoodTester<T> implements Serializable {
 
     private final Optional<T> safeCopy;
 
+    private final boolean safe;
+
     public static <T> RoyalFoodTester<T> of(T val) {
-        return new RoyalFoodTester(val);
+        return RoyalFoodTester.of(val, true);
     }
 
-    public static <T> RoyalFoodTester<T> absent() {
-        return new RoyalFoodTester();
+
+    public static <T> RoyalFoodTester<T> of(T val, boolean safe) {
+        return new RoyalFoodTester(val, safe);
     }
 
-    private RoyalFoodTester() {
+    public static <T> RoyalFoodTester<T> absent(boolean safe) {
+        return new RoyalFoodTester(safe);
+    }
+
+    private RoyalFoodTester(boolean safe) {
         this.safeCopy = Optional.absent();
         this.foodTester = Optional.absent();
+        this.safe = safe;
     }
 
-    private RoyalFoodTester(T val) {
+    private RoyalFoodTester(T val, boolean safe) {
         this.safeCopy = Optional.of(val);
+        this.safe = safe;
         restore();
     }
 
@@ -61,7 +70,14 @@ public class RoyalFoodTester<T> implements Serializable {
     }
 
     public final void restore() {
-        this.foodTester = (Optional<T>) DeepCopier.deepCopy(this.safeCopy);
+        if ( isSafe()) {
+            this.foodTester = (Optional<T>) DeepCopier.deepCopy(this.safeCopy);
+        } else {
+            this.foodTester = this.safeCopy;
+        }
     }
 
+    public boolean isSafe() {
+        return safe;
+    }
 }

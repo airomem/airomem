@@ -8,6 +8,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.pool.KryoFactory;
 import com.esotericsoftware.kryo.pool.KryoPool;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,7 +18,6 @@ import org.objenesis.strategy.StdInstantiatorStrategy;
 import org.prevayler.foundation.serialization.JavaSerializer;
 
 /**
- *
  * @author jarekr
  */
 public class KryoSerializer extends JavaSerializer {
@@ -31,7 +31,7 @@ public class KryoSerializer extends JavaSerializer {
     KryoFactory factory = () -> {
         final Kryo kryo = new Kryo();
         kryo.setInstantiatorStrategy(new Kryo.DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
-        kryo.register(java.lang.invoke.SerializedLambda.class);
+        //kryo.register(java.lang.invoke.SerializedLambda.class);
         try {
             kryo.register(Class.forName(Kryo.class.getName() + "$Closure"), new ClosureSerializer());
         } catch (ClassNotFoundException e) {
@@ -48,7 +48,7 @@ public class KryoSerializer extends JavaSerializer {
 
     @Override
     public Object readObject(InputStream stream) throws IOException, ClassNotFoundException {
-        try (Input input = new Input(stream)) {
+        try (Input input = new Input(stream, 1024)) {
             return getKryo().readClassAndObject(input);
         }
 
@@ -56,7 +56,7 @@ public class KryoSerializer extends JavaSerializer {
 
     @Override
     public void writeObject(OutputStream stream, Object object) throws IOException {
-        try (Output output = new Output(stream)) {
+        try (Output output = new Output(stream, 1024)) {
             getKryo().writeClassAndObject(output, object);
         }
     }
