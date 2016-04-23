@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>pl.setblack</groupId>
     <artifactId>airomem-core</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>airomem core</name>
     <description>Prevayler based persistence engine</description>
@@ -83,14 +83,11 @@
             <scope>test</scope>
             <type>jar</type>
         </dependency>
-        
-        
-        
 
         <dependency>
-            <groupId>com.esotericsoftware.kryo</groupId>
+            <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo</artifactId>
-            <version>2.24.1-SNAPSHOT</version>
+            <version>3.0.3</version>
         </dependency>
     </dependencies>
     

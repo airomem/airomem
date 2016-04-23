@@ -1,6 +1,6 @@
 /* Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package pl.setblack.airomem.core.builders;
+package pl.setblack.airomem.core.impl;
 
 import com.google.common.base.Optional;
 import java.util.Date;
@@ -31,9 +31,12 @@ class InternalTransaction<T extends Storable, R> implements TransactionWithQuery
     public R executeAndQuery(RoyalFoodTester<T> p, Date date) {
         final PrevalanceContext ctx = createContext(date);
         WriteChecker.setContext(ctx);
+
         try {
             final R firstValue = cmd.execute(p.getFoodTester(), ctx);
-            cmd.execute(p.getSafeCopy(), ctx);
+            if ( p.isSafe()) {
+                cmd.execute(p.getSafeCopy(), ctx);
+            }
             return firstValue;
         } catch (RuntimeException re) {
             p.restore();

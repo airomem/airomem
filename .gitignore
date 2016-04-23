@@ -7,3 +7,4 @@ release.properties
 /airomem-direct/prevayler/
 /WebJpa/nbproject/private/
 .idea/
+*.iml

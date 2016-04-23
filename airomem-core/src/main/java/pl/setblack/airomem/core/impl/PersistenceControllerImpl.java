@@ -1,8 +1,7 @@
 /* Copyright (c) Jarek Ratajski, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package pl.setblack.airomem.core.builders;
+package pl.setblack.airomem.core.impl;
 
-import com.google.common.base.Optional;
 import org.prevayler.Prevayler;
 import pl.setblack.airomem.core.Command;
 import pl.setblack.airomem.core.ContextCommand;
@@ -12,6 +11,7 @@ import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.VoidCommand;
 import pl.setblack.airomem.core.VoidContextCommand;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
+import pl.setblack.airomem.core.impl.InternalTransaction;
 import pl.setblack.airomem.core.impl.RoyalFoodTester;
 import pl.setblack.badass.Politician;
 
@@ -24,14 +24,14 @@ import pl.setblack.badass.Politician;
  * @param <T> mutable interface to system
  * @author jarekr
  */
-class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
+public class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
         implements PersistenceController<T, IMMUTABLE> {
 
     private Prevayler<RoyalFoodTester<T>> prevayler;
 
     private final String uniqueName;
 
-    PersistenceControllerImpl(String name) {
+    public PersistenceControllerImpl(String name) {
         this.uniqueName = name;
     }
 
@@ -64,7 +64,7 @@ class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
         });
     }
 
-    void initSystem(final Prevayler<RoyalFoodTester<T>> prevayler) {
+    public void initSystem(final Prevayler<RoyalFoodTester<T>> prevayler) {
         this.prevayler = prevayler;
         Politician.beatAroundTheBush(() -> this.prevayler.takeSnapshot());
     }
@@ -133,7 +133,7 @@ class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
         return this.prevayler != null;
     }
 
-    void deleteFolder() {
+    public void deleteFolder() {
         PersistenceDiskHelper.delete(this.uniqueName);
     }
 

@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.setblack.airomem.core.builders;
+package pl.setblack.airomem.core.impl;
 
 import pl.setblack.airomem.core.StorableObject;
-import com.google.common.base.Optional;
+
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneOffset;
@@ -16,6 +16,7 @@ import org.junit.Test;
 import pl.setblack.airomem.core.PrevalanceContext;
 import pl.setblack.airomem.core.VoidContextCommand;
 import pl.setblack.airomem.core.WriteChecker;
+import pl.setblack.airomem.core.impl.InternalTransaction;
 import pl.setblack.airomem.core.impl.RoyalFoodTester;
 
 /**
@@ -32,7 +33,7 @@ public class InternalTransactionTest {
         final LocalDateTime time = LocalDateTime.of(1977, Month.MAY, 20, 1, 1);
         final Date date = Date.from(time.toInstant(ZoneOffset.UTC));
         final VoidContextCommand<StorableObject> myCmd = (x, ctx) -> x.internalMap.put("date", ctx.time.toString());
-        final RoyalFoodTester<StorableObject> testSystem = RoyalFoodTester.of(StorableObject.createTestObject());
+        final RoyalFoodTester<StorableObject> testSystem = RoyalFoodTester.of(StorableObject.createTestObject(), true);
 
         final InternalTransaction instance = new InternalTransaction(myCmd);
         instance.executeAndQuery(testSystem, date);
@@ -87,4 +88,25 @@ public class InternalTransactionTest {
         assertEquals(date.toInstant(), result.time);
     }
 
+
+    @Test
+    public void testUnsafeRoyalFoodTester() {
+        LocalDateTime time = LocalDateTime.of(1977, Month.MAY, 20, 1, 1);
+        final Date date = Date.from(time.toInstant(ZoneOffset.UTC));
+
+        VoidContextCommand<StorableObject> myCmd = (x, ctx) -> {
+            x.internalMap.put("unsafe", "isunsafe");
+            throw new RuntimeException("unsafe");
+        };
+        InternalTransaction instance = new InternalTransaction(myCmd);
+        final RoyalFoodTester<StorableObject> testSystem = RoyalFoodTester.of(StorableObject.createTestObject(), false);
+
+        try {
+            instance.executeAndQuery(testSystem, date );
+        } catch ( RuntimeException e) {}
+
+
+        assertEquals("isunsafe", testSystem.getSafeCopy().internalMap.get("unsafe"));
+
+    }
 }

@@ -6,10 +6,12 @@ package pl.setblack.airomem.core.builders;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Supplier;
+
 import org.prevayler.Prevayler;
 import org.prevayler.PrevaylerFactory;
 import org.prevayler.foundation.serialization.JavaSerializer;
@@ -17,9 +19,9 @@ import pl.setblack.airomem.core.PersistenceController;
 import pl.setblack.airomem.core.RestoreException;
 import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
+import pl.setblack.airomem.core.impl.PersistenceControllerImpl;
 import pl.setblack.airomem.core.impl.RoyalFoodTester;
 import pl.setblack.airomem.core.kryo.KryoSerializer;
-import pl.setblack.badass.Politician;
 
 /**
  *
@@ -43,6 +45,8 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
 
     private boolean useFastSnapshotSerialization;
 
+    private boolean useRoyalFoodTester;
+
     PrevaylerBuilder() {
         initialSystem = Optional.absent();
         forceOverwrite = false;
@@ -51,7 +55,9 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
         journalDiskSync = false;
         useFastJournalSerialization = true;
         useFastSnapshotSerialization = false;
+        useRoyalFoodTester = true;
     }
+
 
     private PrevaylerBuilder(final PrevaylerBuilder original) {
         this.initialSystem = original.getInitialSystem();
@@ -61,6 +67,7 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
         this.journalDiskSync = original.isJournalDiskSync();
         this.useFastJournalSerialization = original.isUseFastJournalSerialization();
         this.useFastSnapshotSerialization = original.isUseFastSnapshotSerialization();
+        this.useRoyalFoodTester = original.isUseRoyalFoodTester();
     }
 
     public static PrevaylerBuilder newBuilder() {
@@ -104,6 +111,10 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
         return useFastSnapshotSerialization;
     }
 
+    public boolean isUseRoyalFoodTester() {
+        return useRoyalFoodTester;
+    }
+
     public PrevaylerBuilder<T, R> useSupplier(final Supplier<Serializable> supplier) {
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
         copy.initialSystem = Optional.of(supplier);
@@ -124,14 +135,15 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
             PrevaylerFactory<RoyalFoodTester> factory = new PrevaylerFactory<>();
 
             if (getInitialSystem().isPresent()) {
-                factory.configurePrevalentSystem(RoyalFoodTester.of(getInitialSystem().get().get()));
+                factory.configurePrevalentSystem(RoyalFoodTester.of(getInitialSystem().get().get(),useRoyalFoodTester));
             } else {
-                factory.configurePrevalentSystem(RoyalFoodTester.absent());
+                factory.configurePrevalentSystem(RoyalFoodTester.absent(useRoyalFoodTester));
             }
             factory.configureJournalDiskSync(false);
             factory.configurePrevalenceDirectory(PersistenceDiskHelper.calcFolderName(this.getFolder()));
 
             factory.configureJournalSerializer(createSerializer(isUseFastJournalSerialization()));
+            factory.configureTransactionDeepCopy(false);
             final Prevayler prev = factory.create();
             return prev;
         } catch (Error | Exception e) {
@@ -148,16 +160,22 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
 
     public PrevaylerBuilder<T, R> withinUserFolder(final String folderName) {
         final String userFolder = System.getProperty("user.home");
-        final Path userPath =  Paths.get(userFolder, folderName).toAbsolutePath();
+        final Path userPath = Paths.get(userFolder, folderName).toAbsolutePath();
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
         copy.folder = userPath.toString();
         return copy;
     }
 
 
-        public PrevaylerBuilder<T, R> forceOverwrite(final boolean overwrite) {
+    public PrevaylerBuilder<T, R> forceOverwrite(final boolean overwrite) {
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
         copy.forceOverwrite = overwrite;
+        return copy;
+    }
+
+    public PrevaylerBuilder<T, R> disableRoyalFoodTester() {
+        final PrevaylerBuilder copy = new PrevaylerBuilder(this);
+        copy.useRoyalFoodTester = false;
         return copy;
     }
 
