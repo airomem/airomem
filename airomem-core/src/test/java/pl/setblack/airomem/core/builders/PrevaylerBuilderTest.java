@@ -213,7 +213,7 @@ public class PrevaylerBuilderTest {
     @Test
     public void shouldCreateFolderWithinUserHome() {
         //WHEN
-        File localFolder = new File("prevayler");
+        File localFolder = new File("prevaylerHome");
         System.setProperty("user.home", localFolder.getAbsolutePath());
         localFolder.mkdirs();
         try (
@@ -225,7 +225,7 @@ public class PrevaylerBuilderTest {
             ctrl.execute((x) -> x.internalMap.put("myKey", "myVal"));
             ctrl.close();
             //THEN
-            File testFolder = new File(localFolder, "myfolder");
+            File testFolder = new File(localFolder, "prevayler/myfolder");
             File[] insideFiles = testFolder.listFiles();
             Assert.assertEquals(3, insideFiles.length);
         } finally {

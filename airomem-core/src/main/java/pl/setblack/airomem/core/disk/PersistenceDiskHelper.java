@@ -9,11 +9,13 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.apache.commons.io.FileUtils;
 import pl.setblack.airomem.core.builders.PersistenceFactory;
 import pl.setblack.badass.Politician;
 
-/**
+/**ca
  *
  */
 public final class PersistenceDiskHelper {
@@ -50,11 +52,27 @@ public final class PersistenceDiskHelper {
         if  (name.contains(File.separator) ) {
                 return FileSystems.getDefault().getPath(name);
         } else {
-            return FileSystems.getDefault().getPath(STORAGE_FOLDER, name);
+            return calcUserPath(  name);
         }
     }
 
     public static void deletePrevaylerFolder() {
-            Politician.beatAroundTheBush( () -> FileUtils.deleteDirectory(new File(PersistenceFactory.STORAGE_FOLDER)));
+        try {
+            FileUtils.deleteDirectory(new File(PersistenceDiskHelper.userStoragePath().toUri()));
+        } catch (IOException ioe) {
+            System.gc();
+            Politician.beatAroundTheBush(() -> Thread.sleep(100));
+            Politician.beatAroundTheBush(() -> FileUtils.deleteDirectory(new File(PersistenceFactory.STORAGE_FOLDER)));
+        }
+    }
+
+    public static Path calcUserPath(String folderName) {
+        final String userFolder = System.getProperty("user.home");
+        return Paths.get(userFolder, STORAGE_FOLDER, folderName).toAbsolutePath();
+    }
+
+    public static Path userStoragePath() {
+        final String userFolder = System.getProperty("user.home");
+        return Paths.get(userFolder, STORAGE_FOLDER).toAbsolutePath();
     }
 }

@@ -159,12 +159,13 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
     }
 
     public PrevaylerBuilder<T, R> withinUserFolder(final String folderName) {
-        final String userFolder = System.getProperty("user.home");
-        final Path userPath = Paths.get(userFolder, folderName).toAbsolutePath();
+        final Path userPath = PersistenceDiskHelper.calcUserPath( folderName);
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
         copy.folder = userPath.toString();
         return copy;
     }
+
+
 
 
     public PrevaylerBuilder<T, R> forceOverwrite(final boolean overwrite) {

@@ -13,6 +13,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import pl.setblack.airomem.core.PersistenceController;
+import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 import pl.setblack.badass.Politician;
 
 /**
@@ -37,7 +38,7 @@ public class PersistenceFactoryTest {
 
     private void deletePrevaylerFolder() {
         Politician.beatAroundTheBush(() -> {
-            FileUtils.deleteDirectory(new File(PersistenceFactory.STORAGE_FOLDER));
+            FileUtils.deleteDirectory(new File(PersistenceDiskHelper.userStoragePath().toUri()));
         });
     }
 

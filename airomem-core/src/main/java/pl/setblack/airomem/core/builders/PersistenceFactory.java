@@ -63,6 +63,7 @@ public class PersistenceFactory {
      * @return PersistenceControllerImpl for further use
      */
     public <T extends Storable<R>, R> PersistenceController<T, R> initOptional(String name, Supplier<T> supplier) {
+
         if (exists(name)) {
             return this.load(name);
         } else {
@@ -71,7 +72,7 @@ public class PersistenceFactory {
     }
 
     public boolean exists(final String name) {
-        return PersistenceDiskHelper.exists(name);
+        return PersistenceDiskHelper.exists(PersistenceDiskHelper.calcUserPath(name).toString());
     }
 
 }
