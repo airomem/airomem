@@ -56,4 +56,6 @@ public interface PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE>
     void execute(VoidContextCommand<T> cmd);
 
     boolean isOpen();
+
+    void erase();
 }

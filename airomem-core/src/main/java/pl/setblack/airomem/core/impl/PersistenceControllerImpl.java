@@ -137,4 +137,9 @@ public class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
         PersistenceDiskHelper.delete(this.uniqueName);
     }
 
+    @Override
+    public void erase() {
+        this.close();
+        this.deleteFolder();
+    }
 }

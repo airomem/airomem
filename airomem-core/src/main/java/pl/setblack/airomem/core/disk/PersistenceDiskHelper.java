@@ -59,7 +59,7 @@ public final class PersistenceDiskHelper {
     public static void deletePrevaylerFolder() {
         try {
             FileUtils.deleteDirectory(new File(PersistenceDiskHelper.userStoragePath().toUri()));
-        } catch (IOException ioe) {
+        } catch (IOException ioe) { //this does not happen on linux - thats is why class is not covered here
             System.gc();
             Politician.beatAroundTheBush(() -> Thread.sleep(100));
             Politician.beatAroundTheBush(() -> FileUtils.deleteDirectory(new File(PersistenceFactory.STORAGE_FOLDER)));

@@ -140,6 +140,32 @@ public class PrevaylerBuilderTest {
         }
     }
 
+
+    @Test
+    public void shouldEraseSystem() {
+        //GIVEN
+        final PrevaylerBuilder<StorableObject, Map<String, String>> builder = PrevaylerBuilder.newBuilder()
+                .useSupplier(StorableObject::createTestObject)
+                .forceOverwrite(false);
+        //WHEN
+        try (
+                final PersistenceController<StorableObject, Map<String, String>> ctrl = builder.build();) {
+            ctrl.execute((x) -> {
+                x.internalMap.put("key:1", "myVal");
+            });
+            ctrl.erase();
+        }
+
+        Politician.beatAroundTheBush(() -> Thread.sleep(100));
+        //THEN
+        try (
+                final PersistenceController<StorableObject, Map<String, String>> ctrl = builder.build();) {
+            final String val = ctrl.query(s -> s.get("key:1"));
+            assertEquals("val:1", val);
+        }
+    }
+
+
     @Test
     public void shouldWorkOnDisabledRFT() {
         //GIVEN

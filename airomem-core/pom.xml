@@ -125,6 +125,7 @@
                                 <rule implementation="org.jacoco.maven.RuleConfiguration">
                                     <element>CLASS</element>
                                     <excludes>
+                                        <exclude>pl.setblack.airomem.core.disk.PersistenceDiskHelper</exclude>
                                         <exclude>pl.setblack.airomem.core.kryo.KryoSerializer</exclude>
                                         <exclude>pl.setblack.airomem.core.kryo.KryoSerializer.1</exclude>
                                         <exclude> pl.setblack.airomem.core.kryo.ReferenceResolver</exclude>
