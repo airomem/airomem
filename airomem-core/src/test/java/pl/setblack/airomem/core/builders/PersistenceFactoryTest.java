@@ -115,6 +115,19 @@ public class PersistenceFactoryTest {
         assertEquals("val:2", value);
     }
 
+    /**
+     * This test does not do much.
+     * Would be good to fix it later.
+     */
+    @Test
+    public void testSnapshot() {
+        PersistenceController<StorableObject, Map<String, String>> controller = createController();
+        controller.snapshot();
+        PersistenceController<StorableObject, Map<String, String>> controller2 = factory.load("sample");
+        String value = controller2.query((map) -> map.get("key:2"));
+        assertEquals("val:2", value);
+    }
+
     @Test
     public void testExecuteStored() {
         PersistenceController<StorableObject, Map<String, String>> controller = createController();

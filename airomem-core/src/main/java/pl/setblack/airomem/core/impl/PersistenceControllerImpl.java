@@ -142,4 +142,9 @@ public class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
         this.close();
         this.deleteFolder();
     }
+
+    @Override
+    public void snapshot() {
+        Politician.beatAroundTheBush(()->this.prevayler.takeSnapshot());
+    }
 }

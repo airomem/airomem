@@ -93,6 +93,7 @@ public class SimpleControllerTest {
         assertFalse(simpleController.isOpen());
     }
 
+
     @Test(expected = IllegalStateException.class)
     public void testLoadWithNoStoredSystemShouldFail() {
         //WHEN

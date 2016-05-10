@@ -58,4 +58,6 @@ public interface PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE>
     boolean isOpen();
 
     void erase();
+
+    void snapshot();
 }
