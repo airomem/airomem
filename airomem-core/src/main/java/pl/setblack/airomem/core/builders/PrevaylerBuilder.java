@@ -9,7 +9,6 @@ import com.google.common.base.Preconditions;
 
 import java.io.Serializable;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.function.Supplier;
 
 import org.prevayler.Prevayler;
