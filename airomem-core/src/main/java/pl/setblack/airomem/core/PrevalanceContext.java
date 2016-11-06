@@ -19,7 +19,21 @@ public class PrevalanceContext {
      */
     public final Instant time;
 
-    public PrevalanceContext(Date date) {
-        time = date.toInstant();
+    public final boolean safe;
+
+    public PrevalanceContext(final Date date) {
+        this( date.toInstant(), false);
+    }
+    private PrevalanceContext(final Instant time, final boolean safe) {
+        this.time = time;
+        this.safe = safe;
+    }
+
+    public PrevalanceContext safe() {
+        return new PrevalanceContext(this.time, true);
+    }
+
+    public PrevalanceContext unsafe() {
+        return new PrevalanceContext(this.time, false);
     }
 }

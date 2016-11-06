@@ -29,4 +29,16 @@ public class WriteChecker {
         return CONTEXT_STORE.get() != null;
     }
 
+    public static void enterSafe() {
+        assert hasPrevalanceContext() : "Context has to be initialized first";
+        assert !getContext().safe : "context cannot be safe before";
+        CONTEXT_STORE.set(getContext().safe());
+    }
+
+    public static void leaveSafe() {
+        assert hasPrevalanceContext() : "Context has to be initialized first";
+        assert getContext().safe :  "context must be safe before";;
+        CONTEXT_STORE.set(getContext().unsafe());
+    }
+
 }

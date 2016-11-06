@@ -47,7 +47,7 @@ public class InternalTransactionTest {
         final Date date = Date.from(time.toInstant(ZoneOffset.UTC));
         final VoidContextCommand<StorableObject> myCmd = (x, ctx) -> {
             assertTrue(WriteChecker.hasPrevalanceContext());
-            assertEquals(ctx, WriteChecker.getContext());
+            assertEquals(ctx.time, WriteChecker.getContext().time);
         };
         InternalTransaction instance = new InternalTransaction(myCmd);
         final RoyalFoodTester<StorableObject> testSystem = RoyalFoodTester.of(StorableObject.createTestObject());

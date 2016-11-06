@@ -239,6 +239,7 @@ public class PrevaylerBuilderTest {
     @Test
     public void shouldCreateFolderWithinUserHome() {
         //WHEN
+        final String prevHome = System.getProperty("user.home");
         File localFolder = new File("prevaylerHome");
         System.setProperty("user.home", localFolder.getAbsolutePath());
         localFolder.mkdirs();
@@ -256,6 +257,7 @@ public class PrevaylerBuilderTest {
             Assert.assertEquals(3, insideFiles.length);
         } finally {
             Politician.beatAroundTheBush(() -> FileUtils.deleteDirectory(localFolder));
+            System.setProperty("user.home", prevHome);
         }
     }
 

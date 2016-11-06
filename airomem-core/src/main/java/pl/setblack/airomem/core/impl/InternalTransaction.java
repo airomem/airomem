@@ -2,7 +2,6 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package pl.setblack.airomem.core.impl;
 
-import com.google.common.base.Optional;
 import java.util.Date;
 import org.prevayler.TransactionWithQuery;
 import pl.setblack.airomem.core.ContextCommand;
@@ -10,7 +9,6 @@ import pl.setblack.airomem.core.ContextCommand;
 import pl.setblack.airomem.core.PrevalanceContext;
 import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.WriteChecker;
-import pl.setblack.airomem.core.impl.RoyalFoodTester;
 
 /**
  * Class used internally to wrap user Command.
@@ -35,7 +33,12 @@ class InternalTransaction<T extends Storable, R> implements TransactionWithQuery
         try {
             final R firstValue = cmd.execute(p.getFoodTester(), ctx);
             if ( p.isSafe()) {
-                cmd.execute(p.getSafeCopy(), ctx);
+                WriteChecker.enterSafe();
+                try {
+                    cmd.execute(p.getSafeCopy(), ctx);
+                } finally {
+                    WriteChecker.leaveSafe();
+                }
             }
             return firstValue;
         } catch (RuntimeException re) {

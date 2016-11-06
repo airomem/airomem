@@ -37,9 +37,7 @@ public class PersistenceFactoryTest {
     }
 
     private void deletePrevaylerFolder() {
-        Politician.beatAroundTheBush(() -> {
-            FileUtils.deleteDirectory(new File(PersistenceDiskHelper.STORAGE_FOLDER));
-        });
+        PersistenceDiskHelper.delete("sample");
     }
 
     @After

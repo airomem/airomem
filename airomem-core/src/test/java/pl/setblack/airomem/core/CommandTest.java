@@ -8,8 +8,6 @@ package pl.setblack.airomem.core;
 import java.util.Date;
 import static org.junit.Assert.*;
 import org.junit.Test;
-import pl.setblack.airomem.core.PrevalanceContext;
-import pl.setblack.airomem.core.VoidCommand;
 
 /**
  *
