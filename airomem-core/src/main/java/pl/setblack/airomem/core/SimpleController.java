@@ -35,14 +35,19 @@ public class SimpleController<T extends Serializable> implements AutoCloseable {
         return new SimpleController<>(controller);
     }
 
-    public static <T extends Serializable> SimpleController<T> loadOptional(String name, Supplier<T> constructor) {
+    public static <T extends Serializable> SimpleController<T> loadOptional(String name, Supplier<T> constructor, boolean useRoyalFoodTester) {
         final PersistenceFactory factory = new PersistenceFactory();
         PersistenceController<DataRoot<T, T>, T> controller
-                = factory.<DataRoot<T, T>, T>initOptional(name, () -> new DataRoot<>(constructor.get()));
+                = factory.<DataRoot<T, T>, T>initOptional(name, () -> new DataRoot<>(constructor.get()), useRoyalFoodTester);
         return new SimpleController<>(controller);
     }
 
-    public static <T extends Serializable> SimpleController<T> create(String name, T initial) {
+    public static <T extends Serializable> SimpleController<T> loadOptional(String name, Supplier<T> constructor) {
+        return loadOptional(name, constructor, true);
+    }
+
+
+        public static <T extends Serializable> SimpleController<T> create(String name, T initial) {
         final PersistenceFactory factory = new PersistenceFactory();
         final DataRoot<T, T> root = new DataRoot<>(initial);
         PersistenceController<DataRoot<T, T>, T> controller

@@ -174,8 +174,12 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
     }
 
     public PrevaylerBuilder<T, R> disableRoyalFoodTester() {
+        return this.withRoyalFoodTester(false);
+    }
+
+    public PrevaylerBuilder<T, R> withRoyalFoodTester(boolean useRFT) {
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
-        copy.useRoyalFoodTester = false;
+        copy.useRoyalFoodTester = useRFT;
         return copy;
     }
 

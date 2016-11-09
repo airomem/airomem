@@ -65,6 +65,10 @@ public class RoyalFoodTester<T> implements Serializable {
         return this.foodTester.get();
     }
 
+    public T getWorkObject() {
+            return this.getFoodTester();
+    }
+
     public T getSafeCopy() {
         return this.safeCopy.get();
     }

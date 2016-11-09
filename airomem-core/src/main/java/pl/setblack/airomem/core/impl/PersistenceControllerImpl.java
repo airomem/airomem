@@ -11,8 +11,6 @@ import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.VoidCommand;
 import pl.setblack.airomem.core.VoidContextCommand;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
-import pl.setblack.airomem.core.impl.InternalTransaction;
-import pl.setblack.airomem.core.impl.RoyalFoodTester;
 import pl.setblack.badass.Politician;
 
 /**
@@ -121,7 +119,7 @@ public class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
     }
 
     private T getObject() {
-        return this.prevayler.prevalentSystem().getFoodTester();
+        return this.prevayler.prevalentSystem().getWorkObject();
     }
 
     private IMMUTABLE getImmutable() {
