@@ -15,11 +15,11 @@ import pl.setblack.airomem.data.DataRoot;
  * This version does not force to follow IMMUTABLE , MUTABLE Pattern. IT is
  * easier to implement - but of course not that safe for team development.
  */
-public class SimpleController<T extends Serializable> implements AutoCloseable {
+public class Persistent<T extends Serializable> implements AutoCloseable {
 
     private final PersistenceController<DataRoot<T, T>, T> controller;
 
-    private SimpleController(PersistenceController<DataRoot<T, T>, T> controller) {
+    private Persistent(PersistenceController<DataRoot<T, T>, T> controller) {
         this.controller = controller;
     }
 
@@ -28,31 +28,31 @@ public class SimpleController<T extends Serializable> implements AutoCloseable {
         return factory.exists(name);
     }
 
-    public static <T extends Serializable> SimpleController<T> load(String name) {
+    public static <T extends Serializable> Persistent<T> load(String name) {
         final PersistenceFactory factory = new PersistenceFactory();
         PersistenceController<DataRoot<T, T>, T> controller
                 = factory.<DataRoot<T, T>, T>load(name);
-        return new SimpleController<>(controller);
+        return new Persistent<>(controller);
     }
 
-    public static <T extends Serializable> SimpleController<T> loadOptional(String name, Supplier<T> constructor, boolean useRoyalFoodTester) {
+    public static <T extends Serializable> Persistent<T> loadOptional(String name, Supplier<T> constructor, boolean useRoyalFoodTester) {
         final PersistenceFactory factory = new PersistenceFactory();
         PersistenceController<DataRoot<T, T>, T> controller
                 = factory.<DataRoot<T, T>, T>initOptional(name, () -> new DataRoot<>(constructor.get()), useRoyalFoodTester);
-        return new SimpleController<>(controller);
+        return new Persistent<>(controller);
     }
 
-    public static <T extends Serializable> SimpleController<T> loadOptional(String name, Supplier<T> constructor) {
+    public static <T extends Serializable> Persistent<T> loadOptional(String name, Supplier<T> constructor) {
         return loadOptional(name, constructor, true);
     }
 
 
-        public static <T extends Serializable> SimpleController<T> create(String name, T initial) {
+        public static <T extends Serializable> Persistent<T> create(String name, T initial) {
         final PersistenceFactory factory = new PersistenceFactory();
         final DataRoot<T, T> root = new DataRoot<>(initial);
         PersistenceController<DataRoot<T, T>, T> controller
                 = factory.<DataRoot<T, T>, T>init(name, root);
-        return new SimpleController<>(controller);
+        return new Persistent<>(controller);
     }
 
     public <RESULT> RESULT query(Query<T, RESULT> query) {
