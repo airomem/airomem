@@ -13,6 +13,8 @@ import org.jglue.cdiunit.CdiRunner;
 import org.junit.After;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import pl.setblack.airomem.core.builders.PersistenceFactory;
@@ -32,16 +34,19 @@ public class ContainerTest {
     @Inject
     SampleController controller2;
 
-    @After
-    public void tearDown() {
+    @Before @After
+    public void clean() {
         PrevaylerRegister.getInstance().clear();
         Politician.beatAroundTheBush(() -> {
             FileUtils.deleteDirectory(new File(PersistenceFactory.STORAGE_FOLDER));
         });
+        controller.getObject();//prefetch
     }
 
     @Test
     public void shouldRunMethodWithoutErrors() {
+
+
         controller.writeMethod();
     }
 
