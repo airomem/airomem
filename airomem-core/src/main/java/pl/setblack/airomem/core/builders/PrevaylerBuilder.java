@@ -9,6 +9,7 @@ import com.google.common.base.Preconditions;
 
 import java.io.Serializable;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.function.Supplier;
 
 import org.prevayler.Prevayler;
@@ -25,7 +26,7 @@ import pl.setblack.airomem.core.kryo.KryoSerializer;
 /**
  *
  */
-public class PrevaylerBuilder<T extends Storable<R>, R> {
+public class PrevaylerBuilder<T extends Serializable> {
 
     /**
      * Must be defined for create initialSystem.
@@ -36,7 +37,7 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
 
     private boolean allowCreate;
 
-    private String folder;
+    private Path folder;
 
     private boolean journalDiskSync;
 
@@ -50,7 +51,7 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
         initialSystem = Optional.absent();
         forceOverwrite = false;
         allowCreate = false;
-        folder = "";
+        folder = Paths.get("prevayler");
         journalDiskSync = false;
         useFastJournalSerialization = true;
         useFastSnapshotSerialization = false;
@@ -73,8 +74,8 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
         return new PrevaylerBuilder();
     }
 
-    public PersistenceController<T, R> build() {
-        PersistenceControllerImpl<T, R> result = new PersistenceControllerImpl<>(getFolder());
+    public PersistenceController<T> build() {
+        PersistenceControllerImpl<T> result = new PersistenceControllerImpl<>(getFolder());
         if (this.isForceOverwrite()) {
             result.deleteFolder();
         }
@@ -94,7 +95,7 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
         return allowCreate;
     }
 
-    String getFolder() {
+    Path getFolder() {
         return folder;
     }
 
@@ -114,7 +115,7 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
         return useRoyalFoodTester;
     }
 
-    public PrevaylerBuilder<T, R> useSupplier(final Supplier<Serializable> supplier) {
+    public PrevaylerBuilder<T> useSupplier(final Supplier<Serializable> supplier) {
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
         copy.initialSystem = Optional.of(supplier);
         return copy;
@@ -151,39 +152,39 @@ public class PrevaylerBuilder<T extends Storable<R>, R> {
 
     }
 
-    public PrevaylerBuilder<T, R> withFolder(final String folderName) {
+    public PrevaylerBuilder<T> withFolder(final Path folder) {
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
-        copy.folder = folderName;
+        copy.folder = folder;
         return copy;
     }
 
-    public PrevaylerBuilder<T, R> withinUserFolder(final String folderName) {
+    public PrevaylerBuilder<T> withinUserFolder(final String folderName) {
         final Path userPath = PersistenceDiskHelper.calcUserPath( folderName);
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
-        copy.folder = userPath.toString();
+        copy.folder = userPath;
         return copy;
     }
 
 
 
 
-    public PrevaylerBuilder<T, R> forceOverwrite(final boolean overwrite) {
+    public PrevaylerBuilder<T> forceOverwrite(final boolean overwrite) {
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
         copy.forceOverwrite = overwrite;
         return copy;
     }
 
-    public PrevaylerBuilder<T, R> disableRoyalFoodTester() {
+    public PrevaylerBuilder<T> disableRoyalFoodTester() {
         return this.withRoyalFoodTester(false);
     }
 
-    public PrevaylerBuilder<T, R> withRoyalFoodTester(boolean useRFT) {
+    public PrevaylerBuilder<T> withRoyalFoodTester(boolean useRFT) {
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
         copy.useRoyalFoodTester = useRFT;
         return copy;
     }
 
-    public PrevaylerBuilder<T, R> withJournalFastSerialization(boolean fastSerialization) {
+    public PrevaylerBuilder<T> withJournalFastSerialization(boolean fastSerialization) {
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
         copy.useFastJournalSerialization = fastSerialization;
         return copy;

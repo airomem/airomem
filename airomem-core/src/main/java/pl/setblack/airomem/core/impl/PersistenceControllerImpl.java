@@ -7,30 +7,31 @@ import pl.setblack.airomem.core.Command;
 import pl.setblack.airomem.core.ContextCommand;
 import pl.setblack.airomem.core.PersistenceController;
 import pl.setblack.airomem.core.Query;
-import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.VoidCommand;
 import pl.setblack.airomem.core.VoidContextCommand;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 import pl.setblack.badass.Politician;
+
+import java.io.Serializable;
+import java.nio.file.Path;
 
 /**
  * Controller of persistence system.
  *
  * Use this to perform queries and commands on system.
  *
- * @param <IMMUTABLE> immutable interface to persistent system (view)
- * @param <T> mutable interface to system
+ * @param <ROOT> mutable interface to system
  * @author jarekr
  */
-public class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
-        implements PersistenceController<T, IMMUTABLE> {
+public class PersistenceControllerImpl<ROOT extends Serializable>
+        implements PersistenceController<ROOT> {
 
-    private Prevayler<RoyalFoodTester<T>> prevayler;
+    private Prevayler<RoyalFoodTester<ROOT>> prevayler;
 
-    private final String uniqueName;
+    private final Path path;
 
-    public PersistenceControllerImpl(String name) {
-        this.uniqueName = name;
+    public PersistenceControllerImpl(final Path path) {
+        this.path = path;
     }
 
     /**
@@ -62,7 +63,7 @@ public class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
         });
     }
 
-    public void initSystem(final Prevayler<RoyalFoodTester<T>> prevayler) {
+    public void initSystem(final Prevayler<RoyalFoodTester<ROOT>> prevayler) {
         this.prevayler = prevayler;
         Politician.beatAroundTheBush(() -> this.prevayler.takeSnapshot());
     }
@@ -79,7 +80,7 @@ public class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
      * @param query lambda (or query implementation) with operations
      * @return calculated result
      */
-    public <RESULT> RESULT query(Query<IMMUTABLE, RESULT> query) {
+    public <RESULT> RESULT query(Query<ROOT, RESULT> query) {
         return query.evaluate(getImmutable());
     }
 
@@ -91,7 +92,7 @@ public class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
      *
      * @param cmd
      */
-    public <R> R executeAndQuery(ContextCommand<T, R> cmd) {
+    public <R> R executeAndQuery(ContextCommand<ROOT, R> cmd) {
         return Politician.beatAroundTheBush(() -> this.prevayler.execute(new InternalTransaction<>(cmd)));
     }
 
@@ -104,26 +105,26 @@ public class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
      * @param cmd
      */
     @Override
-    public <R> R executeAndQuery(Command<T, R> cmd) {
-        return this.executeAndQuery((ContextCommand<T, R>) cmd);
+    public <R> R executeAndQuery(Command<ROOT, R> cmd) {
+        return this.executeAndQuery((ContextCommand<ROOT, R>) cmd);
     }
 
     @Override
-    public void execute(VoidCommand<T> cmd) {
-        this.executeAndQuery((Command<T, Void>) cmd);
+    public void execute(VoidCommand<ROOT> cmd) {
+        this.executeAndQuery((Command<ROOT, Void>) cmd);
     }
 
     @Override
-    public void execute(VoidContextCommand<T> cmd) {
-        this.executeAndQuery((ContextCommand<T, Void>) cmd);
+    public void execute(VoidContextCommand<ROOT> cmd) {
+        this.executeAndQuery((ContextCommand<ROOT, Void>) cmd);
     }
 
-    private T getObject() {
+    private ROOT getObject() {
         return this.prevayler.prevalentSystem().getWorkObject();
     }
 
-    private IMMUTABLE getImmutable() {
-        return this.getObject().getImmutable();
+    private ROOT getImmutable() {
+        return this.getObject();
     }
 
     @Override
@@ -132,7 +133,7 @@ public class PersistenceControllerImpl<T extends Storable<IMMUTABLE>, IMMUTABLE>
     }
 
     public void deleteFolder() {
-        PersistenceDiskHelper.delete(this.uniqueName);
+        PersistenceDiskHelper.delete(this.path);
     }
 
     @Override

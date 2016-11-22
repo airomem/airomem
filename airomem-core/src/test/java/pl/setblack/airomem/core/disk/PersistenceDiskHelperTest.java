@@ -4,14 +4,7 @@
  */
 package pl.setblack.airomem.core.disk;
 
-import org.junit.Before;
 import org.junit.Test;
-import pl.setblack.airomem.core.builders.PersistenceFactory;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import static org.junit.Assert.*;
 
 /**
  *

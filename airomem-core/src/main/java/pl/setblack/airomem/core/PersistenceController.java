@@ -4,14 +4,12 @@
  */
 package pl.setblack.airomem.core;
 
-import com.google.common.base.Optional;
-import org.prevayler.Prevayler;
-import pl.setblack.badass.Politician;
+import java.io.Serializable;
 
 /**
  *
  */
-public interface PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE> extends AutoCloseable {
+public interface PersistenceController<ROOT extends Serializable> extends AutoCloseable {
 
     void close();
 
@@ -22,14 +20,14 @@ public interface PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE>
      *
      * Few things to remember: 1. if operations done on system (using query) do
      * make some changes they will not be preserved (for long) 2. it is possible
-     * to return any object from domain (including IMMUTABLE root) and perform
+     * to return any object from domain (including ROOT root) and perform
      * operations later on (but the more You do inside Query the safer).
      *
      * @param <RESULT> result of query
      * @param query lambda (or query implementation) with operations
      * @return calculated result
      */
-    <RESULT> RESULT query(Query<IMMUTABLE, RESULT> query);
+    <RESULT> RESULT query(Query<ROOT, RESULT> query);
 
     /**
      * Perform command on system.
@@ -39,7 +37,7 @@ public interface PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE>
      *
      * @param cmd
      */
-    <R> R executeAndQuery(ContextCommand<T, R> cmd);
+    <R> R executeAndQuery(ContextCommand<ROOT, R> cmd);
 
     /**
      * Perform command on system.
@@ -49,11 +47,11 @@ public interface PersistenceController<T extends Storable<IMMUTABLE>, IMMUTABLE>
      *
      * @param cmd
      */
-    <R> R executeAndQuery(Command<T, R> cmd);
+    <R> R executeAndQuery(Command<ROOT, R> cmd);
 
-    void execute(VoidCommand<T> cmd);
+    void execute(VoidCommand<ROOT> cmd);
 
-    void execute(VoidContextCommand<T> cmd);
+    void execute(VoidContextCommand<ROOT> cmd);
 
     boolean isOpen();
 

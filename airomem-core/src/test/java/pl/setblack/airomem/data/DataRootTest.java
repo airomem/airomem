@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
  */
 public class DataRootTest {
 
-    private DataRoot<BankAccountView, BankAccount> bank;
+    private DataRoot<BankAccount> bank;
 
     public DataRootTest() {
     }
@@ -27,7 +27,6 @@ public class DataRootTest {
     @Test
     public void testCreation() {
         assertNotNull(bank);
-        assertNotNull(bank.getImmutable().getAmount());
         assertNotNull(bank.getDataObject().getAmount());
     }
 

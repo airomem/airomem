@@ -17,23 +17,29 @@ import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
  */
 public abstract class AbstractPrevaylerTest<T extends Storable<R>, R> {
 
-    private final PersistenceFactory factory;
+    protected PersistenceController<T> persistenceController;
 
-    protected PersistenceController<T, R> persistenceController;
+    private String origUserHome;
 
     protected abstract T createSystem();
 
     public AbstractPrevaylerTest() {
-        factory = new PersistenceFactory();
+
     }
 
     @Before
     public void setUp() {
         File localFolder = new File("prevayler/");
         localFolder.mkdir();
+        this.origUserHome = System.getProperty("user.home");
         System.setProperty("user.home",  localFolder.getAbsolutePath());
         AbstractPrevaylerTest.deletePrevaylerFolder();
-        this.persistenceController = factory.init("test", createSystem());
+        this.persistenceController = PrevaylerBuilder
+                .newBuilder()
+                .withinUserFolder("test")
+                .forceOverwrite(true)
+                .useSupplier(()->createSystem())
+                .build();
 
     }
 
@@ -41,15 +47,22 @@ public abstract class AbstractPrevaylerTest<T extends Storable<R>, R> {
     public void tearDown() {
         this.persistenceController.close();
         AbstractPrevaylerTest.deletePrevaylerFolder();
+        System.setProperty("user.home",  origUserHome);
+
     }
 
     protected void reloadController(Class<T> type) {
         this.persistenceController.close();
-        this.persistenceController = factory.load("test");
+        this.persistenceController = PrevaylerBuilder
+                .newBuilder()
+                .withinUserFolder("test")
+                .forceOverwrite(false)
+
+                .build();
     }
 
     static void deletePrevaylerFolder() {
-        PersistenceDiskHelper.deletePrevaylerFolder();
+        PersistenceDiskHelper.delete(PersistenceDiskHelper.calcUserPath("test"));
     }
 
 }

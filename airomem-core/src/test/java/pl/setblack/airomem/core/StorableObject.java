@@ -4,6 +4,7 @@
 package pl.setblack.airomem.core;
 
 import java.beans.Transient;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,7 @@ import pl.setblack.airomem.core.Storable;
  *
  * @author jarekr
  */
-public class StorableObject implements Storable<Map<String, String>> {
+public class StorableObject implements Serializable {
 
     public final HashMap<String, String> internalMap;
 
@@ -21,15 +22,9 @@ public class StorableObject implements Storable<Map<String, String>> {
 
     public StorableObject(HashMap<String, String> intenralMap) {
         this.internalMap = intenralMap;
+        this.immutable = Collections.unmodifiableMap(intenralMap);
     }
 
-    @Override
-    public synchronized Map<String, String> getImmutable() {
-        if (this.immutable == null) {
-            this.immutable = Collections.unmodifiableMap(internalMap);
-        }
-        return immutable;
-    }
 
     public static HashMap createTestHashMap() {
         final HashMap<String, String> result = new HashMap<>();

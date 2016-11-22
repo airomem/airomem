@@ -2,6 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package pl.setblack.airomem.core.impl;
 
+import java.io.Serializable;
 import java.util.Date;
 import org.prevayler.TransactionWithQuery;
 import pl.setblack.airomem.core.ContextCommand;
@@ -15,7 +16,7 @@ import pl.setblack.airomem.core.WriteChecker;
  *
  * @author jarekr
  */
-class InternalTransaction<T extends Storable, R> implements TransactionWithQuery<RoyalFoodTester<T>, R> {
+class InternalTransaction<T extends Serializable, R> implements TransactionWithQuery<RoyalFoodTester<T>, R> {
 
     private static final long serialVersionUID = 1l;
 

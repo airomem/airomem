@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.apache.commons.io.FileUtils;
-import pl.setblack.airomem.core.builders.PersistenceFactory;
 import pl.setblack.badass.Politician;
 
 /**ca
@@ -26,25 +25,22 @@ public final class PersistenceDiskHelper {
         throw new UnsupportedOperationException("do not create util classes");
     }
 
-    public static String calcFolderName(final String name) {
-        return getFolderPath(name).toString();
+    public static String calcFolderName(final Path path) {
+        return path.toString();
     }
 
     /**
      * Check if save of given name exists.
      */
-    public static boolean exists(String name) {
-        final Path path = getFolderPath( name);
+    public static boolean exists(Path path) {
         return Files.exists(path);
     }
 
-    public static void delete(String name) {
-        if (exists(name)) {
-            final Path path = getFolderPath( name);
+    public static void delete(Path path) {
+        if (exists(path)) {
             Politician.beatAroundTheBush(() -> {
                 FileUtils.deleteDirectory(path.toFile());
             });
-
         }
     }
 
@@ -56,15 +52,7 @@ public final class PersistenceDiskHelper {
         }
     }
 
-    public static void deletePrevaylerFolder() {
-        try {
-            FileUtils.deleteDirectory(new File(PersistenceDiskHelper.userStoragePath().toUri()));
-        } catch (IOException ioe) { //this does not happen on linux - thats is why class is not covered here
-            System.gc();
-            Politician.beatAroundTheBush(() -> Thread.sleep(100));
-            Politician.beatAroundTheBush(() -> FileUtils.deleteDirectory(new File(PersistenceFactory.STORAGE_FOLDER)));
-        }
-    }
+
 
     public static Path calcUserPath(String folderName) {
         final String userFolder = System.getProperty("user.home");

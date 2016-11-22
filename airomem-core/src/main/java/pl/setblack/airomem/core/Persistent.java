@@ -4,63 +4,67 @@
  */
 package pl.setblack.airomem.core;
 
-import java.io.Serializable;
-import java.util.function.Supplier;
-import pl.setblack.airomem.core.builders.PersistenceFactory;
+import pl.setblack.airomem.core.builders.PrevaylerBuilder;
 import pl.setblack.airomem.data.DataRoot;
+
+import java.io.Serializable;
+import java.nio.file.Path;
+import java.util.function.Supplier;
 
 /**
  * Simplified version of persistence controller.
- *
+ * <p>
  * This version does not force to follow IMMUTABLE , MUTABLE Pattern. IT is
  * easier to implement - but of course not that safe for team development.
  */
 public class Persistent<T extends Serializable> implements AutoCloseable {
 
-    private final PersistenceController<DataRoot<T, T>, T> controller;
+    private final PersistenceController<DataRoot<T>> controller;
 
-    private Persistent(PersistenceController<DataRoot<T, T>, T> controller) {
+    private Persistent(PersistenceController<DataRoot<T>> controller) {
         this.controller = controller;
     }
 
     public static boolean exists(String name) {
-        final PersistenceFactory factory = new PersistenceFactory();
-        return factory.exists(name);
+        throw new UnsupportedOperationException("aa");
+        /*final PersistenceFactory factory = new PersistenceFactory();
+        return factory.exists(name);*/
     }
 
-    public static <T extends Serializable> Persistent<T> load(String name) {
-        final PersistenceFactory factory = new PersistenceFactory();
-        PersistenceController<DataRoot<T, T>, T> controller
-                = factory.<DataRoot<T, T>, T>load(name);
-        return new Persistent<>(controller);
+    public static <T extends Serializable> Persistent<T> load(Path path) {
+        return new Persistent<T>(PrevaylerBuilder.newBuilder()
+                .withFolder(path)
+                .build());
     }
 
-    public static <T extends Serializable> Persistent<T> loadOptional(String name, Supplier<T> constructor, boolean useRoyalFoodTester) {
-        final PersistenceFactory factory = new PersistenceFactory();
-        PersistenceController<DataRoot<T, T>, T> controller
-                = factory.<DataRoot<T, T>, T>initOptional(name, () -> new DataRoot<>(constructor.get()), useRoyalFoodTester);
-        return new Persistent<>(controller);
+    public static <T extends Serializable> Persistent<T> loadOptional(Path path, Supplier<T> constructor, boolean useRoyalFoodTester) {
+        return new Persistent<T>(PrevaylerBuilder.newBuilder()
+                .useSupplier(constructor)
+                .withRoyalFoodTester(useRoyalFoodTester)
+                .withFolder(path)
+                .build());
+
     }
 
-    public static <T extends Serializable> Persistent<T> loadOptional(String name, Supplier<T> constructor) {
-        return loadOptional(name, constructor, true);
+    public static <T extends Serializable> Persistent<T> loadOptional(Path path, Supplier<T> constructor) {
+        return loadOptional(path, constructor, true);
     }
 
 
-        public static <T extends Serializable> Persistent<T> create(String name, T initial) {
-        final PersistenceFactory factory = new PersistenceFactory();
-        final DataRoot<T, T> root = new DataRoot<>(initial);
-        PersistenceController<DataRoot<T, T>, T> controller
-                = factory.<DataRoot<T, T>, T>init(name, root);
-        return new Persistent<>(controller);
+    public static <T extends Serializable> Persistent<T> create(Path path, T initial) {
+        return new Persistent<T>(PrevaylerBuilder.newBuilder()
+                .useSupplier(() -> initial)
+                .forceOverwrite(true)
+                .withFolder(path)
+                .build());
     }
 
     public <RESULT> RESULT query(Query<T, RESULT> query) {
-        return controller.query(query);
+        return controller.query((dataRoot)->query.evaluate(dataRoot.getDataObject()));
     }
 
     public T readOnly() {
-        return controller.query( t -> t);
+        return query(t -> t);
     }
 
     @Override
@@ -77,19 +81,19 @@ public class Persistent<T extends Serializable> implements AutoCloseable {
     }
 
     public <R> R executeAndQuery(ContextCommand<T, R> cmd) {
-        return controller.executeAndQuery((ContextCommand<DataRoot<T, T>, R>) ((x, ctx) -> cmd.execute(x.getDataObject(), ctx)));
+        return controller.executeAndQuery((ContextCommand<DataRoot<T>, R>) ((x, ctx) -> cmd.execute(x.getDataObject(), ctx)));
     }
 
     public <R> R executeAndQuery(Command<T, R> cmd) {
-        return controller.executeAndQuery((Command<DataRoot<T, T>, R>) (x -> cmd.execute(x.getDataObject())));
+        return controller.executeAndQuery((Command<DataRoot<T>, R>) (x -> cmd.execute(x.getDataObject())));
     }
 
     public void execute(VoidContextCommand<T> cmd) {
-        controller.execute((VoidContextCommand<DataRoot<T, T>>) ((x, ctx) -> cmd.execute(x.getDataObject(), ctx)));
+        controller.execute((VoidContextCommand<DataRoot<T>>) ((x, ctx) -> cmd.execute(x.getDataObject(), ctx)));
     }
 
     public void execute(VoidCommand<T> cmd) {
-        controller.execute((VoidCommand<DataRoot<T, T>>) (x -> cmd.execute(x.getDataObject())));
+        controller.execute((VoidCommand<DataRoot<T>>) (x -> cmd.execute(x.getDataObject())));
     }
 
 }
