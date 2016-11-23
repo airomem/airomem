@@ -7,12 +7,14 @@ package pl.setblack.airomem.core.builders;
 import java.io.*;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BooleanSupplier;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -236,7 +238,33 @@ public class PrevaylerBuilderTest {
         try (
                 PersistenceController<StorableObject> controller2 = builder.build();) {
         }
+    }
 
+    @Test
+    public void shouldUseSnapshotUponRestart() {
+        //GIVEN
+        final boolean[] calledInsideTransactionCheck = new boolean[]{false};
+
+
+        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.<StorableObject>newBuilder()
+                .useSupplier(StorableObject::createTestObject)
+                .withJournalFastSerialization(false);
+        try (
+                final PersistenceController<StorableObject> ctrl = builder.build();) {
+            ctrl.execute((x) -> {
+                calledInsideTransactionCheck[0]  = true;
+                x.internalMap.put("key:2", "dzikc");
+            });
+            ctrl.snapshot();
+        }
+
+        calledInsideTransactionCheck[0]  = false;
+        try (
+                PersistenceController<StorableObject> controller2 = builder.build();) {
+            controller2.query(obj -> obj.internalMap.get("key:2"));
+        }
+
+        assertFalse(calledInsideTransactionCheck[0]);
     }
 
     @Test
