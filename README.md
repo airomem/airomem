@@ -1,5 +1,7 @@
 airomem
 =======
+[![Build Status](https://travis-ci.org/airomem/airomem.svg?branch=master)](https://travis-ci.org/airomem/airomem)
+
 
 Airomem is Java persistence framework based on [Prevayler](http://prevayler.org/).
 The most important features are:
