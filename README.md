@@ -53,5 +53,10 @@ In reality one can expect to achive performance of 10 up to 1000 faster compared
 Please read more on:
 [Wiki](https://github.com/jarekratajski/airomem/wiki)
 
+# Release  notes
 
-
+## Version 1.1 (in progress)
+- Simplified - no longer use Storable interface with getImmutable
+- Use *Path* in API instead of String name  of folder 
+- Transient version for tests
+- xml snapshot 
