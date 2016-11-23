@@ -3,17 +3,15 @@
  */
 package pl.setblack.airomem.core.builders;
 
-import java.io.File;
-import java.io.Serializable;
-
 import org.junit.After;
 import org.junit.Before;
 import pl.setblack.airomem.core.PersistenceController;
-import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 
+import java.io.File;
+import java.io.Serializable;
+
 /**
- *
  * @author jarekr
  */
 public abstract class AbstractPrevaylerTest<T extends Serializable> {
@@ -33,13 +31,13 @@ public abstract class AbstractPrevaylerTest<T extends Serializable> {
         File localFolder = new File("prevayler/");
         localFolder.mkdir();
         this.origUserHome = System.getProperty("user.home");
-        System.setProperty("user.home",  localFolder.getAbsolutePath());
+        System.setProperty("user.home", localFolder.getAbsolutePath());
         AbstractPrevaylerTest.deletePrevaylerFolder();
         this.persistenceController = PrevaylerBuilder
                 .<T>newBuilder()
                 .withinUserFolder("test")
                 .forceOverwrite(true)
-                .useSupplier(()->createSystem())
+                .useSupplier(() -> createSystem())
                 .build();
 
     }
@@ -48,7 +46,7 @@ public abstract class AbstractPrevaylerTest<T extends Serializable> {
     public void tearDown() {
         this.persistenceController.close();
         AbstractPrevaylerTest.deletePrevaylerFolder();
-        System.setProperty("user.home",  origUserHome);
+        System.setProperty("user.home", origUserHome);
 
     }
 

@@ -3,14 +3,11 @@
  */
 package pl.setblack.airomem.core.sequnce;
 
-import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.WriteChecker;
-import pl.setblack.airomem.core.builders.WriteCheckerTest;
 
 import java.io.Serializable;
 
 /**
- *
  * @author jarekr
  */
 public class SequenceSystem implements Serializable {
@@ -18,7 +15,6 @@ public class SequenceSystem implements Serializable {
     private final Sequence seq = new Sequence();
 
     private long number;
-
 
 
     public Sequence getSequence() {

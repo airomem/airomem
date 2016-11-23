@@ -6,9 +6,8 @@ import java.io.Serializable;
 
 /**
  * Base interface for building Persisten system.
- *
+ * <p>
  * Every persistent system in RAM should have one ROOT object.
- *
  */
 public interface Storable<READONLY> extends Serializable {
 

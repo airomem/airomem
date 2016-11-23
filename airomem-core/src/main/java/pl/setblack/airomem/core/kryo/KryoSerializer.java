@@ -8,14 +8,13 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.pool.KryoFactory;
 import com.esotericsoftware.kryo.pool.KryoPool;
+import com.esotericsoftware.kryo.serializers.ClosureSerializer;
+import org.objenesis.strategy.StdInstantiatorStrategy;
+import org.prevayler.foundation.serialization.JavaSerializer;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import com.esotericsoftware.kryo.serializers.ClosureSerializer;
-import org.objenesis.strategy.StdInstantiatorStrategy;
-import org.prevayler.foundation.serialization.JavaSerializer;
 
 /**
  * @author jarekr

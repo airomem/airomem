@@ -4,15 +4,15 @@
 package pl.setblack.airomem.core.builders;
 
 import org.junit.After;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import pl.setblack.airomem.core.PrevalanceContext;
 import pl.setblack.airomem.core.WriteChecker;
 
+import static org.junit.Assert.*;
+
 /**
- *
  * @author jarek ratajski
  */
 public class WriteCheckerTest {
@@ -31,7 +31,7 @@ public class WriteCheckerTest {
             WriteChecker.clearContext();
         }
     }
-    
+
     @After
     public void tearDown() {
         if (WriteChecker.hasPrevalanceContext()) {

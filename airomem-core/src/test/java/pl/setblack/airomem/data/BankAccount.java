@@ -6,7 +6,6 @@ package pl.setblack.airomem.data;
 import java.math.BigDecimal;
 
 /**
- *
  * @author jarekr
  */
 public class BankAccount implements BankAccountView {

@@ -4,18 +4,17 @@
  */
 package pl.setblack.airomem.core.disk;
 
+import org.apache.commons.io.FileUtils;
+import pl.setblack.badass.Politician;
+
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.apache.commons.io.FileUtils;
-import pl.setblack.badass.Politician;
-
-/**ca
- *
+/**
+ * ca
  */
 public final class PersistenceDiskHelper {
 
@@ -45,13 +44,12 @@ public final class PersistenceDiskHelper {
     }
 
     private static Path getFolderPath(String name) {
-        if  (name.contains(File.separator) ) {
-                return FileSystems.getDefault().getPath(name);
+        if (name.contains(File.separator)) {
+            return FileSystems.getDefault().getPath(name);
         } else {
-            return calcUserPath(  name);
+            return calcUserPath(name);
         }
     }
-
 
 
     public static Path calcUserPath(String folderName) {

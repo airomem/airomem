@@ -2,14 +2,13 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package pl.setblack.airomem.core.impl;
 
-import java.io.Serializable;
-import java.util.Date;
 import org.prevayler.TransactionWithQuery;
 import pl.setblack.airomem.core.ContextCommand;
-
 import pl.setblack.airomem.core.PrevalanceContext;
-import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.WriteChecker;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Class used internally to wrap user Command.
@@ -33,7 +32,7 @@ class InternalTransaction<T extends Serializable, R> implements TransactionWithQ
 
         try {
             final R firstValue = cmd.execute(p.getFoodTester(), ctx);
-            if ( p.isSafe()) {
+            if (p.isSafe()) {
                 WriteChecker.enterSafe();
                 try {
                     cmd.execute(p.getSafeCopy(), ctx);

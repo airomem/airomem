@@ -6,6 +6,7 @@ package pl.setblack.airomem.core.kryo;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.util.Util;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;

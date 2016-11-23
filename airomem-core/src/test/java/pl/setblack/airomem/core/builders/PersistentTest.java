@@ -5,19 +5,18 @@
 package pl.setblack.airomem.core.builders;
 
 import org.junit.After;
-import pl.setblack.airomem.core.StorableObject;
+import org.junit.Before;
+import org.junit.Test;
 import pl.setblack.airomem.core.Persistent;
+import pl.setblack.airomem.core.StorableObject;
+import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 
 import java.io.File;
 import java.util.HashMap;
-import org.junit.Before;
-import org.junit.Test;
-import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 
 import static org.junit.Assert.*;
 
 /**
- *
  * @author jarek ratajski
  */
 public class PersistentTest {
@@ -46,7 +45,7 @@ public class PersistentTest {
     }
 
     @Test
-     public void testSimpleControllerQuery() {
+    public void testSimpleControllerQuery() {
         //GIVEN
         final Persistent<HashMap<String, String>> persistent = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());
         //WHEN
@@ -209,7 +208,10 @@ public class PersistentTest {
         //GIVEN
         try (
                 final Persistent<HashMap<String, String>> persistent = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());) {
-            persistent.<Void>query((x) -> { x.put("key:1", "otherVal"); return null;} );
+            persistent.<Void>query((x) -> {
+                x.put("key:1", "otherVal");
+                return null;
+            });
         }
         try (
                 final Persistent<HashMap<String, String>> persistent = Persistent.loadOptional(localFolder.toPath(), () -> StorableObject.createTestHashMap());) {

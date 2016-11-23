@@ -3,12 +3,7 @@
 package pl.setblack.airomem.core.impl;
 
 import org.prevayler.Prevayler;
-import pl.setblack.airomem.core.Command;
-import pl.setblack.airomem.core.ContextCommand;
-import pl.setblack.airomem.core.PersistenceController;
-import pl.setblack.airomem.core.Query;
-import pl.setblack.airomem.core.VoidCommand;
-import pl.setblack.airomem.core.VoidContextCommand;
+import pl.setblack.airomem.core.*;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 import pl.setblack.badass.Politician;
 
@@ -17,7 +12,7 @@ import java.nio.file.Path;
 
 /**
  * Controller of persistence system.
- *
+ * <p>
  * Use this to perform queries and commands on system.
  *
  * @param <ROOT> mutable interface to system
@@ -36,7 +31,7 @@ public class PersistenceControllerImpl<ROOT extends Serializable>
 
     /**
      * Close system.
-     *
+     * <p>
      * This couses snapshot of system to be done. After this operation
      * Controller should be no more usable.
      */
@@ -52,7 +47,7 @@ public class PersistenceControllerImpl<ROOT extends Serializable>
 
     /**
      * Shut system immediatelly.
-     *
+     * <p>
      * No snaphsot is done. After load system will be restored using Commands.
      */
     @Override
@@ -70,14 +65,14 @@ public class PersistenceControllerImpl<ROOT extends Serializable>
 
     /**
      * Query system (immutable view of it).
-     *
+     * <p>
      * Few things to remember: 1. if operations done on system (using query) do
      * make some changes they will not be preserved (for long) 2. it is possible
      * to return any object from domain (including IMMUTABLE root) and perform
      * operations later on (but the more You do inside Query the safer).
      *
      * @param <RESULT> result of query
-     * @param query lambda (or query implementation) with operations
+     * @param query    lambda (or query implementation) with operations
      * @return calculated result
      */
     public <RESULT> RESULT query(Query<ROOT, RESULT> query) {
@@ -86,7 +81,7 @@ public class PersistenceControllerImpl<ROOT extends Serializable>
 
     /**
      * Perform command on system.
-     *
+     * <p>
      * Inside command can be any code doing any changes. Such changes are
      * guaranteed to be preserved (if only command ended without exception).
      *
@@ -98,7 +93,7 @@ public class PersistenceControllerImpl<ROOT extends Serializable>
 
     /**
      * Perform command on system.
-     *
+     * <p>
      * Inside command can be any code doing any changes. Such changes are
      * guaranteed to be preserved (if only command ended without exception).
      *
@@ -144,6 +139,6 @@ public class PersistenceControllerImpl<ROOT extends Serializable>
 
     @Override
     public void snapshot() {
-        Politician.beatAroundTheBush(()->this.prevayler.takeSnapshot());
+        Politician.beatAroundTheBush(() -> this.prevayler.takeSnapshot());
     }
 }

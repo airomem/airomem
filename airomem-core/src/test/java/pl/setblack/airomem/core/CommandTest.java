@@ -5,12 +5,14 @@
  */
 package pl.setblack.airomem.core;
 
-import java.util.Date;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
+import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+
 /**
- *
  * @author jratajsk
  */
 public class CommandTest {

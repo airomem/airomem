@@ -6,22 +6,20 @@ package pl.setblack.airomem.core.builders;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-
-import java.io.Serializable;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.function.Supplier;
-
 import org.prevayler.Prevayler;
 import org.prevayler.PrevaylerFactory;
 import org.prevayler.foundation.serialization.JavaSerializer;
 import pl.setblack.airomem.core.PersistenceController;
 import pl.setblack.airomem.core.RestoreException;
-import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 import pl.setblack.airomem.core.impl.PersistenceControllerImpl;
 import pl.setblack.airomem.core.impl.RoyalFoodTester;
 import pl.setblack.airomem.core.kryo.KryoSerializer;
+
+import java.io.Serializable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.function.Supplier;
 
 /**
  *
@@ -136,7 +134,7 @@ public class PrevaylerBuilder<T extends Serializable> {
             PrevaylerFactory<RoyalFoodTester> factory = new PrevaylerFactory<>();
 
             if (getInitialSystem().isPresent()) {
-                factory.configurePrevalentSystem(RoyalFoodTester.of(getInitialSystem().get().get(),useRoyalFoodTester));
+                factory.configurePrevalentSystem(RoyalFoodTester.of(getInitialSystem().get().get(), useRoyalFoodTester));
             } else {
                 factory.configurePrevalentSystem(RoyalFoodTester.absent(useRoyalFoodTester));
             }
@@ -160,13 +158,11 @@ public class PrevaylerBuilder<T extends Serializable> {
     }
 
     public PrevaylerBuilder<T> withinUserFolder(final String folderName) {
-        final Path userPath = PersistenceDiskHelper.calcUserPath( folderName);
+        final Path userPath = PersistenceDiskHelper.calcUserPath(folderName);
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
         copy.folder = userPath;
         return copy;
     }
-
-
 
 
     public PrevaylerBuilder<T> forceOverwrite(final boolean overwrite) {

@@ -7,7 +7,6 @@ package pl.setblack.airomem.core;
 import pl.setblack.airomem.core.builders.PrevaylerBuilder;
 import pl.setblack.airomem.data.DataRoot;
 
-import javax.xml.crypto.Data;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,7 +59,7 @@ public class Persistent<T extends Serializable> implements AutoCloseable {
     }
 
     public <RESULT> RESULT query(Query<T, RESULT> query) {
-        return controller.query((dataRoot)->query.evaluate(dataRoot.getDataObject()));
+        return controller.query((dataRoot) -> query.evaluate(dataRoot.getDataObject()));
     }
 
     public T readOnly() {

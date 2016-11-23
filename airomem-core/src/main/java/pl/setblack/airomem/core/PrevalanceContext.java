@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * Context object.
- *
+ * <p>
  * May be used to get time of command.
  *
  * @author jratajsk
@@ -22,8 +22,9 @@ public class PrevalanceContext {
     public final boolean safe;
 
     public PrevalanceContext(final Date date) {
-        this( date.toInstant(), false);
+        this(date.toInstant(), false);
     }
+
     private PrevalanceContext(final Instant time, final boolean safe) {
         this.time = time;
         this.safe = safe;

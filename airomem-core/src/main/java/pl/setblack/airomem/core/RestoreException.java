@@ -6,13 +6,12 @@ package pl.setblack.airomem.core;
 
 /**
  * Indicated problem appeared during restore.
- *
+ * <p>
  * Mostly it happens when classes changed so much they cannot be restored from
  * stream. Helpful might be serialVersionUID.
- *
+ * <p>
  * If You work on test sysem You can simply delete Prevayler folder and this
  * should clean all outdated data.
- *
  */
 public class RestoreException extends RuntimeException {
 

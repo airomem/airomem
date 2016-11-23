@@ -3,15 +3,12 @@
  */
 package pl.setblack.airomem.core;
 
-import java.beans.Transient;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import pl.setblack.airomem.core.Storable;
 
 /**
- *
  * @author jarekr
  */
 public class StorableObject implements Serializable {

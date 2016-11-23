@@ -7,7 +7,6 @@ package pl.setblack.airomem.core.disk;
 import org.junit.Test;
 
 /**
- *
  * @author jarek ratajski
  */
 public class PersistenceDiskHelperTest {

@@ -17,21 +17,21 @@ public interface PersistenceController<ROOT extends Serializable> extends AutoCl
 
     /**
      * Query system (immutable view of it).
-     *
+     * <p>
      * Few things to remember: 1. if operations done on system (using query) do
      * make some changes they will not be preserved (for long) 2. it is possible
      * to return any object from domain (including ROOT root) and perform
      * operations later on (but the more You do inside Query the safer).
      *
      * @param <RESULT> result of query
-     * @param query lambda (or query implementation) with operations
+     * @param query    lambda (or query implementation) with operations
      * @return calculated result
      */
     <RESULT> RESULT query(Query<ROOT, RESULT> query);
 
     /**
      * Perform command on system.
-     *
+     * <p>
      * Inside command can be any code doing any changes. Such changes are
      * guaranteed to be preserved (if only command ended without exception).
      *
@@ -41,7 +41,7 @@ public interface PersistenceController<ROOT extends Serializable> extends AutoCl
 
     /**
      * Perform command on system.
-     *
+     * <p>
      * Inside command can be any code doing any changes. Such changes are
      * guaranteed to be preserved (if only command ended without exception).
      *

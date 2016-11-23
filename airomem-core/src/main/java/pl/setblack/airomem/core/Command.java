@@ -4,10 +4,10 @@ package pl.setblack.airomem.core;
 
 /**
  * Command interface without context.
- *
+ * <p>
  * Enclose all operations that mutate system in commands. This can be easily
  * achieved with lambdas :
- *
+ * <p>
  * Command cmd = system -&gt; system.doSomething();
  *
  * @author jarekr

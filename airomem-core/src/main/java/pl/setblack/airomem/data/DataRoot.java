@@ -3,8 +3,6 @@
  */
 package pl.setblack.airomem.data;
 
-import pl.setblack.airomem.core.Storable;
-
 import java.io.Serializable;
 
 /**
@@ -12,7 +10,7 @@ import java.io.Serializable;
  *
  * @author jarekr
  */
-public class DataRoot< DATA >  implements Serializable{
+public class DataRoot<DATA> implements Serializable {
     private static final long serialVersionId = 1l;
     private final DATA persistentObject;
 

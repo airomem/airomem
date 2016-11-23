@@ -5,14 +5,14 @@
 package pl.setblack.airomem.core.impl;
 
 import com.google.common.base.Optional;
+import org.prevayler.foundation.DeepCopier;
 
 import java.io.IOException;
 import java.io.Serializable;
-import org.prevayler.foundation.DeepCopier;
 
 /**
  * Consistency wrapper for a persistent object.
- *
+ * <p>
  * This container holds two instances of persistence object.
  * FoodTester  -  object on which transactions are first applied.
  * SafeCopy - is the real state of a system  - transactions are applied to it
@@ -66,7 +66,7 @@ public class RoyalFoodTester<T> implements Serializable {
     }
 
     public T getWorkObject() {
-            return this.getFoodTester();
+        return this.getFoodTester();
     }
 
     public T getSafeCopy() {
@@ -74,7 +74,7 @@ public class RoyalFoodTester<T> implements Serializable {
     }
 
     public final void restore() {
-        if ( isSafe()) {
+        if (isSafe()) {
             this.foodTester = (Optional<T>) DeepCopier.deepCopy(this.safeCopy);
         } else {
             this.foodTester = this.safeCopy;

@@ -5,10 +5,10 @@ package pl.setblack.airomem.core.sequnce;
 
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
- *
  * @author jarek ratajski
  */
 public class SequenceTest {

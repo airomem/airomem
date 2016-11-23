@@ -8,7 +8,6 @@ import org.junit.Test;
 import pl.setblack.airomem.core.builders.AbstractPrevaylerTest;
 
 /**
- *
  * @author jarekr
  */
 public class SequencePersistenceTest

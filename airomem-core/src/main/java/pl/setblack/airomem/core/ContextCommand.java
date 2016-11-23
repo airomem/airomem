@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 /**
  * Command interface for all operations that mutate system.
- *
+ * <p>
  * Implement command (classic class or lambda) and pass to persistence
  * Controller.
  *
@@ -16,8 +16,7 @@ import java.io.Serializable;
 public interface ContextCommand<T, R> extends Serializable {
 
     /**
-     *
-     * @param system reference to mutable system
+     * @param system  reference to mutable system
      * @param context context info (such as date)
      */
     R execute(T system, PrevalanceContext context);

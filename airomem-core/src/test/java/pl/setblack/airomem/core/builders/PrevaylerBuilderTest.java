@@ -4,24 +4,23 @@
  */
 package pl.setblack.airomem.core.builders;
 
-import java.io.*;
-import java.nio.file.Path;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BooleanSupplier;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
-import pl.setblack.airomem.core.*;
+import pl.setblack.airomem.core.PersistenceController;
+import pl.setblack.airomem.core.RestoreException;
+import pl.setblack.airomem.core.StorableObject;
+import pl.setblack.airomem.core.VoidCommand;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 import pl.setblack.badass.Politician;
+
+import java.io.*;
+import java.nio.file.Path;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static org.junit.Assert.*;
 
 /**
  * @author jarek ratajski
@@ -179,14 +178,15 @@ public class PrevaylerBuilderTest {
                 .disableRoyalFoodTester();
         //WHEN
 
-                final PersistenceController<StorableObject> ctrl = builder.build();
+        final PersistenceController<StorableObject> ctrl = builder.build();
         try {
             ctrl.execute((x) -> {
                 x.internalMap.put("key:1", "myVal");
                 throw new RuntimeException();
             });
 
-        } catch (RuntimeException e) {}
+        } catch (RuntimeException e) {
+        }
 
         assertEquals("myVal", ctrl.query(c -> c.getImmutable().get("key:1")));
     }
@@ -252,13 +252,13 @@ public class PrevaylerBuilderTest {
         try (
                 final PersistenceController<StorableObject> ctrl = builder.build();) {
             ctrl.execute((x) -> {
-                calledInsideTransactionCheck[0]  = true;
+                calledInsideTransactionCheck[0] = true;
                 x.internalMap.put("key:2", "dzikc");
             });
             ctrl.snapshot();
         }
 
-        calledInsideTransactionCheck[0]  = false;
+        calledInsideTransactionCheck[0] = false;
         try (
                 PersistenceController<StorableObject> controller2 = builder.build();) {
             controller2.query(obj -> obj.internalMap.get("key:2"));

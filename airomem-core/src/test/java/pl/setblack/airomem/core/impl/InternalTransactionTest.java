@@ -5,22 +5,20 @@
  */
 package pl.setblack.airomem.core.impl;
 
+import org.junit.Test;
+import pl.setblack.airomem.core.PrevalanceContext;
 import pl.setblack.airomem.core.StorableObject;
+import pl.setblack.airomem.core.VoidContextCommand;
+import pl.setblack.airomem.core.WriteChecker;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneOffset;
 import java.util.Date;
+
 import static org.junit.Assert.*;
-import org.junit.Test;
-import pl.setblack.airomem.core.PrevalanceContext;
-import pl.setblack.airomem.core.VoidContextCommand;
-import pl.setblack.airomem.core.WriteChecker;
-import pl.setblack.airomem.core.impl.InternalTransaction;
-import pl.setblack.airomem.core.impl.RoyalFoodTester;
 
 /**
- *
  * @author jratajsk
  */
 public class InternalTransactionTest {
@@ -102,8 +100,9 @@ public class InternalTransactionTest {
         final RoyalFoodTester<StorableObject> testSystem = RoyalFoodTester.of(StorableObject.createTestObject(), false);
 
         try {
-            instance.executeAndQuery(testSystem, date );
-        } catch ( RuntimeException e) {}
+            instance.executeAndQuery(testSystem, date);
+        } catch (RuntimeException e) {
+        }
 
 
         assertEquals("isunsafe", testSystem.getSafeCopy().internalMap.get("unsafe"));
