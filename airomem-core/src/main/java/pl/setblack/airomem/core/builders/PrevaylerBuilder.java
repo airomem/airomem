@@ -28,6 +28,7 @@ import pl.setblack.airomem.core.kryo.KryoSerializer;
  */
 public class PrevaylerBuilder<T extends Serializable> {
 
+    public static final Path PREVAYLER_DEFAULT_FOLDER = Paths.get("prevayler");
     /**
      * Must be defined for create initialSystem.
      */
@@ -51,7 +52,7 @@ public class PrevaylerBuilder<T extends Serializable> {
         initialSystem = Optional.absent();
         forceOverwrite = false;
         allowCreate = false;
-        folder = Paths.get("prevayler");
+        folder = PREVAYLER_DEFAULT_FOLDER;
         journalDiskSync = false;
         useFastJournalSerialization = true;
         useFastSnapshotSerialization = false;
@@ -59,7 +60,7 @@ public class PrevaylerBuilder<T extends Serializable> {
     }
 
 
-    private PrevaylerBuilder(final PrevaylerBuilder original) {
+    private PrevaylerBuilder(final PrevaylerBuilder<T> original) {
         this.initialSystem = original.getInitialSystem();
         this.forceOverwrite = original.isForceOverwrite();
         this.allowCreate = original.isAllowCreate();
@@ -70,7 +71,7 @@ public class PrevaylerBuilder<T extends Serializable> {
         this.useRoyalFoodTester = original.isUseRoyalFoodTester();
     }
 
-    public static PrevaylerBuilder newBuilder() {
+    public static <S extends Serializable> PrevaylerBuilder<S> newBuilder() {
         return new PrevaylerBuilder();
     }
 
@@ -115,7 +116,7 @@ public class PrevaylerBuilder<T extends Serializable> {
         return useRoyalFoodTester;
     }
 
-    public PrevaylerBuilder<T> useSupplier(final Supplier<Serializable> supplier) {
+    public PrevaylerBuilder<T> useSupplier(final Supplier<T> supplier) {
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
         copy.initialSystem = Optional.of(supplier);
         return copy;

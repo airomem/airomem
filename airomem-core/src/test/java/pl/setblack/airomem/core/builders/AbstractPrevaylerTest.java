@@ -4,6 +4,7 @@
 package pl.setblack.airomem.core.builders;
 
 import java.io.File;
+import java.io.Serializable;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,7 +16,7 @@ import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
  *
  * @author jarekr
  */
-public abstract class AbstractPrevaylerTest<T extends Storable<R>, R> {
+public abstract class AbstractPrevaylerTest<T extends Serializable> {
 
     protected PersistenceController<T> persistenceController;
 
@@ -35,7 +36,7 @@ public abstract class AbstractPrevaylerTest<T extends Storable<R>, R> {
         System.setProperty("user.home",  localFolder.getAbsolutePath());
         AbstractPrevaylerTest.deletePrevaylerFolder();
         this.persistenceController = PrevaylerBuilder
-                .newBuilder()
+                .<T>newBuilder()
                 .withinUserFolder("test")
                 .forceOverwrite(true)
                 .useSupplier(()->createSystem())
@@ -54,10 +55,9 @@ public abstract class AbstractPrevaylerTest<T extends Storable<R>, R> {
     protected void reloadController(Class<T> type) {
         this.persistenceController.close();
         this.persistenceController = PrevaylerBuilder
-                .newBuilder()
+                .<T>newBuilder()
                 .withinUserFolder("test")
                 .forceOverwrite(false)
-
                 .build();
     }
 

@@ -12,7 +12,7 @@ import pl.setblack.airomem.core.builders.AbstractPrevaylerTest;
  * @author jarekr
  */
 public class SequencePersistenceTest
-        extends AbstractPrevaylerTest<SequenceSystem, SequenceSystemView> {
+        extends AbstractPrevaylerTest<SequenceSystem> {
 
     @Override
     protected SequenceSystem createSystem() {

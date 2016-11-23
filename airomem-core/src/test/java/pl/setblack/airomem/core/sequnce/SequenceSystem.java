@@ -7,26 +7,25 @@ import pl.setblack.airomem.core.Storable;
 import pl.setblack.airomem.core.WriteChecker;
 import pl.setblack.airomem.core.builders.WriteCheckerTest;
 
+import java.io.Serializable;
+
 /**
  *
  * @author jarekr
  */
-public class SequenceSystem implements Storable<SequenceSystemView>, SequenceSystemView {
+public class SequenceSystem implements Serializable {
 
     private final Sequence seq = new Sequence();
 
     private long number;
 
-    @Override
-    public SequenceSystemView getImmutable() {
-        return this;
-    }
+
 
     public Sequence getSequence() {
         return seq;
     }
 
-    @Override
+
     public long getNumber() {
         return this.number;
     }

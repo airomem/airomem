@@ -18,13 +18,20 @@ public class StorableObject implements Serializable {
 
     public final HashMap<String, String> internalMap;
 
-    public transient Map<String, String> immutable;
+    private transient Map<String, String> immutable;
 
     public StorableObject(HashMap<String, String> intenralMap) {
         this.internalMap = intenralMap;
         this.immutable = Collections.unmodifiableMap(intenralMap);
     }
 
+
+    public synchronized Map<String, String> getImmutable() {
+        if (this.immutable == null) {
+            this.immutable = Collections.unmodifiableMap(internalMap);
+        }
+        return immutable;
+    }
 
     public static HashMap createTestHashMap() {
         final HashMap<String, String> result = new HashMap<>();

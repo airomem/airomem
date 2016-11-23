@@ -6,8 +6,6 @@ package pl.setblack.airomem.core.builders;
 
 import java.io.*;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.io.FileUtils;
@@ -30,6 +28,7 @@ public class PrevaylerBuilderTest {
 
     private static final AtomicReference<Boolean> failureMarker = new AtomicReference<>(Boolean.FALSE);
 
+
     final Path testFolder = new File("prevayler/test").toPath();
 
     private static boolean isFailureNeeded() {
@@ -41,18 +40,19 @@ public class PrevaylerBuilderTest {
 
     @Before
     public void setUp() {
-        deletePrevaylerFolder();
+        deletePrevaylerFolders();
         failureMarker.set(Boolean.FALSE);
 
     }
 
-    private void deletePrevaylerFolder() {
+    private void deletePrevaylerFolders() {
         PersistenceDiskHelper.delete(this.testFolder);
+        PersistenceDiskHelper.delete(PrevaylerBuilder.PREVAYLER_DEFAULT_FOLDER);
     }
 
     @After
     public void tearDown() {
-        deletePrevaylerFolder();
+        deletePrevaylerFolders();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -77,10 +77,10 @@ public class PrevaylerBuilderTest {
     public void shouldReallyExecuteValues() {
         //WHEN
         try (
-                final PersistenceController<StorableObject> ctrl = PrevaylerBuilder.newBuilder().useSupplier(() -> StorableObject.createTestObject()).build();) {
+                final PersistenceController<StorableObject> ctrl = PrevaylerBuilder.<StorableObject>newBuilder().useSupplier(() -> StorableObject.createTestObject()).build();) {
             ctrl.execute((x) -> x.internalMap.put("myKey", "myVal"));
             //THEN
-            assertEquals("myVal", ctrl.query((x) -> x.immutable.get("myKey")));
+            assertEquals("myVal", ctrl.query((x) -> x.getImmutable().get("myKey")));
         }
     }
 
@@ -88,7 +88,7 @@ public class PrevaylerBuilderTest {
     public void shouldPreventValuesUponException() {
         //WHEN
         try (
-                final PersistenceController<StorableObject> ctrl = PrevaylerBuilder.newBuilder().useSupplier(() -> StorableObject.createTestObject()).build();) {
+                final PersistenceController<StorableObject> ctrl = PrevaylerBuilder.<StorableObject>newBuilder().useSupplier(() -> StorableObject.createTestObject()).build();) {
             ctrl.execute((x) -> x.internalMap.put("myKey", "myVal"));
             try {
                 ctrl.execute((x) -> {
@@ -97,7 +97,7 @@ public class PrevaylerBuilderTest {
                 });
             } catch (RuntimeException re) {
                 //THEN
-                assertEquals("myVal", ctrl.query((x) -> x.immutable.get("myKey")));
+                assertEquals("myVal", ctrl.query((x) -> x.getImmutable().get("myKey")));
             }
 
         }
@@ -106,7 +106,7 @@ public class PrevaylerBuilderTest {
     @Test
     public void shouldUseGivenFolder() {
         //GIVEN
-        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.newBuilder()
+        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.<StorableObject>newBuilder()
                 .useSupplier(StorableObject::createTestObject)
                 .withFolder(testFolder);
 
@@ -122,7 +122,7 @@ public class PrevaylerBuilderTest {
     @Test
     public void shouldOverweriteSystem() {
         //GIVEN
-        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.newBuilder()
+        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.<StorableObject>newBuilder()
                 .useSupplier(StorableObject::createTestObject)
                 .forceOverwrite(true);
         //WHEN
@@ -138,7 +138,7 @@ public class PrevaylerBuilderTest {
         //THEN
         try (
                 final PersistenceController<StorableObject> ctrl = builder.build();) {
-            final String val = ctrl.query(s -> s.immutable.get("key:1"));
+            final String val = ctrl.query(s -> s.getImmutable().get("key:1"));
             assertEquals("val:1", val);
         }
     }
@@ -147,7 +147,7 @@ public class PrevaylerBuilderTest {
     @Test
     public void shouldEraseSystem() {
         //GIVEN
-        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.newBuilder()
+        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.<StorableObject>newBuilder()
                 .useSupplier(StorableObject::createTestObject)
                 .forceOverwrite(false);
         //WHEN
@@ -163,7 +163,7 @@ public class PrevaylerBuilderTest {
         //THEN
         try (
                 final PersistenceController<StorableObject> ctrl = builder.build();) {
-            final String val = ctrl.query(s -> s.immutable.get("key:1"));
+            final String val = ctrl.query(s -> s.getImmutable().get("key:1"));
             assertEquals("val:1", val);
         }
     }
@@ -172,7 +172,7 @@ public class PrevaylerBuilderTest {
     @Test
     public void shouldWorkOnDisabledRFT() {
         //GIVEN
-        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.newBuilder()
+        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.<StorableObject>newBuilder()
                 .useSupplier(StorableObject::createTestObject)
                 .disableRoyalFoodTester();
         //WHEN
@@ -186,13 +186,13 @@ public class PrevaylerBuilderTest {
 
         } catch (RuntimeException e) {}
 
-        assertEquals("myVal", ctrl.query(c -> c.immutable.get("key:1")));
+        assertEquals("myVal", ctrl.query(c -> c.getImmutable().get("key:1")));
     }
 
     @Test
     public void shouldUseJavaSerializerForJournaling() {
         //GIVEN
-        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.newBuilder()
+        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.<StorableObject>newBuilder()
                 .useSupplier(StorableObject::createTestObject)
                 .withJournalFastSerialization(false);
         StrangeTransaction.counter = 0;
@@ -207,7 +207,7 @@ public class PrevaylerBuilderTest {
     @Test
     public void shouldUseFastSerializerForJournaling() {
         //GIVEN
-        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.newBuilder()
+        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.<StorableObject>newBuilder()
                 .useSupplier(StorableObject::createTestObject)
                 .withJournalFastSerialization(true);
         StrangeTransaction.counter = 0;
@@ -222,7 +222,7 @@ public class PrevaylerBuilderTest {
     @Test(expected = RestoreException.class)
     public void shouldThrowRestoreExceptionWhenLoadFails() {
         //GIVEN
-        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.newBuilder()
+        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.<StorableObject>newBuilder()
                 .useSupplier(StorableObject::createTestObject)
                 .withJournalFastSerialization(false);
         try (
@@ -248,7 +248,7 @@ public class PrevaylerBuilderTest {
         localFolder.mkdirs();
         try (
                 final PersistenceController<StorableObject> ctrl =
-                        PrevaylerBuilder.newBuilder()
+                        PrevaylerBuilder.<StorableObject>newBuilder()
                                 .useSupplier(StorableObject::createTestObject)
                                 .withinUserFolder("myfolder").build();) {
 

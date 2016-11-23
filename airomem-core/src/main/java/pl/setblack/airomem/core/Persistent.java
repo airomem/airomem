@@ -7,7 +7,9 @@ package pl.setblack.airomem.core;
 import pl.setblack.airomem.core.builders.PrevaylerBuilder;
 import pl.setblack.airomem.data.DataRoot;
 
+import javax.xml.crypto.Data;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
@@ -25,21 +27,19 @@ public class Persistent<T extends Serializable> implements AutoCloseable {
         this.controller = controller;
     }
 
-    public static boolean exists(String name) {
-        throw new UnsupportedOperationException("aa");
-        /*final PersistenceFactory factory = new PersistenceFactory();
-        return factory.exists(name);*/
+    public static boolean exists(Path path) {
+        return Files.exists(path);
     }
 
     public static <T extends Serializable> Persistent<T> load(Path path) {
-        return new Persistent<T>(PrevaylerBuilder.newBuilder()
+        return new Persistent<T>(PrevaylerBuilder.<DataRoot<T>>newBuilder()
                 .withFolder(path)
                 .build());
     }
 
     public static <T extends Serializable> Persistent<T> loadOptional(Path path, Supplier<T> constructor, boolean useRoyalFoodTester) {
-        return new Persistent<T>(PrevaylerBuilder.newBuilder()
-                .useSupplier(constructor)
+        return new Persistent<T>(PrevaylerBuilder.<DataRoot<T>>newBuilder()
+                .useSupplier(() -> new DataRoot<>(constructor.get()))
                 .withRoyalFoodTester(useRoyalFoodTester)
                 .withFolder(path)
                 .build());
@@ -52,8 +52,8 @@ public class Persistent<T extends Serializable> implements AutoCloseable {
 
 
     public static <T extends Serializable> Persistent<T> create(Path path, T initial) {
-        return new Persistent<T>(PrevaylerBuilder.newBuilder()
-                .useSupplier(() -> initial)
+        return new Persistent<T>(PrevaylerBuilder.<DataRoot<T>>newBuilder()
+                .useSupplier(() -> new DataRoot<>(initial))
                 .forceOverwrite(true)
                 .withFolder(path)
                 .build());

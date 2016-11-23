@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
  */
 public class PersistentTest {
 
-    private final File localFolder = new File("prevayler/");
+    private final File localFolder = new File("prevayler");
 
     public PersistentTest() {
     }
@@ -97,7 +97,7 @@ public class PersistentTest {
     }
 
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testLoadWithNoStoredSystemShouldFail() {
         //WHEN
         Persistent.load(localFolder.toPath());
@@ -164,7 +164,7 @@ public class PersistentTest {
         }
         //when
         //then
-        assertTrue(Persistent.exists("test"));
+        assertTrue(Persistent.exists(localFolder.toPath()));
     }
 
     @Test
@@ -173,7 +173,7 @@ public class PersistentTest {
 
         //when
         //then
-        assertFalse(Persistent.exists("test"));
+        assertFalse(Persistent.exists(localFolder.toPath()));
     }
 
     @Test
