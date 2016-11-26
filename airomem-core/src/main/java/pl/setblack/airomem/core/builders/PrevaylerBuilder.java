@@ -6,6 +6,7 @@ package pl.setblack.airomem.core.builders;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.thoughtworks.xstream.XStream;
 import org.prevayler.Prevayler;
 import org.prevayler.PrevaylerFactory;
 import org.prevayler.foundation.serialization.JavaSerializer;
@@ -15,8 +16,10 @@ import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 import pl.setblack.airomem.core.impl.PersistenceControllerImpl;
 import pl.setblack.airomem.core.impl.RoyalFoodTester;
 import pl.setblack.airomem.core.kryo.KryoSerializer;
+import pl.setblack.badass.Politician;
 
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Supplier;
@@ -203,6 +206,17 @@ public class PrevaylerBuilder<T extends Serializable> {
         final PrevaylerBuilder copy  = new PrevaylerBuilder(this);
         copy.transientMode = true;
         return copy;
+    }
+
+    public PrevaylerBuilder<T> initialFromXML(Path xmlFile) {
+        final PrevaylerBuilder copy  = new PrevaylerBuilder(this);
+        copy.initialSystem = Optional.<Supplier<T>>of(() -> readXML(xmlFile));
+        return copy;
+    }
+
+    private T readXML(Path xmlFile) {
+        final XStream xs = new XStream();
+        return Politician.beatAroundTheBush( () -> (T)xs.fromXML(Files.newInputStream(xmlFile)));
     }
 
 }

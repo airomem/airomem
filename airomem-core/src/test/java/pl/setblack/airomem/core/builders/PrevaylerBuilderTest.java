@@ -5,6 +5,7 @@
 package pl.setblack.airomem.core.builders;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -124,6 +125,7 @@ public class PrevaylerBuilderTest {
     @Test
     public void shouldStoreXML() throws IOException {
         //GIVEN
+        final Path storedPath = Paths.get("target/my.xml");
         final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.<StorableObject>newBuilder()
                 .useSupplier(StorableObject::createTestObject)
                 .withFolder(testFolder);
@@ -133,7 +135,28 @@ public class PrevaylerBuilderTest {
                 final PersistenceController<StorableObject> ctrl = builder.build();) {
             ctrl.execute((x) -> x.internalMap.put("myKey", "myVal"));
 
-            ctrl.snapshotXML(Paths.get("target/my.xml"));
+            ctrl.snapshotXML(storedPath);
+        }
+
+        //THEN
+        final String stored = IOUtils.toString(storedPath.toUri());
+        final String  expected = IOUtils.toString(getClass().getResourceAsStream("/importMap.xml"));
+        assertEquals(expected, stored);
+
+    }
+
+    @Test
+    public void shouldLoadXML() throws Exception {
+        //GIVEN
+        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.<StorableObject>newBuilder()
+                .initialFromXML(Paths.get(getClass().getResource("/importMap.xml").toURI()))
+                .withFolder(testFolder);
+
+        //WHEN
+        try (
+                final PersistenceController<StorableObject> ctrl = builder.build();) {
+                //THEN
+            assertEquals("myVal", ctrl.query(storable -> storable.getImmutable().get("myKey")));
         }
     }
 
