@@ -46,6 +46,8 @@ public class PrevaylerBuilder<T extends Serializable> {
 
     private boolean useRoyalFoodTester;
 
+    private boolean transientMode;
+
     PrevaylerBuilder() {
         initialSystem = Optional.absent();
         forceOverwrite = false;
@@ -55,6 +57,7 @@ public class PrevaylerBuilder<T extends Serializable> {
         useFastJournalSerialization = true;
         useFastSnapshotSerialization = false;
         useRoyalFoodTester = true;
+        transientMode = false;
     }
 
 
@@ -67,6 +70,7 @@ public class PrevaylerBuilder<T extends Serializable> {
         this.useFastJournalSerialization = original.isUseFastJournalSerialization();
         this.useFastSnapshotSerialization = original.isUseFastSnapshotSerialization();
         this.useRoyalFoodTester = original.isUseRoyalFoodTester();
+        this.transientMode = original.transientMode;
     }
 
     public static <S extends Serializable> PrevaylerBuilder<S> newBuilder() {
@@ -74,7 +78,7 @@ public class PrevaylerBuilder<T extends Serializable> {
     }
 
     public PersistenceController<T> build() {
-        PersistenceControllerImpl<T> result = new PersistenceControllerImpl<>(getFolder());
+        PersistenceControllerImpl<T> result = new PersistenceControllerImpl<>(getFolder(), this.transientMode);
         if (this.isForceOverwrite()) {
             result.deleteFolder();
         }
@@ -128,23 +132,31 @@ public class PrevaylerBuilder<T extends Serializable> {
         }
     }
 
+    private RoyalFoodTester<T> createRoot() {
+        if (getInitialSystem().isPresent()) {
+          return RoyalFoodTester.of(getInitialSystem().get().get(), useRoyalFoodTester);
+        } else {
+            return RoyalFoodTester.absent(useRoyalFoodTester);
+        }
+    }
+
     private Prevayler createPrevayler() {
         Preconditions.checkArgument(getInitialSystem().isPresent() || PersistenceDiskHelper.exists(this.getFolder()));
         try {
             PrevaylerFactory<RoyalFoodTester> factory = new PrevaylerFactory<>();
+            factory.configurePrevalentSystem(createRoot());
 
-            if (getInitialSystem().isPresent()) {
-                factory.configurePrevalentSystem(RoyalFoodTester.of(getInitialSystem().get().get(), useRoyalFoodTester));
-            } else {
-                factory.configurePrevalentSystem(RoyalFoodTester.absent(useRoyalFoodTester));
-            }
             factory.configureJournalDiskSync(false);
             factory.configurePrevalenceDirectory(PersistenceDiskHelper.calcFolderName(this.getFolder()));
 
             factory.configureJournalSerializer(createSerializer(isUseFastJournalSerialization()));
             factory.configureTransactionDeepCopy(false);
-            final Prevayler prev = factory.create();
-            return prev;
+            if (this.transientMode) {
+                return factory.createTransientPrevayler(createRoot());
+            } else {
+                return factory.create();
+            }
+
         } catch (Error | Exception e) {
             throw new RestoreException(e);
         }
@@ -184,6 +196,12 @@ public class PrevaylerBuilder<T extends Serializable> {
     public PrevaylerBuilder<T> withJournalFastSerialization(boolean fastSerialization) {
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);
         copy.useFastJournalSerialization = fastSerialization;
+        return copy;
+    }
+
+    public PrevaylerBuilder<T> beTransient() {
+        final PrevaylerBuilder copy  = new PrevaylerBuilder(this);
+        copy.transientMode = true;
         return copy;
     }
 

@@ -18,6 +18,7 @@ import pl.setblack.badass.Politician;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.Assert.*;
@@ -117,6 +118,22 @@ public class PrevaylerBuilderTest {
             ctrl.execute((x) -> x.internalMap.put("myKey", "myVal"));
             //THEN
             assertTrue(PersistenceDiskHelper.exists(testFolder));
+        }
+    }
+
+    @Test
+    public void shouldStoreXML() throws IOException {
+        //GIVEN
+        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.<StorableObject>newBuilder()
+                .useSupplier(StorableObject::createTestObject)
+                .withFolder(testFolder);
+
+        //WHEN
+        try (
+                final PersistenceController<StorableObject> ctrl = builder.build();) {
+            ctrl.execute((x) -> x.internalMap.put("myKey", "myVal"));
+
+            ctrl.snapshotXML(Paths.get("target/my.xml"));
         }
     }
 
@@ -292,6 +309,31 @@ public class PrevaylerBuilderTest {
         }
     }
 
+
+    @Test
+    public void shouldStartTransientPrevayler() {
+        //WHEN
+        try (
+                final PersistenceController<StorableObject> ctrl =
+                        PrevaylerBuilder.<StorableObject>newBuilder()
+                                .useSupplier(StorableObject::createTestObject)
+                                .beTransient()
+                                .withFolder(this.testFolder).build();) {
+
+            ctrl.execute((x) -> x.internalMap.put("myKey", "myVal"));
+            ctrl.close();
+        }
+        try (
+                final PersistenceController<StorableObject> ctrl =
+                        PrevaylerBuilder.<StorableObject>newBuilder()
+                                .useSupplier(StorableObject::createTestObject)
+                                .beTransient()
+                                .withFolder(this.testFolder).build();) {
+
+            assertNull( ctrl.query( obj -> obj.getImmutable().get("myKey")));
+            ctrl.close();
+        }
+    }
     private static final class StrangeTransaction implements VoidCommand<StorableObject>, Serializable {
 
         private static int counter = 0;

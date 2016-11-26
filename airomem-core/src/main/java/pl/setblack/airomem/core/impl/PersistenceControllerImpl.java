@@ -2,11 +2,14 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package pl.setblack.airomem.core.impl;
 
+import com.thoughtworks.xstream.XStream;
 import org.prevayler.Prevayler;
 import pl.setblack.airomem.core.*;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 import pl.setblack.badass.Politician;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Path;
 
@@ -25,8 +28,11 @@ public class PersistenceControllerImpl<ROOT extends Serializable>
 
     private final Path path;
 
-    public PersistenceControllerImpl(final Path path) {
+    private final boolean isTransient;
+
+    public PersistenceControllerImpl(final Path path, boolean isTransient) {
         this.path = path;
+        this.isTransient = isTransient;
     }
 
     /**
@@ -38,7 +44,7 @@ public class PersistenceControllerImpl<ROOT extends Serializable>
     public void close() {
         Politician.beatAroundTheBush(() -> {
             if (this.prevayler != null) {
-                this.prevayler.takeSnapshot();
+                this.optionalSnapshot();
                 this.prevayler.close();
                 this.prevayler = null;
             }
@@ -60,7 +66,7 @@ public class PersistenceControllerImpl<ROOT extends Serializable>
 
     public void initSystem(final Prevayler<RoyalFoodTester<ROOT>> prevayler) {
         this.prevayler = prevayler;
-        Politician.beatAroundTheBush(() -> this.prevayler.takeSnapshot());
+        this.optionalSnapshot();
     }
 
     /**
@@ -137,8 +143,23 @@ public class PersistenceControllerImpl<ROOT extends Serializable>
         this.deleteFolder();
     }
 
+    private void optionalSnapshot() {
+            if ( !isTransient) {
+                snapshot();
+            }
+    }
+
     @Override
     public void snapshot() {
         Politician.beatAroundTheBush(() -> this.prevayler.takeSnapshot());
+    }
+
+    @Override
+    public void snapshotXML(Path xmlFile) throws IOException {
+        final ROOT root  =this.prevayler.prevalentSystem().getWorkObject();
+        XStream xStream = new XStream();
+        final FileOutputStream fout = new FileOutputStream(xmlFile.toFile());
+        xStream.toXML(root, fout);
+        fout.close();
     }
 }

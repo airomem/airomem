@@ -4,7 +4,9 @@
  */
 package pl.setblack.airomem.core;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Path;
 
 /**
  *
@@ -58,4 +60,6 @@ public interface PersistenceController<ROOT extends Serializable> extends AutoCl
     void erase();
 
     void snapshot();
+
+    void snapshotXML(Path xmlFile) throws IOException;
 }
