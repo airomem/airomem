@@ -55,8 +55,12 @@ Please read more on:
 
 # Release  notes
 
-## Version 1.1 (in progress)
+## Version 1.1.0
 - Simplified - no longer use Storable interface with getImmutable
 - Use *Path* in API instead of String name  of folder 
 - Transient version for tests
-- xml snapshot 
+- xml snapshot (import and export) 
+Important changes from 1.0.5
+ - No more SimpleController (what a stupid name it was :-) ?) - class is called *Persistent*
+ - *Path* instead  of Strings as folder names 
+
