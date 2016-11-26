@@ -60,7 +60,7 @@ Please read more on:
 - Use *Path* in API instead of String name  of folder 
 - Transient version for tests
 - xml snapshot (import and export) 
-Important changes from 1.0.5
+### Important changes from 1.0.5
  - No more SimpleController (what a stupid name it was :-) ?) - class is called *Persistent*
  - *Path* instead  of Strings as folder names 
 
