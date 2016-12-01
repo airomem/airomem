@@ -12,8 +12,8 @@ This is achieved because there is no _Database_. There is only _persistence_.
 
 #Motivation
 
-I hava lot of positive experience with _Prevayler_ - quite an old project published by Klaus Wuestefeld.
-Pure Prevayler lacks however some features  and is not perfectly safe for unexperienced teams.
+I have a lot of positive experience with _Prevayler_ - quite an old project published by Klaus Wuestefeld.
+Pure Prevayler lacks however some features  and is not perfectly safe for inexperienced teams.
 
 Goal of this project is to provide Prevayler based persistence with extra features such as Java 8 Lambda expressions,
 _Kryo_ based serialization, rich collections (_CQEngine_) and sanity checks that make Prevayler easier to implement.
@@ -44,7 +44,7 @@ There are only two things to do:
 #Performance - this thing is insane
 This thing must come. How fast is that? Can be more than 1000 times faster than traditional SQL / ORM approach...
 
-I've tried to measure spped in operations per second using [jpab](http://www.jpab.org/) project.
+I've tried to measure speed in operations per second using [jpab](http://www.jpab.org/) project.
 Results are [here](https://github.com/jarekratajski/airomem/wiki/JPAB-Benchmark).
 
 In reality one can expect to achive performance of 10 up to 1000 faster compared to DB/ORM approach.
