@@ -39,7 +39,8 @@ There are only two things to do:
   
  
 #How simple is that? (Sample Project)
-[Chat Sample](https://github.com/jarekratajski/airomem/wiki/Chat-Sample)
+**New!**
+[Galakpizza Sample](https://github.com/airomem/galakpizza)
 
 #Performance - this thing is insane
 This thing must come. How fast is that? Can be more than 1000 times faster than traditional SQL / ORM approach...
