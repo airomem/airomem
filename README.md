@@ -67,3 +67,4 @@ Please read more on:
  - *Path* instead  of Strings as folder names 
 
 ## Version 1.0.5
+.

@@ -38,7 +38,7 @@ public class WriteChecker {
     public static void leaveSafe() {
         assert hasPrevalanceContext() : "Context has to be initialized first";
         assert getContext().safe : "context must be safe before";
-        ;
+
         CONTEXT_STORE.set(getContext().unsafe());
     }
 
