@@ -4,7 +4,6 @@ package pl.setblack.airomem.core.impl;
 
 import com.thoughtworks.xstream.XStream;
 import org.prevayler.Prevayler;
-import pl.setblack.airomem.core.*;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 import pl.setblack.badass.Politician;
 
