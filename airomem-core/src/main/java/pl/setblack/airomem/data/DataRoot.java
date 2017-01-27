@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author jarekr
  */
 public class DataRoot<DATA> implements Serializable {
-    private static final long serialVersionId = 1l;
+    private static final long serialVersionUID = 1l;
     private final DATA persistentObject;
 
     public DataRoot(DATA persistentObject) {
