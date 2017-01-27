@@ -31,14 +31,10 @@ public class PrevaylerBuilderTest {
 
     private static final AtomicReference<Boolean> failureMarker = new AtomicReference<>(Boolean.FALSE);
 
-
     final Path testFolder = new File("prevayler/test").toPath();
 
     private static boolean isFailureNeeded() {
         return failureMarker.get();
-    }
-
-    public PrevaylerBuilderTest() {
     }
 
     @Before
@@ -63,6 +59,7 @@ public class PrevaylerBuilderTest {
         //WHEN
         try (final PersistenceController ctrl
                      = PrevaylerBuilder.newBuilder().build()) {
+            assertNotNull(ctrl);
         }
     }
 
@@ -277,6 +274,7 @@ public class PrevaylerBuilderTest {
         failureMarker.set(Boolean.TRUE);
         try (
                 PersistenceController<StorableObject> controller2 = builder.build();) {
+            assertNotNull(controller2);
         }
     }
 

@@ -23,9 +23,6 @@ public class PersistentTest {
 
     private final File localFolder = new File("prevayler");
 
-    public PersistentTest() {
-    }
-
     @Before
     public void setUp() {
         PersistenceDiskHelper.delete(localFolder.toPath());

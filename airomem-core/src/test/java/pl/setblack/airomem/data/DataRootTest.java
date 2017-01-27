@@ -15,9 +15,6 @@ public class DataRootTest {
 
     private DataRoot<BankAccount> bank;
 
-    public DataRootTest() {
-    }
-
     @Before
     public void setUp() {
         bank = new DataRoot<>(new BankAccount());

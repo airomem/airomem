@@ -19,9 +19,6 @@ public class CommandTest {
 
     private static final String COMMAND_PERFORMED_MARKER = "command performed";
 
-    public CommandTest() {
-    }
-
     @Test
     public void testExecuteWithContext() {
         StorableObject s = StorableObject.createTestObject();
