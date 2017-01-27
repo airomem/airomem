@@ -22,7 +22,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.Assert.*;
+import static junit.framework.Assert.*;
+
 
 /**
  * @author jarek ratajski
@@ -93,7 +94,7 @@ public class PrevaylerBuilderTest {
             try {
                 ctrl.execute((x) -> {
                     x.internalMap.put("myKey", "myBadVal");
-                    throw new RuntimeException();
+                    throw new IllegalStateException("should rollback change");
                 });
             } catch (RuntimeException re) {
                 //THEN
@@ -323,7 +324,7 @@ public class PrevaylerBuilderTest {
             //THEN
             File testFolder = new File(localFolder, "prevayler/myfolder");
             File[] insideFiles = testFolder.listFiles();
-            Assert.assertEquals(3, insideFiles.length);
+            assertEquals(3, insideFiles.length);
         } finally {
             Politician.beatAroundTheBush(() -> FileUtils.deleteDirectory(localFolder));
             System.setProperty("user.home", prevHome);

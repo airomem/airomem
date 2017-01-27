@@ -94,7 +94,7 @@ public class InternalTransactionTest {
 
         VoidContextCommand<StorableObject> myCmd = (x, ctx) -> {
             x.internalMap.put("unsafe", "isunsafe");
-            throw new RuntimeException("unsafe");
+            throw new IllegalStateException("unsafe");
         };
         InternalTransaction instance = new InternalTransaction(myCmd);
         final RoyalFoodTester<StorableObject> testSystem = RoyalFoodTester.of(StorableObject.createTestObject(), false);
