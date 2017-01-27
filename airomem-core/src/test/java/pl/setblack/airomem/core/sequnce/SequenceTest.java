@@ -15,9 +15,6 @@ public class SequenceTest {
 
     private Sequence sequence;
 
-    public SequenceTest() {
-    }
-
     @Before
     public void setUp() {
         this.sequence = new Sequence();

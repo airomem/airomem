@@ -7,8 +7,6 @@ package pl.setblack.airomem.core.disk;
 import org.apache.commons.io.FileUtils;
 import pl.setblack.badass.Politician;
 
-import java.io.File;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;

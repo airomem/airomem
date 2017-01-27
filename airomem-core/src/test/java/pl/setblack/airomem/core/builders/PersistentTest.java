@@ -54,7 +54,7 @@ public class PersistentTest {
     @Test
     public void testCreateTwice() {
         //GIVEN
-        final Persistent<HashMap<String, String>> persistent1 = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());
+        Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());
         //WHEN
         final Persistent<HashMap<String, String>> persistent2 = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());
         String val = persistent2.query(x -> x.get("key:2"));

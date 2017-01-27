@@ -70,7 +70,7 @@ public class PrevaylerBuilderTest {
         try (
                 final PersistenceController ctrl = PrevaylerBuilder.newBuilder().useSupplier(() -> StorableObject.createTestObject()).build();) {
             //THEN
-            Assert.assertNotNull(ctrl);
+            assertNotNull(ctrl);
         }
     }
 
@@ -220,7 +220,7 @@ public class PrevaylerBuilderTest {
         try {
             ctrl.execute((x) -> {
                 x.internalMap.put("key:1", "myVal");
-                throw new RuntimeException();
+                throw new IllegalStateException();
             });
 
         } catch (RuntimeException e) {

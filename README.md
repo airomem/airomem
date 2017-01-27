@@ -1,7 +1,7 @@
 airomem
 =======
 [![Build Status](https://travis-ci.org/airomem/airomem.svg?branch=master)](https://travis-ci.org/airomem/airomem)
-
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6c932d5fca3c4936aaaa8fab6a84a8e4)](https://www.codacy.com/app/jarekratajski/airomem?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=airomem/airomem&amp;utm_campaign=Badge_Grade)
 
 Airomem is Java persistence framework based on [Prevayler](http://prevayler.org/).
 The most important features are:
