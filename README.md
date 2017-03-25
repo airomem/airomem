@@ -56,7 +56,7 @@ Please read more on:
 
 # Release  notes
 ## Version 1.1.1
-Changed to use disk sync always. 
+Changed to use file  sync always. 
 It is slower but safer on some environments. 
 
 ## Version 1.1.0
