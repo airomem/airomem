@@ -56,7 +56,7 @@ public class PrevaylerBuilder<T extends Serializable> {
         forceOverwrite = false;
         allowCreate = false;
         folder = PREVAYLER_DEFAULT_FOLDER;
-        journalDiskSync = false;
+        journalDiskSync = true;
         useFastJournalSerialization = true;
         useFastSnapshotSerialization = false;
         useRoyalFoodTester = true;

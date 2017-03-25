@@ -55,6 +55,9 @@ Please read more on:
 [Wiki](https://github.com/jarekratajski/airomem/wiki)
 
 # Release  notes
+## Version 1.1.1
+Changed to use disk sync always. 
+It is slower but safer on some environments. 
 
 ## Version 1.1.0
 - Simplified - no longer use Storable interface with getImmutable
