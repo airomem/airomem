@@ -7,7 +7,6 @@ package pl.setblack.airomem.core.builders;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import pl.setblack.airomem.core.PersistenceController;
@@ -22,7 +21,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.Assert.*;
+import static junit.framework.Assert.*;
+
 
 /**
  * @author jarek ratajski
@@ -31,14 +31,10 @@ public class PrevaylerBuilderTest {
 
     private static final AtomicReference<Boolean> failureMarker = new AtomicReference<>(Boolean.FALSE);
 
-
     final Path testFolder = new File("prevayler/test").toPath();
 
     private static boolean isFailureNeeded() {
         return failureMarker.get();
-    }
-
-    public PrevaylerBuilderTest() {
     }
 
     @Before
@@ -63,6 +59,7 @@ public class PrevaylerBuilderTest {
         //WHEN
         try (final PersistenceController ctrl
                      = PrevaylerBuilder.newBuilder().build()) {
+            assertNotNull(ctrl);
         }
     }
 
@@ -72,7 +69,7 @@ public class PrevaylerBuilderTest {
         try (
                 final PersistenceController ctrl = PrevaylerBuilder.newBuilder().useSupplier(() -> StorableObject.createTestObject()).build();) {
             //THEN
-            Assert.assertNotNull(ctrl);
+            assertNotNull(ctrl);
         }
     }
 
@@ -96,7 +93,7 @@ public class PrevaylerBuilderTest {
             try {
                 ctrl.execute((x) -> {
                     x.internalMap.put("myKey", "myBadVal");
-                    throw new RuntimeException();
+                    throw new IllegalStateException("should rollback change");
                 });
             } catch (RuntimeException re) {
                 //THEN
@@ -222,7 +219,7 @@ public class PrevaylerBuilderTest {
         try {
             ctrl.execute((x) -> {
                 x.internalMap.put("key:1", "myVal");
-                throw new RuntimeException();
+                throw new IllegalStateException();
             });
 
         } catch (RuntimeException e) {
@@ -277,6 +274,7 @@ public class PrevaylerBuilderTest {
         failureMarker.set(Boolean.TRUE);
         try (
                 PersistenceController<StorableObject> controller2 = builder.build();) {
+            assertNotNull(controller2);
         }
     }
 
@@ -325,7 +323,7 @@ public class PrevaylerBuilderTest {
             //THEN
             File testFolder = new File(localFolder, "prevayler/myfolder");
             File[] insideFiles = testFolder.listFiles();
-            Assert.assertEquals(3, insideFiles.length);
+            assertEquals(3, insideFiles.length);
         } finally {
             Politician.beatAroundTheBush(() -> FileUtils.deleteDirectory(localFolder));
             System.setProperty("user.home", prevHome);

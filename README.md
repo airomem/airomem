@@ -1,7 +1,7 @@
 airomem
 =======
 [![Build Status](https://travis-ci.org/airomem/airomem.svg?branch=master)](https://travis-ci.org/airomem/airomem)
-
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6c932d5fca3c4936aaaa8fab6a84a8e4)](https://www.codacy.com/app/jarekratajski/airomem?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=airomem/airomem&amp;utm_campaign=Badge_Grade)
 
 Airomem is Java persistence framework based on [Prevayler](http://prevayler.org/).
 The most important features are:
@@ -39,6 +39,8 @@ There are only two things to do:
   
  
 # How simple is that? (Sample Project)
+**New!**
+[Galakpizza Sample](https://github.com/airomem/galakpizza)
 [Chat Sample](https://github.com/jarekratajski/airomem/wiki/Chat-Sample)
 
 # Performance - this thing is insane
@@ -54,6 +56,9 @@ Please read more on:
 [Wiki](https://github.com/jarekratajski/airomem/wiki)
 
 # Release  notes
+## Version 1.1.1
+Changed to use file  sync always. 
+It is slower but safer on some environments. 
 
 ## Version 1.1.0
 - Simplified - no longer use Storable interface with getImmutable
@@ -66,3 +71,4 @@ Please read more on:
  - *Path* instead  of Strings as folder names 
 
 ## Version 1.0.5
+.

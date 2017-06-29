@@ -7,8 +7,6 @@ package pl.setblack.airomem.core.disk;
 import org.apache.commons.io.FileUtils;
 import pl.setblack.badass.Politician;
 
-import java.io.File;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,22 +41,10 @@ public final class PersistenceDiskHelper {
         }
     }
 
-    private static Path getFolderPath(String name) {
-        if (name.contains(File.separator)) {
-            return FileSystems.getDefault().getPath(name);
-        } else {
-            return calcUserPath(name);
-        }
-    }
-
 
     public static Path calcUserPath(String folderName) {
         final String userFolder = System.getProperty("user.home");
         return Paths.get(userFolder, STORAGE_FOLDER, folderName).toAbsolutePath();
     }
 
-    public static Path userStoragePath() {
-        final String userFolder = System.getProperty("user.home");
-        return Paths.get(userFolder, STORAGE_FOLDER).toAbsolutePath();
-    }
 }

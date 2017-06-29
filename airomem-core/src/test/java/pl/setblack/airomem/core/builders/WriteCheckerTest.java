@@ -20,10 +20,7 @@ public class WriteCheckerTest {
     private PrevalanceContext ctx1;
     private PrevalanceContext ctx2;
 
-    public WriteCheckerTest() {
-    }
-
-    @Before
+     @Before
     public void setUp() {
         ctx1 = Mockito.mock(PrevalanceContext.class);
         ctx2 = Mockito.mock(PrevalanceContext.class);

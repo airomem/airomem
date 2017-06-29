@@ -11,9 +11,6 @@ import org.junit.Test;
  */
 public class PersistenceDiskHelperTest {
 
-    public PersistenceDiskHelperTest() {
-    }
-
     @Test(expected = UnsupportedOperationException.class)
     public void shouldFailOnCreate() {
         new PersistenceDiskHelper();

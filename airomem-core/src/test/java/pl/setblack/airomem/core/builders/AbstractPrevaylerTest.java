@@ -22,10 +22,6 @@ public abstract class AbstractPrevaylerTest<T extends Serializable> {
 
     protected abstract T createSystem();
 
-    public AbstractPrevaylerTest() {
-
-    }
-
     @Before
     public void setUp() {
         File localFolder = new File("prevayler/");
