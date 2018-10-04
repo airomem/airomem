@@ -9,6 +9,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.prevayler.foundation.serialization.JavaSerializer;
 import pl.setblack.airomem.core.PersistenceController;
 import pl.setblack.airomem.core.RestoreException;
 import pl.setblack.airomem.core.StorableObject;
@@ -249,6 +250,21 @@ public class PrevaylerBuilderTest {
         final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.<StorableObject>newBuilder()
                 .useSupplier(StorableObject::createTestObject)
                 .withJournalFastSerialization(true);
+        StrangeTransaction.counter = 0;
+        //WHEN
+        try (
+                final PersistenceController<StorableObject> ctrl = builder.build();) {
+            ctrl.execute(new StrangeTransaction());
+        }
+        assertTrue(StrangeTransaction.counter == 0);
+    }
+
+    @Test
+    public void shouldUseCustomSerializerForJournaling() {
+        //GIVEN
+        final PrevaylerBuilder<StorableObject> builder = PrevaylerBuilder.<StorableObject>newBuilder()
+                .useSupplier(StorableObject::createTestObject)
+                .useCustomJavaSerializer(new JavaSerializer());
         StrangeTransaction.counter = 0;
         //WHEN
         try (
