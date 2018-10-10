@@ -138,7 +138,7 @@ public class PrevaylerBuilderTest {
 
         //THEN
         final String stored = IOUtils.toString(storedPath.toUri());
-        final String  expected = IOUtils.toString(getClass().getResourceAsStream("/importMap.xml"));
+        final String expected = IOUtils.toString(getClass().getResourceAsStream("/importMap.xml"));
         assertEquals(expected, stored);
 
     }
@@ -153,7 +153,7 @@ public class PrevaylerBuilderTest {
         //WHEN
         try (
                 final PersistenceController<StorableObject> ctrl = builder.build();) {
-                //THEN
+            //THEN
             assertEquals("myVal", ctrl.query(storable -> storable.getImmutable().get("myKey")));
         }
     }
@@ -367,10 +367,11 @@ public class PrevaylerBuilderTest {
                                 .beTransient()
                                 .withFolder(this.testFolder).build();) {
 
-            assertNull( ctrl.query( obj -> obj.getImmutable().get("myKey")));
+            assertNull(ctrl.query(obj -> obj.getImmutable().get("myKey")));
             ctrl.close();
         }
     }
+
     private static final class StrangeTransaction implements VoidCommand<StorableObject>, Serializable {
 
         private static int counter = 0;
