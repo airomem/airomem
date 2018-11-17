@@ -159,7 +159,7 @@ public class PrevaylerBuilder<T extends Serializable> {
             PrevaylerFactory<RoyalFoodTester> factory = new PrevaylerFactory<>();
             factory.configurePrevalentSystem(createRoot());
 
-            factory.configureJournalDiskSync(false);
+            factory.configureJournalDiskSync(true);
             factory.configurePrevalenceDirectory(PersistenceDiskHelper.calcFolderName(this.getFolder()));
 
             factory.configureJournalSerializer(createSerializer(isUseFastJournalSerialization()));
