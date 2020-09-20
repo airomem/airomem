@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>pl.setblack</groupId>
     <artifactId>airomem-core</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <packaging>jar</packaging>
     <name>airomem core</name>
     <description>Prevayler based persistence engine</description>
