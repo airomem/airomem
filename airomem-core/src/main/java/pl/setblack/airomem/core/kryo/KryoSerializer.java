@@ -6,30 +6,25 @@ package pl.setblack.airomem.core.kryo;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.pool.KryoFactory;
-import com.esotericsoftware.kryo.pool.KryoPool;
+
 import com.esotericsoftware.kryo.serializers.ClosureSerializer;
+import com.esotericsoftware.kryo.util.DefaultInstantiatorStrategy;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 import org.prevayler.foundation.serialization.JavaSerializer;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.function.Supplier;
 
 /**
  * @author jarekr
  */
 public class KryoSerializer extends JavaSerializer {
-
-    private ThreadLocal<Kryo> kryos = new ThreadLocal<Kryo>() {
-        protected Kryo initialValue() {
-            return pool.borrow();
-        }
-    };
-
-    KryoFactory factory = () -> {
+    private Supplier<Kryo> factory = () -> {
         final Kryo kryo = new Kryo();
-        kryo.setInstantiatorStrategy(new Kryo.DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
+        kryo.setRegistrationRequired(false);
+        kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
         //kryo.register(java.lang.invoke.SerializedLambda.class);
         try {
             kryo.register(Class.forName(Kryo.class.getName() + "$Closure"), new ClosureSerializer());
@@ -38,8 +33,15 @@ public class KryoSerializer extends JavaSerializer {
         kryo.setReferenceResolver(new ReferenceResolver());
         return kryo;
     };
+    private ThreadLocal<Kryo> kryos = new ThreadLocal<Kryo>() {
+        protected Kryo initialValue() {
+            return factory.get();
+        }
+    };
 
-    private final KryoPool pool = new KryoPool.Builder(factory).build();
+
+
+//    private final KryoPool pool = new KryoPool.Builder(factory).build();
 
     private Kryo getKryo() {
         return this.kryos.get();
@@ -50,7 +52,6 @@ public class KryoSerializer extends JavaSerializer {
         try (Input input = new Input(stream, 1024)) {
             return getKryo().readClassAndObject(input);
         }
-
     }
 
     @Override

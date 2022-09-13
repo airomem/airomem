@@ -100,10 +100,10 @@ public class ReferenceResolver implements com.esotericsoftware.kryo.ReferenceRes
         return !Util.isWrapperClass(type) && !type.equals(String.class) && !type.equals(Date.class) && !type.equals(BigDecimal.class) && !type.equals(BigInteger.class);
     }
 
-    public void addReadObject(int id, Object object) {
-        while (id >= readObjects.size()) {
-            readObjects.add(null);
-        }
-        readObjects.set(id, object);
-    }
+//    public void addReadObject(int id, Object object) {
+//        while (id >= readObjects.size()) {
+//            readObjects.add(null);
+//        }
+//        readObjects.set(id, object);
+//    }
 }

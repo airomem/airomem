@@ -11,6 +11,8 @@ public class WriteChecker {
 
     private static final ThreadLocal<PrevalanceContext> CONTEXT_STORE = new ThreadLocal<>();
 
+    private WriteChecker() {}
+
     public static void setContext(final PrevalanceContext ctx) {
         assert !hasPrevalanceContext() : "Context was initialized before";
         CONTEXT_STORE.set(ctx);

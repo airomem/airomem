@@ -7,6 +7,7 @@ package pl.setblack.airomem.core.builders;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.security.AnyTypePermission;
 import org.prevayler.Prevayler;
 import org.prevayler.PrevaylerFactory;
 import org.prevayler.foundation.serialization.JavaSerializer;
@@ -232,6 +233,7 @@ public class PrevaylerBuilder<T extends Serializable> {
 
     private T readXML(Path xmlFile) {
         final XStream xs = new XStream();
+        xs.addPermission(AnyTypePermission.ANY);
         return Politician.beatAroundTheBush(() -> (T) xs.fromXML(Files.newInputStream(xmlFile)));
     }
 
