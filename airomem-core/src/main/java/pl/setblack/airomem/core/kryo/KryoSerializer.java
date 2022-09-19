@@ -25,11 +25,7 @@ public class KryoSerializer extends JavaSerializer {
         final Kryo kryo = new Kryo();
         kryo.setRegistrationRequired(false);
         kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
-        //kryo.register(java.lang.invoke.SerializedLambda.class);
-        try {
-            kryo.register(Class.forName(Kryo.class.getName() + "$Closure"), new ClosureSerializer());
-        } catch (ClassNotFoundException e) {
-        }
+        //maybe register lambdas later
         kryo.setReferenceResolver(new ReferenceResolver());
         return kryo;
     };
@@ -38,10 +34,6 @@ public class KryoSerializer extends JavaSerializer {
             return factory.get();
         }
     };
-
-
-
-//    private final KryoPool pool = new KryoPool.Builder(factory).build();
 
     private Kryo getKryo() {
         return this.kryos.get();
@@ -60,5 +52,4 @@ public class KryoSerializer extends JavaSerializer {
             getKryo().writeClassAndObject(output, object);
         }
     }
-
 }
