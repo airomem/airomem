@@ -190,6 +190,11 @@ public class PrevaylerBuilder<T extends Serializable> {
         return copy;
     }
 
+    public PrevaylerBuilder<T> withJournalSync(final boolean sync) {
+        final PrevaylerBuilder copy = new PrevaylerBuilder(this);
+        copy.journalDiskSync = sync;
+        return copy;
+    }
 
     public PrevaylerBuilder<T> forceOverwrite(final boolean overwrite) {
         final PrevaylerBuilder copy = new PrevaylerBuilder(this);

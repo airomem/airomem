@@ -332,6 +332,7 @@ public class PrevaylerBuilderTest {
                 final PersistenceController<StorableObject> ctrl =
                         PrevaylerBuilder.<StorableObject>newBuilder()
                                 .useSupplier(StorableObject::createTestObject)
+                                .withJournalSync(false)
                                 .withinUserFolder("myfolder").build();) {
 
             ctrl.execute((x) -> x.internalMap.put("myKey", "myVal"));

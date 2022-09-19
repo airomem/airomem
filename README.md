@@ -56,6 +56,10 @@ Please read more on:
 [Wiki](https://github.com/jarekratajski/airomem/wiki)
 
 # Release  notes
+## Version 1.2.0
+Works with java 11 or later
+
+
 ## Version 1.1.1
 Changed to use file  sync always. 
 It is slower but safer on some environments. 
