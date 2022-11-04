@@ -4,9 +4,12 @@
  */
 package pl.setblack.airomem.core.builders;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pl.setblack.airomem.core.Persistent;
 import pl.setblack.airomem.core.StorableObject;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
@@ -14,129 +17,128 @@ import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 import java.io.File;
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
 
 /**
  * @author jarek ratajski
  */
-public class PersistentTest {
+class PersistentTest {
 
     private final File localFolder = new File("prevayler");
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         PersistenceDiskHelper.delete(localFolder.toPath());
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         PersistenceDiskHelper.delete(localFolder.toPath());
     }
 
     @Test
-    public void testSimpleControllerCreation() {
+    void testSimpleControllerCreation() {
         //GIVEN
         final Persistent<HashMap<String, String>> persistent = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());
         //THEN
-        assertTrue(persistent.isOpen());
+        assertThat(persistent.isOpen()).isTrue();
     }
 
     @Test
-    public void testSimpleControllerQuery() {
+    void testSimpleControllerQuery() {
         //GIVEN
         final Persistent<HashMap<String, String>> persistent = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());
         //WHEN
         String val = persistent.query(x -> x.get("key:2"));
         //THEN
-        assertEquals("val:2", val);
+        assertThat("val:2").isEqualTo(val);
     }
 
     @Test
-    public void testCreateTwice() {
+    void testCreateTwice() {
         //GIVEN
         Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());
         //WHEN
         final Persistent<HashMap<String, String>> persistent2 = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());
         String val = persistent2.query(x -> x.get("key:2"));
         //THEN
-        assertEquals("val:2", val);
+        assertThat("val:2").isEqualTo(val);
     }
 
     @Test
-    public void testSimpleControlleReadOnly() {
+    void testSimpleControlleReadOnly() {
         //GIVEN
         final Persistent<HashMap<String, String>> persistent = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());
         //WHEN
         String val = persistent.readOnly().get("key:2");
         //THEN
-        assertEquals("val:2", val);
+        assertThat("val:2").isEqualTo(val);
     }
 
     @Test
-    public void testSimpleControllerClose() {
+    void testSimpleControllerClose() {
         //GIVEN
         final Persistent<HashMap<String, String>> persistent = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());
         //WHEN
         persistent.close();
         //THEN
-        assertFalse(persistent.isOpen());
+        assertThat(persistent.isOpen()).isFalse();
     }
 
     @Test
-    public void testSimpleControllerShut() {
+    void testSimpleControllerShut() {
         //GIVEN
         final Persistent<HashMap<String, String>> persistent = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());
         //WHEN
         persistent.shut();
         //THEN
-        assertFalse(persistent.isOpen());
+        assertThat(persistent.isOpen()).isFalse();
     }
 
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testLoadWithNoStoredSystemShouldFail() {
+    @Test
+    void testLoadWithNoStoredSystemShouldFail() {
         //WHEN
-        Persistent.load(localFolder.toPath());
+        assertThatThrownBy(()-> Persistent.load(localFolder.toPath())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void testExecutePerformed() {
+    void testExecutePerformed() {
         //GIVEN
         try (
                 final Persistent<HashMap<String, String>> persistent = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());) {
             //WHEN
             persistent.executeAndQuery((x, ctx) -> x.put("key:1", "otherVal"));
             //THEN
-            assertEquals("otherVal", persistent.query(x -> x.get("key:1")));
+            assertThat("otherVal").isEqualTo(persistent.query(x -> x.get("key:1")));
         }
     }
 
     @Test
-    public void testExecuteAndQueryWithoutContextPerformed() {
+    void testExecuteAndQueryWithoutContextPerformed() {
         //GIVEN
         try (
                 final Persistent<HashMap<String, String>> persistent = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());) {
             //WHEN
             persistent.executeAndQuery((x) -> x.put("key:1", "otherVal"));
             //THEN
-            assertEquals("otherVal", persistent.query(x -> x.get("key:1")));
+            assertThat("otherVal").isEqualTo(persistent.query(x -> x.get("key:1")));
         }
     }
 
     @Test
-    public void testExecuteWithoutContextPerformed() {
+    void testExecuteWithoutContextPerformed() {
         //GIVEN
         try (
                 final Persistent<HashMap<String, String>> persistent = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());) {
             //WHEN
             persistent.execute((x) -> x.put("key:1", "otherVal"));
             //THEN
-            assertEquals("otherVal", persistent.query(x -> x.get("key:1")));
+            assertThat("otherVal").isEqualTo(persistent.query(x -> x.get("key:1")));
         }
     }
 
     @Test
-    public void testExecutePerformedAndStored() {
+    void testExecutePerformedAndStored() {
         //GIVEN
         try (
                 final Persistent<HashMap<String, String>> persistent = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());) {
@@ -147,12 +149,12 @@ public class PersistentTest {
         try (
                 final Persistent<HashMap<String, String>> persistent = Persistent.load(localFolder.toPath())) {
             //THEN
-            assertEquals("otherVal", persistent.query(x -> x.get("key:1")));
+            assertThat("otherVal").isEqualTo(persistent.query(x -> x.get("key:1")));
         }
     }
 
     @Test
-    public void schouldExistsAfterCreation() {
+    void schouldExistsAfterCreation() {
         //GIVEN
         try (
                 final Persistent<HashMap<String, String>> persistent = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());) {
@@ -160,32 +162,32 @@ public class PersistentTest {
         }
         //when
         //then
-        assertTrue(Persistent.exists(localFolder.toPath()));
+        assertThat(Persistent.exists(localFolder.toPath())).isTrue();
     }
 
     @Test
-    public void schouldNotExistsAfterCreation() {
+    void schouldNotExistsAfterCreation() {
         //GIVEN
 
         //when
         //then
-        assertFalse(Persistent.exists(localFolder.toPath()));
+        assertThat(Persistent.exists(localFolder.toPath())).isFalse();
     }
 
     @Test
-    public void schouldCreateNewSystem() {
+    void schouldCreateNewSystem() {
         //GIVEN
         try (
                 final Persistent<HashMap<String, String>> persistent = Persistent.loadOptional(localFolder.toPath(), () -> StorableObject.createTestHashMap());) {
             //WHEN
             final String val = persistent.query(x -> x.get("key:1"));
             //THEN
-            assertEquals("val:1", val);
+            assertThat("val:1").isEqualTo(val);
         }
     }
 
     @Test
-    public void schouldLoadOldSystemIfExists() {
+    void schouldLoadOldSystemIfExists() {
         //GIVEN
         try (
                 final Persistent<HashMap<String, String>> persistent = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());) {
@@ -196,12 +198,12 @@ public class PersistentTest {
             //WHEN
             final String val = persistent.query(x -> x.get("key:1"));
             //THEN
-            assertEquals("otherVal", val);
+            assertThat("otherVal").isEqualTo(val);
         }
     }
 
     @Test
-    public void schouldForgetChangesDoneInQueries() {
+    void schouldForgetChangesDoneInQueries() {
         //GIVEN
         try (
                 final Persistent<HashMap<String, String>> persistent = Persistent.create(localFolder.toPath(), StorableObject.createTestHashMap());) {
@@ -215,7 +217,7 @@ public class PersistentTest {
             //WHEN
             final String val = persistent.query(x -> x.get("key:1"));
             //THEN
-            assertEquals("val:1", val);
+            assertThat("val:1").isEqualTo(val);
         }
     }
 

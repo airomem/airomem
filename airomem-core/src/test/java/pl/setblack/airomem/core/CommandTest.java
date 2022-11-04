@@ -5,27 +5,26 @@
  */
 package pl.setblack.airomem.core;
 
-import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Date;
-
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jratajsk
  */
-public class CommandTest {
+class CommandTest {
 
-    private static final String COMMAND_PERFORMED_MARKER = "command performed";
+	private static final String COMMAND_PERFORMED_MARKER = "command performed";
 
-    @Test
-    public void testExecuteWithContext() {
-        StorableObject s = StorableObject.createTestObject();
-        assertNotSame(COMMAND_PERFORMED_MARKER, s.getImmutable().get("test"));
-        VoidCommand<StorableObject> cmd = x -> x.internalMap.put("test", COMMAND_PERFORMED_MARKER);
-        cmd.execute(s, new PrevalanceContext(new Date()));
-        assertEquals(COMMAND_PERFORMED_MARKER, s.getImmutable().get("test"));
-    }
+	@Test
+	void testExecuteWithContext() {
+		StorableObject s = StorableObject.createTestObject();
+		assertThat(COMMAND_PERFORMED_MARKER).isNotSameAs(s.getImmutable().get("test"));
+		VoidCommand<StorableObject> cmd = x -> x.internalMap.put("test", COMMAND_PERFORMED_MARKER);
+		cmd.execute(s, new PrevalanceContext(new Date()));
+		assertThat(COMMAND_PERFORMED_MARKER).isEqualTo(s.getImmutable().get("test"));
+	}
 
 }

@@ -4,16 +4,20 @@
  */
 package pl.setblack.airomem.core.disk;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jarek ratajski
  */
-public class PersistenceDiskHelperTest {
+class PersistenceDiskHelperTest {
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void shouldFailOnCreate() {
-        new PersistenceDiskHelper();
+    @Test
+    void shouldFailOnCreate() {
+        assertThatThrownBy(PersistenceDiskHelper::new).isInstanceOf(UnsupportedOperationException.class);
+
     }
 
     /*@Test

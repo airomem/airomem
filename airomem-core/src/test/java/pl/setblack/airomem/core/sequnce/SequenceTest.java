@@ -3,28 +3,28 @@
  */
 package pl.setblack.airomem.core.sequnce;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jarek ratajski
  */
-public class SequenceTest {
+class SequenceTest {
 
     private Sequence sequence;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         this.sequence = new Sequence();
     }
 
     @Test
-    public void testGenerateId() {
+    void testGenerateId() {
         long id1 = sequence.generateId();
         long id2 = sequence.generateId();
-        assertEquals(id1 + 1, id2);
+        assertThat(id1 + 1).isEqualTo(id2);
     }
 
 }
