@@ -3,24 +3,27 @@
  */
 package pl.setblack.airomem.core.builders;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pl.setblack.airomem.core.PrevalanceContext;
 import pl.setblack.airomem.core.WriteChecker;
 
-import static org.junit.Assert.*;
 
 /**
  * @author jarek ratajski
  */
-public class WriteCheckerTest {
+class WriteCheckerTest {
 
     private PrevalanceContext ctx1;
     private PrevalanceContext ctx2;
 
-     @Before
+     @BeforeEach
     public void setUp() {
         ctx1 = Mockito.mock(PrevalanceContext.class);
         ctx2 = Mockito.mock(PrevalanceContext.class);
@@ -29,7 +32,7 @@ public class WriteCheckerTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         if (WriteChecker.hasPrevalanceContext()) {
             WriteChecker.clearContext();
@@ -37,36 +40,37 @@ public class WriteCheckerTest {
     }
 
     @Test
-    public void testSetContextSimple() {
-        assertFalse(WriteChecker.hasPrevalanceContext());
-        assertNull(WriteChecker.getContext());
+    void testSetContextSimple() {
+        assertThat(WriteChecker.hasPrevalanceContext()).isFalse();
+        assertThat(WriteChecker.getContext()).isNull();
         WriteChecker.setContext(ctx1);
-        assertEquals(ctx1, WriteChecker.getContext());
-        assertTrue(WriteChecker.hasPrevalanceContext());
+        assertThat(ctx1).isEqualTo(WriteChecker.getContext());
+        assertThat(WriteChecker.hasPrevalanceContext()).isTrue();
         WriteChecker.clearContext();
-        assertNull(WriteChecker.getContext());
-        assertFalse(WriteChecker.hasPrevalanceContext());
+        assertThat(WriteChecker.getContext()).isNull();
+        assertThat(WriteChecker.hasPrevalanceContext()).isFalse();
     }
 
     @Test
-    public void testSetContextThread() throws InterruptedException {
-        assertNull(WriteChecker.getContext());
+    void testSetContextThread() throws InterruptedException {
+        assertThat(WriteChecker.getContext()).isNull();
         WriteChecker.setContext(ctx1);
         TestThread th = new TestThread();
         th.start();
-        assertEquals(ctx1, WriteChecker.getContext());
+        assertThat(ctx1).isEqualTo(WriteChecker.getContext());
         th.join();
-        assertTrue(WriteChecker.hasPrevalanceContext());
-        assertEquals(ctx1, WriteChecker.getContext());
+        assertThat(WriteChecker.hasPrevalanceContext()).isTrue();
+        assertThat(ctx1).isEqualTo(WriteChecker.getContext());
         WriteChecker.clearContext();
 
     }
 
-    @Test(expected = java.lang.AssertionError.class)
-    public void testCannotSetContextTwice() throws InterruptedException {
-        assertNull(WriteChecker.getContext());
-        WriteChecker.setContext(ctx1);
-        WriteChecker.setContext(ctx1);
+    @Test
+    void testCannotSetContextTwice() {
+        assertThat(WriteChecker.getContext()).isNull();
+        assertThatNoException().isThrownBy(() -> WriteChecker.setContext(ctx1));
+        assertThatThrownBy(()->WriteChecker.setContext(ctx1)).isInstanceOf(AssertionError.class);
+
 
     }
 
@@ -74,10 +78,10 @@ public class WriteCheckerTest {
 
         @Override
         public void run() {
-            assertNull(WriteChecker.getContext());
-            assertFalse(WriteChecker.hasPrevalanceContext());
+            assertThat(WriteChecker.getContext()).isNull();
+            assertThat(WriteChecker.hasPrevalanceContext()).isFalse();
             WriteChecker.setContext(ctx2);
-            assertEquals(ctx2, WriteChecker.getContext());
+            assertThat(ctx2).isEqualTo(WriteChecker.getContext());
             WriteChecker.clearContext();
         }
 

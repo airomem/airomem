@@ -3,8 +3,8 @@
  */
 package pl.setblack.airomem.core.builders;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import pl.setblack.airomem.core.PersistenceController;
 import pl.setblack.airomem.core.disk.PersistenceDiskHelper;
 
@@ -22,7 +22,7 @@ public abstract class AbstractPrevaylerTest<T extends Serializable> {
 
     protected abstract T createSystem();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         File localFolder = new File("prevayler/");
         localFolder.mkdir();
@@ -38,7 +38,7 @@ public abstract class AbstractPrevaylerTest<T extends Serializable> {
 
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         this.persistenceController.close();
         AbstractPrevaylerTest.deletePrevaylerFolder();

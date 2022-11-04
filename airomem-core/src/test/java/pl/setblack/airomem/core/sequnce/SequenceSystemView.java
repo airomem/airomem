@@ -8,5 +8,5 @@ package pl.setblack.airomem.core.sequnce;
  */
 public interface SequenceSystemView {
 
-    public long getNumber();
+    long getNumber();
 }

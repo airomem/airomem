@@ -155,7 +155,7 @@ public class PrevaylerBuilder<T extends Serializable> {
     }
 
     private Prevayler createPrevayler() {
-        Preconditions.checkArgument(getInitialSystem().isPresent() || PersistenceDiskHelper.exists(this.getFolder()));
+        Preconditions.checkArgument(getInitialSystem().isPresent() || PersistenceDiskHelper.exists(this.getFolder()), "Initial system is not present or " + this.getFolder().getFileName() + " does not exist");
         try {
             PrevaylerFactory<RoyalFoodTester> factory = new PrevaylerFactory<>();
             factory.configurePrevalentSystem(createRoot());

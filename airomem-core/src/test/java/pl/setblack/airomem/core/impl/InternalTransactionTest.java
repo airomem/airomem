@@ -5,7 +5,12 @@
  */
 package pl.setblack.airomem.core.impl;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 import pl.setblack.airomem.core.PrevalanceContext;
 import pl.setblack.airomem.core.StorableObject;
 import pl.setblack.airomem.core.VoidContextCommand;
@@ -16,18 +21,16 @@ import java.time.Month;
 import java.time.ZoneOffset;
 import java.util.Date;
 
-import static org.junit.Assert.*;
-
 /**
  * @author jratajsk
  */
-public class InternalTransactionTest {
+class InternalTransactionTest {
 
     /**
      * Test of executeOn method, of class InternalTransaction.
      */
     @Test
-    public void testExecuteOn() throws Exception {
+    void testExecuteOn() {
         final LocalDateTime time = LocalDateTime.of(1977, Month.MAY, 20, 1, 1);
         final Date date = Date.from(time.toInstant(ZoneOffset.UTC));
         final VoidContextCommand<StorableObject> myCmd = (x, ctx) -> x.internalMap.put("date", ctx.time.toString());
@@ -36,16 +39,18 @@ public class InternalTransactionTest {
         final InternalTransaction instance = new InternalTransaction(myCmd);
         instance.executeAndQuery(testSystem, date);
 
-        assertEquals(testSystem.getFoodTester().internalMap.get("date"), time.toInstant(ZoneOffset.UTC).toString());
+        assertThat(testSystem.getFoodTester().internalMap)
+                .containsKeys("date")
+                .containsEntry("date", time.toInstant(ZoneOffset.UTC).toString());
     }
 
     @Test
-    public void testWriteCheckerContext() throws Exception {
+    void testWriteCheckerContext() {
         final LocalDateTime time = LocalDateTime.of(1977, Month.MAY, 20, 1, 1);
         final Date date = Date.from(time.toInstant(ZoneOffset.UTC));
         final VoidContextCommand<StorableObject> myCmd = (x, ctx) -> {
-            assertTrue(WriteChecker.hasPrevalanceContext());
-            assertEquals(ctx.time, WriteChecker.getContext().time);
+            assertThat(WriteChecker.hasPrevalanceContext()).isTrue();
+            assertThat(ctx.time).isEqualTo(WriteChecker.getContext().time);
         };
         InternalTransaction instance = new InternalTransaction(myCmd);
         final RoyalFoodTester<StorableObject> testSystem = RoyalFoodTester.of(StorableObject.createTestObject());
@@ -53,42 +58,40 @@ public class InternalTransactionTest {
     }
 
     @Test
-    public void testWriteCheckerContextClearedWhenExceptionOccured() throws Exception {
+    void testWriteCheckerContextClearedWhenExceptionOccured() {
         final LocalDateTime time = LocalDateTime.of(1977, Month.MAY, 20, 1, 1);
         final Date date = Date.from(time.toInstant(ZoneOffset.UTC));
         final RuntimeException exception = new RuntimeException("fail");
         final VoidContextCommand<StorableObject> myCmd = (x, ctx) -> {
-            assertTrue(WriteChecker.hasPrevalanceContext());
-            assertEquals(ctx, WriteChecker.getContext());
+            assertThat(WriteChecker.hasPrevalanceContext()).isTrue();
+            assertThat(ctx).isEqualTo(WriteChecker.getContext());
             throw exception;
         };
         InternalTransaction instance = new InternalTransaction(myCmd);
         final RoyalFoodTester<StorableObject> testSystem = RoyalFoodTester.of(StorableObject.createTestObject());
-        try {
-            instance.executeAndQuery(testSystem, date);
-        } catch (Exception re) {
-            assertEquals(exception, re);
-        }
-        assertNull(WriteChecker.getContext());
+        assertThatThrownBy(() -> instance.executeAndQuery(testSystem, date))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("fail");
+        assertThat(WriteChecker.getContext()).isNull();
     }
 
     /**
      * Test of createContext method, of class InternalTransaction.
      */
     @Test
-    public void testCreateContext() {
+    void testCreateContext() {
         LocalDateTime time = LocalDateTime.of(1977, Month.MAY, 20, 1, 1);
         final Date date = Date.from(time.toInstant(ZoneOffset.UTC));
         VoidContextCommand<StorableObject> myCmd = (x, ctx) -> x.internalMap.put("date", ctx.time.toString());
         InternalTransaction instance = new InternalTransaction(myCmd);
 
         PrevalanceContext result = instance.createContext(date);
-        assertEquals(date.toInstant(), result.time);
+        assertThat(date.toInstant()).isEqualTo(result.time);
     }
 
 
     @Test
-    public void testUnsafeRoyalFoodTester() {
+    void testUnsafeRoyalFoodTester() {
         LocalDateTime time = LocalDateTime.of(1977, Month.MAY, 20, 1, 1);
         final Date date = Date.from(time.toInstant(ZoneOffset.UTC));
 
@@ -99,13 +102,12 @@ public class InternalTransactionTest {
         InternalTransaction instance = new InternalTransaction(myCmd);
         final RoyalFoodTester<StorableObject> testSystem = RoyalFoodTester.of(StorableObject.createTestObject(), false);
 
-        try {
-            instance.executeAndQuery(testSystem, date);
-        } catch (RuntimeException e) {
-        }
 
+        assertThatThrownBy(() -> instance.executeAndQuery(testSystem, date))
+                .isInstanceOf(IllegalStateException.class);
 
-        assertEquals("isunsafe", testSystem.getSafeCopy().internalMap.get("unsafe"));
-
+        assertThat(testSystem.getSafeCopy().internalMap)
+                .containsKeys("unsafe")
+                .containsEntry("unsafe", "isunsafe");
     }
 }

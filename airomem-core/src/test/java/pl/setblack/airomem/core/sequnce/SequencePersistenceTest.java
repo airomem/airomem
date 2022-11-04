@@ -3,40 +3,40 @@
  */
 package pl.setblack.airomem.core.sequnce;
 
-import junit.framework.Assert;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
 import pl.setblack.airomem.core.builders.AbstractPrevaylerTest;
 
 /**
  * @author jarekr
  */
-public class SequencePersistenceTest
-        extends AbstractPrevaylerTest<SequenceSystem> {
+class SequencePersistenceTest
+		extends AbstractPrevaylerTest<SequenceSystem> {
 
-    @Override
-    protected SequenceSystem createSystem() {
-        return new SequenceSystem();
-    }
+	@Override
+	protected SequenceSystem createSystem() {
+		return new SequenceSystem();
+	}
 
-    @Test
-    public void testPersistenceOfSequence() {
-        this.persistenceController.execute((x) -> x.setNumber(x.getSequence().generateId()));
-        long id1 = this.persistenceController.query(x -> x.getNumber());
-        reloadController(SequenceSystem.class);
-        long id2 = this.persistenceController.query(x -> x.getNumber());
-        Assert.assertEquals(id1, id2);
-    }
+	@Test
+    void testPersistenceOfSequence() {
+		this.persistenceController.execute((x) -> x.setNumber(x.getSequence().generateId()));
+		long id1 = this.persistenceController.query(x -> x.getNumber());
+		reloadController(SequenceSystem.class);
+		long id2 = this.persistenceController.query(x -> x.getNumber());
+		assertThat(id1).isEqualTo(id2);
+	}
 
-    @Test
-    public void testPersistenceOfSequence2() {
-        this.persistenceController.execute((x) -> x.setNumber(x.getSequence().generateId()));
-        long id1 = this.persistenceController.query(x -> x.getNumber());
-        reloadController(SequenceSystem.class);
-        this.persistenceController.execute((x) -> x.setNumber(x.getSequence().generateId()));
-        long id2 = this.persistenceController.query(x -> x.getNumber());
-        Assert.assertEquals(id1 + 1, id2);
-
-    }
+	@Test
+    void testPersistenceOfSequence2() {
+		this.persistenceController.execute((x) -> x.setNumber(x.getSequence().generateId()));
+		long id1 = this.persistenceController.query(x -> x.getNumber());
+		reloadController(SequenceSystem.class);
+		this.persistenceController.execute((x) -> x.setNumber(x.getSequence().generateId()));
+		long id2 = this.persistenceController.query(x -> x.getNumber());
+        assertThat(id1 + 1).isEqualTo(id2);
+	}
 
 
 }
